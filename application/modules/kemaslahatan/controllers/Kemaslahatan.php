@@ -207,7 +207,7 @@
 			} 
 			
 
-	        /* Set judul file excel nya
+	        /* Set judul file excel n
 			$excel->getActiveSheet(0)->setTitle("Posisi Penempatan Thn " . $tahun);
 			$excel->setActiveSheetIndex(0); */
 
