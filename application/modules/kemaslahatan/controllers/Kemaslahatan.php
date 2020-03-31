@@ -6,6 +6,7 @@
 			parent::__construct();
 			$this->load->library('excel');
 			$this->load->model('kemaslahatan_model', 'kemaslahatan_model');
+			$this->load->model('nonkeuanganbpkh/nonkeuanganbpkh_model', 'nonkeuanganbpkh_model');
 		}
 
 		public function index( $tahun=0 ){		
@@ -219,43 +220,15 @@
 
 		}
 
-		public function alokasi_per_asnaf(){
-			$data['id'] = 'alokasi_kegiatan_kemaslahatan';
-			$data['class'] = 'alokasi_per_asnaf';			
-			$data['judul'] = 'Alokasi Per Asnaf';
-			$data['view'] = 'keuanganhaji/tambahan';
-    		$this->load->view('admin/layout', $data);
-		}
-
-		public function alokasi_per_provinsi(){
-			$data['id'] = 'alokasi_kegiatan_kemaslahatan';
-			$data['class'] = 'alokasi_per_provinsi';			
-			$data['judul'] = 'Alokasi Per Provinsi';
-			$data['view'] = 'keuanganhaji/tambahan';
-    		$this->load->view('admin/layout', $data);
-		}
-
-		public function penerima_manfaat(){
-			$data['id'] = 'alokasi_kegiatan_kemaslahatan';
-			$data['class'] = 'penerima_manfaat';			
-			$data['judul'] = 'Penerima Manfaat';
-			$data['view'] = 'keuanganhaji/tambahan';
-    		$this->load->view('admin/layout', $data);
-		}
-
-		public function dokumentasi_kegiatan_kemaslahatan(){
-			$data['id'] = 'dokumentasi_kegiatan_kemaslahatan';
-			$data['class'] = 'penerima_manfaat';			
-			$data['judul'] = 'Dokumentasi Kegiatan Kemaslahatan';
-			$data['view'] = 'keuanganhaji/tambahan';
-    		$this->load->view('admin/layout', $data);
-		}
+		
 
 		public function regulasi_tentang_kemaslahatan(){
+			
 			$data['id'] = 'regulasi_tentang_kemaslahatan';
 			$data['class'] = 'penerima_manfaat';			
 			$data['judul'] = 'Regulasi Tentang Kemaslahatan';
-			$data['view'] = 'keuanganhaji/tambahan';
+			$data['dokumen'] = $this->nonkeuanganbpkh_model->get_dokumen('regulasi_kemaslahatan');
+			$data['view'] = 'regulasi_kemaslahatan';
     		$this->load->view('admin/layout', $data);
 		}
 

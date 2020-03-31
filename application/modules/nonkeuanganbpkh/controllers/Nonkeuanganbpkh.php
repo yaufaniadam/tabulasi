@@ -32,6 +32,7 @@
 				$this->form_validation->set_rules('nama_dokumen', 'Judul dokumen', 'trim|required');
 				$this->form_validation->set_rules('jenis_dokumen', 'Jenis Dokumen', 'trim|required');
 				
+				$jenis_dok = $this->input->post('jenis_dokumen');
 	
 				if ($this->form_validation->run() == FALSE) {					
 				
@@ -71,7 +72,11 @@
 
 						if($result){
 							$this->session->set_flashdata('msg', 'Dokumen telah ditambahkan!');
-							redirect(base_url('nonkeuanganbpkh/dokumen'));
+							if(!$jenis_dok == 'regulasi_kemaslahatan')  {
+								redirect(base_url('nonkeuanganbpkh/dokumen'));
+							} else {
+								redirect(base_url('kemaslahatan/regulasi_tentang_kemaslahatan'));
+							}
 						} 
 
 					} 
@@ -85,13 +90,61 @@
     				$this->load->view('admin/layout', $data);
 				}
 		}
+		public function tambah_dokumen_video(){
+			if($this->input->post('submit')){
+
+				$this->form_validation->set_rules('nama_dokumen', 'Judul dokumen', 'trim|required');
+					$this->form_validation->set_rules('url_video', 'Jenis Dokumen', 'trim|required');
+				
+	
+				if ($this->form_validation->run() == FALSE) {					
+				
+					$data['view'] = 'nonkeuanganbpkh/tambah_dokumen_video';
+    				$this->load->view('admin/layout', $data);
+				}
+				else{ 
+
+					
+						$data = array(
+									
+							'nama_dokumen' => $this->input->post('nama_dokumen'),
+							'date' => date('Y-m-d'),		
+							'url_video' => 	$this->input->post('url_video'),
+							'jenis_dokumen' => 'materi_video_dan_paparan',			
+							
+						);
+									
+						$data = $this->security->xss_clean($data);
+						$result = $this->nonkeuanganbpkh_model->tambah_dokumen($data);
+
+						if($result){
+							$this->session->set_flashdata('msg', 'Dokumen telah ditambahkan!');
+							redirect(base_url('nonkeuanganbpkh/dokumen'));
+						} 
+
+					} 
+
+				}
+
+				else{
+					
+					
+					$data['view'] = 'nonkeuanganbpkh/tambah_dokumen_video';
+    				$this->load->view('admin/layout', $data);
+				}
+		}
 
 		
 
 		public function hapus_dokumen($id = 0, $uri = NULL){	
 			$this->db->delete('dokumen', array('id' => $id));
 			$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-			redirect(base_url('nonkeuanganbpkh/dokumen'));
+
+			if( $uri == 'kemaslahatan') {
+				redirect(base_url('kemaslahatan/regulasi_tentang_kemaslahatan'));
+			} else {
+				redirect(base_url('nonkeuanganbpkh/dokumen'));
+			}
 		}
 
 

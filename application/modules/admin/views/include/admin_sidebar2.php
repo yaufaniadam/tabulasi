@@ -150,7 +150,7 @@
           <a href="<?= base_url('kemaslahatan'); ?>"><span>Mitra Kemaslahatan</span></a>
         </li>
         
-        <li id="regulasi_tentang_kemaslahatan">
+        <li id="regulasi_kemaslahatan">
           <a href="<?= base_url('kemaslahatan/regulasi_tentang_kemaslahatan'); ?>"><span>Regulasi Tentang Kemaslahatan
             </span></a>
         </li>

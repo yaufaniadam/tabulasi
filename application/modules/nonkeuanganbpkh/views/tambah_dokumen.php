@@ -1,5 +1,9 @@
+<?php //get las URI
+    $last = $this->uri->total_segments();
+	$record_num = $this->uri->segment($last);	 
+?>
 <section class="content-header">
-  <h1><i class="fa fa-file-pdf"></i> &nbsp; Tambah Dokumen</h1>        
+  <h1><i class="fa fa-file-pdf"></i> &nbsp; Tambah Dokumen <?php if($record_num == 'kemaslahatan') { echo "Regulasi Kemaslahatan"; } ?></h1>        
 </section>
 
 <section class="content">
@@ -21,15 +25,19 @@
             <?php endif; ?>
            
  
-            <?php echo form_open_multipart(base_url('internalbpkh/tambah_dokumen'), 'class="form-horizontal"');  ?> 
+            <?php echo form_open_multipart(base_url('nonkeuanganbpkh/tambah_dokumen'), 'class="form-horizontal"');  ?> 
               <div class="form-group">
                 <label class="col-sm-3">Nama Dokumen</label>
                 <div class="col-sm-9">
                   <input type="text" name="nama_dokumen" class="form-control" id="nama_dokumen" placeholder="Nama Dokumen">
                 </div>
               </div>              
-                            
-              <div class="form-group">               
+              
+              <?php if($record_num == 'kemaslahatan') { ?>
+               <input  name="jenis_dokumen" type="hidden" value="regulasi_kemaslahatan">
+              <?php } else { ?>
+
+                <div class="form-group">               
                 <label class="col-sm-3">Jenis Dokumen</label>
                 <div class="col-sm-9">
                     <select name="jenis_dokumen" class="form-control">   
@@ -44,7 +52,9 @@
                     </select>
                 </div>            
            
-              </div>  
+              </div> 
+
+              <?php } ?>
 
               <div class="form-group">
                <label class="col-sm-3">File Dokumen</label>
@@ -73,8 +83,7 @@
 
 
 <script>
-    $("#nilai_manfaat").addClass('active');
-    $("#nilai_manfaat .produk").addClass('active');
+    $("#dokumen").addClass('active');
 </script>
 
 
