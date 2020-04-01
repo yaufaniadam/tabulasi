@@ -30,6 +30,13 @@ class Bpih extends MY_Controller
 		$data['view'] = 'pencapaian_perbidang';
 		$this->load->view('admin/layout', $data);
 	}
+	public function detail_pencapaian_perbidang($bulan=0, $tahun = 0)
+	{
+		$data['tahun'] = $this->bpih_model->get_tahun_pencapaian_perbidang();
+		$data['pencapaian_perbidang'] = $this->bpih_model->get_detail_pencapaian_perbidang($bulan, $tahun);
+		$data['view'] = 'detail_pencapaian_perbidang';
+		$this->load->view('admin/layout', $data);
+	}
 
 	public function tambah_pencapaian_perbidang()
 	{
@@ -88,32 +95,39 @@ class Bpih extends MY_Controller
 
 		$data = transposeData($sheet);
 
-		$dataquery = array(
-			'pengembangan_dan_kemaslahatan' => $data['B'][2],
-			'keuangan' => $data['B'][3],
-			'investasi' => $data['B'][4],
-			'operasional' => $data['B'][5],
-			'perencanaan_dan_manajemen_risiko' => $data['B'][6],
-			'sdm_dan_pengadaan' => $data['B'][7],
-			'hukum_dan_kepatuhan' => $data['B'][8],
-			'audit_internal' => $data['B'][9],
-			'sekban' => $data['B'][10],
-			'sekdewas' => $data['B'][11],
-			'tahun' => $data['C'][1],
-			'bulan' => $data['B'][1],
-		);
+		$data2 = array();
+
+			$numrow = 1;
+			foreach ($sheet as $row) {
+
+				if ($numrow > 1) {
+					// Kita push (add) array data ke variabel data
+					array_push($data2, array(
+						'bidang' => $row['A'], 
+						'target' => $row['B'],
+						'realisasi' => $row['C'],
+						'persentase' => $row['D'],
+						'bulan' => $data["E"][1],
+						'tahun' => $data["F"][1],
+					));
+				}
+
+				$numrow++; // Tambah 1 setiap kali looping
+			}
+
+	
 
 		// Panggil fungsi insert_pencapaian_perbidang
-		$this->bpih_model->insert_pencapaian_perbidang($dataquery);
+		$this->bpih_model->insert_pencapaian_perbidang($data2);
 
 		redirect("bpih/pencapaian_perbidang"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
-	public function hapus_pencapaian_perbidang($id = 0, $uri = NULL)
+	public function hapus_pencapaian_perbidang($bulan = 0, $tahun = 0, $uri = NULL)
 	{
-		$this->db->delete('pencapaian_perbidang', array('id' => $id));
+		$this->db->delete('pencapaian_perbidang2', array('bulan' => $bulan, 'tahun' => $tahun));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('bpih/pencapaian_perbidang'));
+		redirect(base_url('bpih/pencapaian_perbidang/'. $tahun));
 	}
 
 	public function export_pencapaian_perbidang($tahun)

@@ -16,40 +16,32 @@
 
         if(isset($_POST['submit'])) {
 
-           // Buat sebuah tag form untuk proses import data ke database
-          echo form_open_multipart(base_url('bpih/import_pencapaian_perbidang/'.$file_excel), 'class="form-horizontal"' );
+          // Buat sebuah tag form untuk proses import data ke database
+          echo form_open_multipart(base_url('bpih/import_pencapaian_perbidang/'.$file_excel), 'class="form-horizontal"' ); 
 
-          
+          echo "<p class='alert alert-warning'>Data bulan ".$sheet['1']['E']." " . $sheet['1']['F'] . "</p>";
           echo "<table class='table table-bordered table-striped'>
          
           <tr>
-            <th>Uraian</th>
-            <th>Jumlah</th>
-            <th>Posisi</th>            
+            <th>Bidang</th>
+            <th>Target</th>
+            <th>Realisasi</th>            
+            <th>Persentase (%)</th>            
           </tr>";
           
           $numrow = 1;
-          $kosong = 0;
-          
-          // Lakukan perulangan dari data yang ada di excel
-          // $sheet adalah variabel yang dikirim dari controller
-          $bulan = $sheet['1']['B'];
-
+          $kosong = 0;                
+   
           foreach($sheet as $row){ 
-            // Ambil data pada excel sesuai Kolom            
-
-            $bps_bpih=$row['A']; 
-            $jumlah=$row['B']; 
-            $bulan = $bulan;
+            // Ambil data pada excel sesuai Kolom        
            
            
-            if($numrow > 1){            
-              
+            if($numrow > 1){    
               echo "<tr>";            
-              echo "<td>".$bps_bpih."</td>"; 
-              echo "<td>".$jumlah."</td>";
-              echo "<td>".$bulan."</td>";
-            
+              echo "<td>".$row['A']."</td>"; 
+              echo "<td>".$row['B']."</td>";
+              echo "<td>".$row['C']."</td>";
+              echo "<td>".$row['D']."</td>";            
               echo "</tr>";
             }
             

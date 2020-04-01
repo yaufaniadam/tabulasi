@@ -1,7 +1,10 @@
 <section class="content-header">
-	<h1><i class="fa fa-kaaba"></i> Laporan Pencapaian Output Perbidang <a href="<?= base_url('bpih/tambah_pencapaian_perbidang'); ?>" class="btn btn-warning btn-sm"><i class="fas fa-plus"></i>&nbsp; Tambah Data</a>
+	<h1><i class="fa fa-kaaba"></i> Laporan Pencapaian Output Perbidang <a
+			href="<?= base_url('bpih/tambah_pencapaian_perbidang'); ?>" class="btn btn-warning btn-sm"><i
+				class="fas fa-plus"></i>&nbsp; Tambah Data</a>
 
-		<a href="<?= base_url('bpih/export_pencapaian_perbidang/' . $thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp; Export Data ke Excel</a>
+		<a href="<?= base_url('bpih/export_pencapaian_perbidang/' . $thn); ?>" class="btn btn-success btn-sm"><i
+				class="fas fa-file-excel"></i>&nbsp; Export Data ke Excel</a>
 
 	</h1>
 </section>
@@ -10,100 +13,38 @@
 		<div class="col-md-12">
 			<?php breadcrumb('', $tahun, $thn); ?>
 			<?php if ($pencapaian_perbidang) { ?>
-				<div class="well well-sm pre-scrollable" style="overflow-x: scroll; min-height:500px;">
-					<table id="table1" class="table table-striped table-bordered" style="width:<?= count($pencapaian_perbidang) * 200; ?>px;;min-width: 100%;">
-						<tr>
-							<td><strong>BULAN</strong></td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right"><?= $row['bulan']; ?> &nbsp;
-									<a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger" data-href="<?= base_url('bpih/hapus_pencapaian_perbidang/' . $row['id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
 
-								</td>
-							<?php } ?>
-						</tr>
-						<tr>
-							<td>
-								Pengembangan dan Kemaslahatan
-							</td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right;"><?= $row['pengembangan_dan_kemaslahatan']; ?></td>
-							<?php } ?>
-						</tr>
-						<tr>
-							<td>
-								Keuangan
-							</td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right;"><?= $row['keuangan']; ?></td>
-							<?php } ?>
-						</tr>
-						<tr>
-							<td>
-								Investasi
-							</td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right;"><?= $row['investasi']; ?></td>
-							<?php } ?>
-						</tr>
-						<tr>
-							<td>
-								Operasional
-							</td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right;"><?= $row['operasional']; ?></td>
-							<?php } ?>
-						</tr>
-						<tr>
-							<td>
-								Perencanaan dan Manajemen Risiko
-							</td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right;"><?= $row['perencanaan_dan_manajemen_risiko']; ?></td>
-							<?php } ?>
-						</tr>
-						<tr>
-							<td>
-								SDM dan Pengadaan
-							</td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right;"><?= $row['sdm_dan_pengadaan']; ?></td>
-							<?php } ?>
-						</tr>
-						<tr>
-							<td>
-								Hukum dan Kepatuhan
-							</td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right;"><?= $row['hukum_dan_kepatuhan']; ?></td>
-							<?php } ?>
-						</tr>
-						<tr>
-							<td>
-								Audit Internal
-							</td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right;"><?= $row['audit_internal']; ?></td>
-							<?php } ?>
-						</tr>
-						<tr>
-							<td>
-								Sekban
-							</td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right;"><?= $row['sekban']; ?></td>
-							<?php } ?>
-						</tr>
-						<tr>
-							<td>
-								Sekdewas
-							</td>
-							<?php foreach ($pencapaian_perbidang as $row) { ?>
-								<td style="text-align: right;"><?= $row['sekdewas']; ?></td>
-							<?php } ?>
-						</tr>
+			<div class="box">
 
-					</table>
+				<div class="box-body my-form-body">
+				<table id="table1" class="table table-striped table-bordered">
+
+
+				<tr>
+					<th style="width:80%;">Bulan</th>
+					<th class="text-center">Aksi</th>
+				</tr>
+				<?php foreach ($pencapaian_perbidang as $row) { ?>
+				<tr>
+					<td><?=$row['bulan']; ?></td>
+					<td class="text-center">
+
+						<a style="color:#fff;" title="Lihat Detail" class="btn btn-xs btn-success"
+							href="<?= base_url($this->router->fetch_class() . '/detail_pencapaian_perbidang/' . $row['bulan'] .'/' .$row['tahun']); ?>">
+							<i class="fa fa-eye"></i></a>
+
+						<a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger"
+							data-href="<?= base_url($this->router->fetch_class() . '/hapus_pencapaian_perbidang/' . $row['bulan'].'/' .$row['tahun']); ?>"
+							data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
+					</td>
+				</tr>
+				<?php } ?>
+			</table>
+
 				</div>
+			</div>
+
+			
 			<?php } else {
 				echo '<p class="alert alert-success"> Pilih tahun</p>';
 			} ?>
@@ -133,11 +74,13 @@
 </div>
 
 <script type="text/javascript">
-	$('#confirm-delete').on('show.bs.modal', function(e) {
+	$('#confirm-delete').on('show.bs.modal', function (e) {
 		$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
 	});
+
 </script>
 
 <script>
 	$("#pencapaian_perbidang").addClass('active');
+
 </script>
