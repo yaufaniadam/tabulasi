@@ -4,10 +4,7 @@
 		<a href="<?= base_url('bpih/export_pencapaian_perbidang/' . $thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp; Export Data ke Excel</a>
 
 	</h1>
-
 </section>
-
-
 <section class="content">
 	<div class="row">
 		<div class="col-md-12">
@@ -15,19 +12,15 @@
 			<?php if ($pencapaian_perbidang) { ?>
 				<div class="well well-sm pre-scrollable" style="overflow-x: scroll; min-height:500px;">
 					<table id="table1" class="table table-striped table-bordered" style="width:<?= count($pencapaian_perbidang) * 200; ?>px;;min-width: 100%;">
-
 						<tr>
 							<td><strong>BULAN</strong></td>
 							<?php foreach ($pencapaian_perbidang as $row) { ?>
 								<td style="text-align: right"><?= $row['bulan']; ?> &nbsp;
-
 									<a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger" data-href="<?= base_url('bpih/hapus_pencapaian_perbidang/' . $row['id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
 
 								</td>
 							<?php } ?>
 						</tr>
-
-
 						<tr>
 							<td>
 								Pengembangan dan Kemaslahatan
