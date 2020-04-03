@@ -38,40 +38,39 @@
 		    $this->db->insert_batch('pencapaian_perbidang2', $data);
 		}
 
-		// LAPORAN REALISASI ANGGARAN
-
 		public function get_tahun_penyerapan_perbidang(){
 			
 			$this->db->select('tahun');
-			$this->db->from('penyerapan_perbidang');			
+			$this->db->from('penyerapan_perbidang2');			
 			
 			$this->db->order_by('tahun', 'ASC');
 			$this->db->group_by('tahun');
 
 			$query = $this->db->get();
-
-			return $result = $query->result_array();
-			
+			return $result = $query->result_array();			
 		}
 
 		public function get_penyerapan_perbidang($tahun){
-			$this->db->select('*,tahun');
-			$this->db->from('penyerapan_perbidang');
+			$this->db->select('bulan,tahun');
+			$this->db->from('penyerapan_perbidang2');
 			$this->db->where('tahun', $tahun);
+			$this->db->order_by('id', 'ASC');
+			$this->db->group_by('bulan');
     		$query = $this->db->get(); 
     		return $result = $query->result_array();
   		}
 
-  		public function get_detail_penyerapan_perbidang($id){
+  		public function get_detail_penyerapan_perbidang($bulan, $tahun){
 			$this->db->select('*');
-			$this->db->from('penyerapan_perbidang');
-			$this->db->where('id', $id);
+			$this->db->from('penyerapan_perbidang2');
+			$this->db->where('bulan', $bulan);
+			$this->db->where('tahun', $tahun);
     		$query = $this->db->get(); 
-    		return $result = $query->row_array();
+    		return $result = $query->result_array();
   		}		  
 		  
 		public function insert_penyerapan_perbidang($data){
-		    $this->db->insert('penyerapan_perbidang', $data);
+		    $this->db->insert_batch('penyerapan_perbidang2', $data);
 		}
 	}
 

@@ -28,6 +28,7 @@
 		  public function get_per_instrumen($tahun){
 			$this->db->select("
 				bulan as Bulan, 
+				id_per_instrumen as Hapus,
 				dau as 'DAU (SDHI & SBSN)',
 				surat_berharga as Surat Berharga,
 				sdhi as SDHI,
@@ -74,8 +75,7 @@
 
 			$query = $this->db->get();
 
-			return $result = $query->result_array();
-			
+			return $result = $query->result_array();			
 		}
 
 		public function get_bps_bpih_nilai_manfaat_penempatan_di_bpsbpih(){
@@ -85,8 +85,7 @@
 			$this->db->group_by('bps_bpih');
 			$query = $this->db->get();
 
-			return $result = $query->result_array();
-			
+			return $result = $query->result_array();			
 		}
 
 		public function get_nilai_manfaat_penempatan_di_bpsbpih($tahun){

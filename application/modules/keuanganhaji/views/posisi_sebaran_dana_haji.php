@@ -11,7 +11,7 @@
     <div class="col-md-12">        
 
         <?php breadcrumb('',$tahun, $thn); ?>
-
+        <?php if($sebaran_dana_haji) { ?>
         <div class="box-body smy-form-body box-keuangan">        
 
           <table class="keuangan table table-striped table-bordered" style="width:2200px;min-width: 100%;">
@@ -75,6 +75,7 @@
           </table>
       
       </div>
+      <?php } else { echo '<p class="alert alert-success"> Pilih tahun</p>';} ?> 
     </div>
   </div>  
 </section> 

@@ -37,6 +37,32 @@
 		    $this->db->insert_batch('program_kemaslahatan', $data);
 		}
 
+		public function get_dokumentasi($id){
+			
+			$this->db->select('*');
+			$this->db->from('dokumentasi');	
+			$this->db->where('id_kemaslahatan', $id);
+
+			$query = $this->db->get();
+			$result = array();
+			return $result = $query->result_array();
+			
+		}
+
+		public function get_penerima($id){
+			$this->db->select('*');
+			$this->db->from('program_kemaslahatan');	
+			$this->db->where('id', $id);
+
+			$query = $this->db->get();
+			$result = array();
+			return $result = $query->row_array();
+		}
+
+		public function tambah_dokumentasi($data){
+		   return $this->db->insert('dokumentasi', $data);
+		}
+
 	}
 
 ?>

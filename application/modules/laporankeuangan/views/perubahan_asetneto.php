@@ -24,7 +24,7 @@
 					<?php foreach($perubahan_asetneto as $row ) { ?>
 					<th style="text-align: right"><?=$row['bulan']; ?> &nbsp;
 						
-						<a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger" data-href="<?=base_url('laporankeuangan/hapus_perubahan_asetneto/'.$row['id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
+						<a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger" data-href="<?=base_url('laporankeuangan/hapus_perubahan_asetneto/'.$row['id'].'/'.$thn); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
 
 					</td>
 					<?php } ?>
@@ -165,6 +165,14 @@
 					</td>	
 					<?php foreach($perubahan_asetneto as $row ) { ?>
 						<td style="text-align: right;"><?=$row['surplus_tahun_berjalan_permanen'];?></td>		
+					<?php } ?>	
+				</tr>	
+				<tr>
+					<td>
+						Penggunaan Efisiensi Haji Tahun Sebelumnya
+					</td>	
+					<?php foreach($perubahan_asetneto as $row ) { ?>
+						<td style="text-align: right;"><?=$row['penggunaan_efisiensi_haji'];?></td>		
 					<?php } ?>	
 				</tr>	
 				<tr>

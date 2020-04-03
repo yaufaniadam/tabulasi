@@ -36,10 +36,10 @@ $record_num = $this->uri->segment($last);
 			<table id="example1" class="table table-bordered table-striped ">
 				<thead>
 					<tr>
-						<th style="width:70%">Judul Dokumen</th>
+						<th style="width:50%">Judul Dokumen</th>
 
 						<?php if ($record_num == 'materi_video_dan_paparan') { ?>
-							<th>Video Player</th>
+							<th style="width:30%">Video Player</th>
 						<?php } ?>
 						<th>Tanggal</th>
 						<th>Aksi</th>
@@ -59,7 +59,7 @@ $record_num = $this->uri->segment($last);
 									$video_url = $exp[1]; ?>
 									<td>							
 										<div class="embed-responsive embed-responsive-16by9">
-											<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/<?php echo $video_url; ?>" allowfullscreen></iframe>
+											<iframe width="400" heigt="" class="embed-responsive-item" src="https://www.youtube.com/embed/<?php echo $video_url; ?>" allowfullscreen></iframe>
 										</div>						
 									</td>
 								<?php } else { ?>

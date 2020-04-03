@@ -29,7 +29,6 @@
 					</td>
 					<?php } ?>
 				</tr>	
-
   				
   				<tr>
 					<td style="font-weight: bold">
@@ -39,98 +38,81 @@
 				</tr>
   				<tr>
 					<td>
-                    Kas dari penyelenggaraan ibadah haji
+					Penerimaan nilai manfaat
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['kas_pih'];?></td>	
+						<td style="text-align: right;"><?=$row['penerima_nilai_manfaat'];?></td>	
 					<?php } ?>	
 				</tr>
 				<tr>
 					<td>
-                    Kas dari nilai nilai manfaat
+					Penerimaan operasional efisiensi haji 
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['kas_nilai_manfaat'];?></td>		
+						<td style="text-align: right;"><?=$row['penerimaan_operasional_efisiensi'];?></td>		
 					<?php } ?>	
 				</tr>
 				<tr>
 					<td>
-					Realisasi pendapatan tangguhan
+					Penerimaan dana jemaah tidak berangkat 
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['realisasi_pend_tangguhan'];?></td>		
+						<td style="text-align: right;"><?=$row['penerimaan_jamaah_tdk_brkt'];?></td>		
 					<?php } ?>	
 				</tr>
 				<tr>
 					<td>
-					Beban penyelenggaraan ibadah haji
+					Penerimaaan lain-lain
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['beban_pih'];?></td>		
+						<td style="text-align: right;"><?=$row['penerimaan_lain'];?></td>		
 					<?php } ?>	
 				</tr>
 				<tr>
 					<td>
-                    Beban virtual account
+                    Pengeluaran transfer penyelenggaraan ibadah haji dari nilai manfaat
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['beban_va'];?></td>		
+						<td style="text-align: right;"><?=$row['pengeluaran_transfer_pih_dari_manfaat'];?></td>		
 					<?php } ?>	
 				</tr>
 				<tr>
 					<td>
-                    Beban program kemaslahatan
+                    Pengeluaran beban pajak nilai manfaat
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['beban_kemaslahatan'];?></td>		
+						<td style="text-align: right;"><?=$row['pengeluaran_pajak_manfaat'];?></td>		
 					<?php } ?>	
 				</tr>
 				<tr>
 					<td>
-					Belanja pegawai
+					Pengeluaran operasional BPKH
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['belanja_pegawai'];?></td>		
+						<td style="text-align: right;"><?=$row['operasional_bpkh'];?></td>		
 					<?php } ?>	
 				</tr>
 				<tr>
 					<td>
-					Belanja Administrasi dan Umum
+					Pengeluaran kegiatan untuk kemaslahatan umat Islam
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['belanja_admin_umum'];?></td>		
-					<?php } ?>	
-				</tr>
-
-				<tr>
-					<td>
-					Pembayaran utang
-					</td>	
-					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['pembayaran_utang'];?></td>		
-					<?php } ?>	
-				</tr>	
-				<tr>
-					<td>
-					Keuntungan/(kerugian) selisih kurs
-					</td>	
-					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['untung_selisih_kurs'];?></td>		
+						<td style="text-align: right;"><?=$row['pengeluaran_kemaslahatan_umat'];?></td>		
 					<?php } ?>	
 				</tr>
 				<tr>
-					<td style="font-weight: bold">
-                    Kas Bersih yang diperoleh dari Aktivitas Operasi
+					<td>
+					Kas Bersih yang diperoleh dari Aktivitas Operasi
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
 						<td style="text-align: right;"><?=$row['kas_bersih_aktivasi_operasi'];?></td>		
 					<?php } ?>	
-				</tr>
+				</tr>	
 				<tr>
 					<td style="font-weight: bold">
                     Arus Kas dari Aktivitas Investasi
 					</td>						
-				</tr>				
+				</tr>								
 				<tr>
 					<td>
                     Pembelian aset tetap 
@@ -174,23 +156,38 @@
 				<tr>
 					<td style="font-weight: bold">
                     Arus Kas Dari Aktivitas Pendanaan
-					</td>	
-					
+					</td>						
                 </tr>
                 <tr>
 					<td>
-                    Setoran awal dan lunas jemaah waiting list 
+                    Penerimaan setoran jemaah
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['setoran_awal_waitinglist'];?></td>		
+						<td style="text-align: right;"><?=$row['penerimaan_setoran_jamaah'];?></td>		
 					<?php } ?>	
                 </tr>
                 <tr>
 					<td>
-                    Pengeluaran pendapatan yang ditangguhkan 
+                    Pengeluaran transfer penyelenggaraan ibadah haji dari setoran jamaah
 					</td>	
 					<?php foreach($lap_arus_kas as $row ) { ?>
-						<td style="text-align: right;"><?=$row['pengeluaran_pendapatan_ditangguhkan'];?></td>		
+						<td style="text-align: right;"><?=$row['pengeluaran_transfer_pih_dr_jamaah'];?></td>		
+					<?php } ?>	
+                </tr>
+                <tr>
+					<td>
+                    Pengeluaran untuk pengembalian dan pembatalan BPIH
+					</td>	
+					<?php foreach($lap_arus_kas as $row ) { ?>
+						<td style="text-align: right;"><?=$row['pengeluaran_pengembalian_bpih'];?></td>		
+					<?php } ?>	
+                </tr>
+                <tr>
+					<td>
+                    Pengeluaran nilai manfaat yang ditangguhkan
+					</td>	
+					<?php foreach($lap_arus_kas as $row ) { ?>
+						<td style="text-align: right;"><?=$row['pengeluaran_nilai_manfaat_ditangguhkan'];?></td>		
 					<?php } ?>	
                 </tr>
                 <tr>

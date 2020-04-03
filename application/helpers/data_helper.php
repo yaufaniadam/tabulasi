@@ -285,7 +285,7 @@ function menu_non_dau()
     <div class="btn-group" role="group" style="margin-bottom: 20px;">
 
         <a href="<?= base_url('keuanganhaji/porsi_penempatan_bps_bpih/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'porsi_penempatan_bps_bpih') ? "btn-info disabled" : "btn-default"; ?>">Porsi Penempatan di Bank BPS-BPIH</a>
-        <a href="<?= base_url('keuanganhaji/porsi_investasi/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'porsi_investasi') ? "btn-info disabled" : "btn-default"; ?>">Porsi Investasi</a>
+        <a href="<?= base_url('keuanganhaji/sbssn_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'porsi_investasi') ? "btn-info disabled" : "btn-default"; ?>">Porsi Investasi</a>
 
 
     </div>
@@ -293,5 +293,3 @@ function menu_non_dau()
 
 <?php
 }
-
-?>

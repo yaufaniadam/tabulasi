@@ -116,7 +116,7 @@
 
 <script>
     $("#nilai_manfaat").addClass('active');
-    $("#nilai_manfaat .penempatan_di_bpsbpih").addClass('active');
+    $("#nilai_manfaat .produk").addClass('active');
 </script>
 
 

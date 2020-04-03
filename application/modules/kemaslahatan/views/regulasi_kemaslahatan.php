@@ -43,7 +43,7 @@
 						
 						<td><?= $row['date']; ?></td>
 						<td class="text-center">
-							<?php if(!$record_num == 'materi_video_dan_paparan') { ?>
+							<?php if($record_num !== 'materi_video_dan_paparan') { ?>
 							<a style="color:#fff;" title="Download" class="delete btn btn-xs btn-success"
 								href="<?=base_url($row['file']); ?>"> <i class="fa fa-download"></i></a>
 							<?php } ?>

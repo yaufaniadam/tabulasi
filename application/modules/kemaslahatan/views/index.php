@@ -1,5 +1,5 @@
 <section class="content-header">
-  <h1><i class="fa fa-file-pdf"></i> &nbsp; Program Kemaslahatan
+  <h1><i class="fa fa-file-pdf"></i> &nbsp; Laporan Realisasi Program Kemaslahatan
   <a href="<?=base_url('kemaslahatan/tambah_kemaslahatan'); ?>" class="btn btn-warning btn-sm"><i class="fas fa-plus"></i>&nbsp;  Tambah Data</a>
     <a href="<?=base_url('kemaslahatan/export_kemaslahatan/'.$thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp;  Export Data ke Excel</a>
   </h1>

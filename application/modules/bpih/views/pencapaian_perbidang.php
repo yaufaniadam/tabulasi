@@ -3,8 +3,7 @@
 			href="<?= base_url('bpih/tambah_pencapaian_perbidang'); ?>" class="btn btn-warning btn-sm"><i
 				class="fas fa-plus"></i>&nbsp; Tambah Data</a>
 
-		<a href="<?= base_url('bpih/export_pencapaian_perbidang/' . $thn); ?>" class="btn btn-success btn-sm"><i
-				class="fas fa-file-excel"></i>&nbsp; Export Data ke Excel</a>
+	
 
 	</h1>
 </section>
@@ -21,7 +20,7 @@
 
 
 				<tr>
-					<th style="width:80%;">Bulan</th>
+					<th style="width:60%;">Bulan</th>
 					<th class="text-center">Aksi</th>
 				</tr>
 				<?php foreach ($pencapaian_perbidang as $row) { ?>
@@ -29,13 +28,15 @@
 					<td><?=$row['bulan']; ?></td>
 					<td class="text-center">
 
-						<a style="color:#fff;" title="Lihat Detail" class="btn btn-xs btn-success"
+						<a style="color:#fff;" title="Lihat Detail" class="btn btn-xs btn-info"
 							href="<?= base_url($this->router->fetch_class() . '/detail_pencapaian_perbidang/' . $row['bulan'] .'/' .$row['tahun']); ?>">
 							<i class="fa fa-eye"></i></a>
 
 						<a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger"
 							data-href="<?= base_url($this->router->fetch_class() . '/hapus_pencapaian_perbidang/' . $row['bulan'].'/' .$row['tahun']); ?>"
 							data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
+							<a href="<?= base_url('bpih/export_pencapaian_perbidang/'. $row['bulan'] .'/' . $thn); ?>" class="btn btn-success btn-xs"><i
+				class="fas fa-file-excel"></i>&nbsp; Export Data ke Excel</a>
 					</td>
 				</tr>
 				<?php } ?>

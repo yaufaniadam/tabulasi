@@ -317,15 +317,15 @@ class Keuanganhaji extends MY_Controller
 				$data['sheet'] = $sheet;
 				$data['file_excel'] = $upload['file_name'];
 
-				$data['view'] = 'tambah_sebaran_dana_haji';
+				$data['view'] = 'keuanganhaji/tambah_sebaran_dana_haji';
 				$this->load->view('admin/layout', $data);
 			} else {
 				echo "gagal";
-				$data['view'] = 'tambah_sebaran_dana_haji';
+				$data['view'] = 'keuanganhaji/tambah_sebaran_dana_haji';
 				$this->load->view('admin/layout', $data);
 			}
 		} else {
-			$data['view'] = 'tambah_sebaran_dana_haji';
+			$data['view'] = 'keuanganhaji/tambah_sebaran_dana_haji';
 			$this->load->view('admin/layout', $data);
 		}
 	}
@@ -354,6 +354,7 @@ class Keuanganhaji extends MY_Controller
 				$this->db->select('bps_bpih');
 				$this->db->from('sebaran_dana_haji2');
 				$this->db->where('bps_bpih', $data["A"][$i]);
+				$this->db->where('tahun', $data["C"][1]);
 				$bps_bpih_check = $this->db->get()->result();
 
 				if (count($bps_bpih_check) > 0) {
@@ -361,7 +362,7 @@ class Keuanganhaji extends MY_Controller
 					$query = array(
 						$data["B"][1] => $data["B"][$i]
 					);
-
+					$this->db->where('tahun', $data["C"][1]);
 					$this->db->update('sebaran_dana_haji2', $query, "bps_bpih = '" . $data["A"][$i] . "'");
 				} else {
 					$query = array(
@@ -516,7 +517,7 @@ class Keuanganhaji extends MY_Controller
 		redirect('./uploads/excel/' . $fileName);
 	}
 
-	//SDHI RUPIAH
+	//sbssn RUPIAH
 
 	public function sdhi_rupiah($tahun = 0)
 	{
@@ -524,10 +525,16 @@ class Keuanganhaji extends MY_Controller
 		$tahun = ($tahun != '') ? $tahun : date('Y');
 
 		$data['thn'] = $tahun;
-		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sdhi_rupiah(); // untuk menu pilihan tahun
+		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sdhi_rupiah();
 		$data['sdhi_rupiah'] = $this->keuanganhaji_model->get_sdhi_rupiah($tahun);
-
-		$data['view'] = 'keuanganhaji/sdhi_rupiah';
+		$data['view'] = 'sdhi_rupiah';
+		$this->load->view('admin/layout', $data);
+	}
+	public function detail_sdhi_rupiah($bulan=0, $tahun = 0)
+	{
+		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sdhi_rupiah();
+		$data['sdhi_rupiah'] = $this->keuanganhaji_model->get_detail_sdhi_rupiah($bulan, $tahun);
+		$data['view'] = 'detail_sdhi_rupiah';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -536,7 +543,7 @@ class Keuanganhaji extends MY_Controller
 
 		if (isset($_POST['submit'])) {
 
-			$upload_path = './uploads/excel';
+			$upload_path = './uploads/excel/keuanganhaji';
 
 			if (!is_dir($upload_path)) {
 				mkdir($upload_path, 0777, TRUE);
@@ -544,7 +551,7 @@ class Keuanganhaji extends MY_Controller
 			//$newName = "hrd-".date('Ymd-His');
 			$config = array(
 				'upload_path' => $upload_path,
-				'allowed_types' => "doc|docx|xls|xlsx|ppt|pptx|odt|rtf|jpg|png|pdf",
+				'allowed_types' => "xlsx",
 				'overwrite' => FALSE,
 			);
 
@@ -553,14 +560,15 @@ class Keuanganhaji extends MY_Controller
 			$upload = $this->upload->data();
 
 
-			if ($upload) { // Jika proses upload sukses		        
+			if ($upload) { // Jika proses upload sukses			    	
 
 				$excelreader = new PHPExcel_Reader_Excel2007();
-				$loadexcel = $excelreader->load('./uploads/excel/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
+				$loadexcel = $excelreader->load('./uploads/excel/keuanganhaji/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
 				$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 				$data['sheet'] = $sheet;
 				$data['file_excel'] = $upload['file_name'];
+
 
 				$data['view'] = 'tambah_sdhi_rupiah';
 				$this->load->view('admin/layout', $data);
@@ -580,80 +588,51 @@ class Keuanganhaji extends MY_Controller
 	public function import_sdhi_rupiah($file_excel)
 	{
 
+
 		$excelreader = new PHPExcel_Reader_Excel2007();
-		$loadexcel = $excelreader->load('./uploads/excel/' . $file_excel); // Load file yang telah diupload ke folder excel
+		$loadexcel = $excelreader->load('./uploads/excel/keuanganhaji/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 		$data = transposeData($sheet);
 
-		//cek data per tahun sudah ada apa belum
-
-		$this->db->select('*');
-		$this->db->from('sdhi_rupiah');
-		$this->db->where('tahun', $data["D"][1]);
-		$query = $this->db->get()->result();
-
-		if (count($query) > 0) { //jika ditemukan data tahun, maka update isinya		    	
-			$countdata = count($data["A"]);
-
-			for ($i = 2; $i <= $countdata; $i++) {
-
-				//cek apakah Instrumen sudah ada pada tabel
-				$this->db->select('instrumen');
-				$this->db->from('sdhi_rupiah');
-				$this->db->where('instrumen', $data["A"][$i]);
-				$this->db->where('tahun', $data["D"][1]);
-				$instrumen_check = $this->db->get()->result();
-
-				if (count($instrumen_check) > 0) {
-
-					$query = array(
-						$data["C"][1] => $data["C"][$i]
-					);
-					$this->db->where('tahun', $data["D"][1]);
-					$this->db->update('sdhi_rupiah', $query, "instrumen = '" . $data["A"][$i] . "'");
-				} else {
-					$query = array(
-						'instrumen' => $data["A"][$i],
-						'maturity' => $data["B"][$i],
-						$data["C"][1] => $data["C"][$i],
-						'tahun' => $data["D"][1],
-					);
-					$this->db->insert('sdhi_rupiah', $query, "instrumen = '" . $data["A"][$i] . "'");
-				}
-			}
-		} else { // jika tidak ditemukan maka masukkan data bank/instrumen
-
-			$data2 = array();
+		$data2 = array();
 
 			$numrow = 1;
 			foreach ($sheet as $row) {
-				// Cek $numrow apakah lebih dari 1
-				// Artinya karena baris pertama adalah nama-nama kolom
-				// Jadi dilewat saja, tidak usah diimport
 
 				if ($numrow > 1) {
 					// Kita push (add) array data ke variabel data
 					array_push($data2, array(
-						'instrumen' => $row['A'], // Insert data nis dari kolom A di
-						'maturity' => $row["B"],
-						$sheet['1']['C'] => $row['C'],
-						'tahun' => $data["D"][1],
+						'instrumen' => $row['A'], 
+						'maturity' => $row['B'],
+						'counterpart' => $row['C'],
+						'nilai' => $row['D'],
+						'bulan' => $data["E"][1],
+						'tahun' => $data["F"][1],
 					));
 				}
 
 				$numrow++; // Tambah 1 setiap kali looping
 			}
 
-			$this->keuanganhaji_model->insert_sdhi_rupiah($data2);
-		}
+	
+
+		// Panggil fungsi insert_sdhi_rupiah
+		$this->keuanganhaji_model->insert_sdhi_rupiah($data2);
 
 		redirect("keuanganhaji/sdhi_rupiah"); // Redirect ke halaman awal (ke controller siswa fungsi index)
-
 	}
 
-	public function export_sdhi_rupiah($tahun)
+	public function hapus_sdhi_rupiah($bulan = 0, $tahun = 0, $uri = NULL)
 	{
+		$this->db->delete('sdhi_rupiah2', array('bulan' => $bulan, 'tahun' => $tahun));
+		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
+		redirect(base_url('keuanganhaji/sdhi_rupiah/'. $tahun));
+	}
+
+	public function export_sdhi_rupiah($bulan,$tahun)
+	{
+
 		// ambil style untuk table dari library Excel.php
 		$style_header = $this->excel->style('style_header');
 		$style_td = $this->excel->style('style_td');
@@ -661,72 +640,51 @@ class Keuanganhaji extends MY_Controller
 		$style_td_bold = $this->excel->style('style_td_bold');
 
 		// create file name
-		$fileName = 'sdhi_rupiah_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
-		$sebaran = $this->keuanganhaji_model->get_sdhi_rupiah($tahun);
+		$fileName = 'laporan_sdhi_rupiah_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
+
+		$sebaran = $this->keuanganhaji_model->get_detail_sdhi_rupiah($bulan, $tahun);
+		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);
 		$excel = new PHPExcel();
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("SBN-SDHI Rupiah Tahun " . $tahun)
-			->setSubject("SBN-SDHI Rupiah Tahun " . $tahun)
-			->setDescription("SBN-SDHI Rupiah Tahun " . $tahun)
-			->setKeywords("SBN-SDHI Rupiah");
+			->setTitle("Laporan SDHI Rupiah Bulan ". $bulan. " " . $tahun)
+			->setSubject("Laporan SDHI Rupiah Bulan ". $bulan. " " . $tahun)
+			->setDescription("Laporan SDHI Rupiah Bulan ". $bulan. " " . $tahun)
+			->setKeywords("Laporan SDHI Rupiah");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Surat Berharga Negara (SBN) - SDHI Rupiah " . $tahun); // Set kolom A1 dengan tulisan "DATA SISWA"
-		$excel->getActiveSheet()->mergeCells('A1:O1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan SDHI Rupiah Bulan ". $bulan. " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
-		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia"); // Set kolom A1 
-		$excel->getActiveSheet()->mergeCells('A2:O2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
+		$excel->getActiveSheet()->mergeCells('A2:E2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
-		$excel->setActiveSheetIndex(0);
-		// set Header
-		$excel->getActiveSheet()->SetCellValue('A4', 'No.');
+		$excel->getActiveSheet()->SetCellValue('A4', 'No');
 		$excel->getActiveSheet()->SetCellValue('B4', 'Instrumen');
 		$excel->getActiveSheet()->SetCellValue('C4', 'Maturity');
-		$excel->getActiveSheet()->SetCellValue('D4', 'Januari');
-		$excel->getActiveSheet()->SetCellValue('E4', 'Februari');
-		$excel->getActiveSheet()->SetCellValue('F4', 'Maret');
-		$excel->getActiveSheet()->SetCellValue('G4', 'April');
-		$excel->getActiveSheet()->SetCellValue('H4', 'Mei');
-		$excel->getActiveSheet()->SetCellValue('I4', 'Juni');
-		$excel->getActiveSheet()->SetCellValue('J4', 'Juli');
-		$excel->getActiveSheet()->SetCellValue('K4', 'Agustus');
-		$excel->getActiveSheet()->SetCellValue('L4', 'September');
-		$excel->getActiveSheet()->SetCellValue('M4', 'Oktober');
-		$excel->getActiveSheet()->SetCellValue('N4', 'November');
-		$excel->getActiveSheet()->SetCellValue('O4', 'Desember');
-
-		//no 
-		$no = 1;
-		// set Row
+		$excel->getActiveSheet()->SetCellValue('D4', 'Counterpart');
+		$excel->getActiveSheet()->SetCellValue('E4', 'Nominal');
+		
+		$no=1;
 		$rowCount = 5;
 		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
 			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $no);
 			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['instrumen']);
 			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['maturity']);
-			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['januari']);
-			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['februari']);
-			$excel->getActiveSheet()->SetCellValue('F' . $rowCount, $element['maret']);
-			$excel->getActiveSheet()->SetCellValue('G' . $rowCount, $element['april']);
-			$excel->getActiveSheet()->SetCellValue('H' . $rowCount, $element['mei']);
-			$excel->getActiveSheet()->SetCellValue('I' . $rowCount, $element['juni']);
-			$excel->getActiveSheet()->SetCellValue('J' . $rowCount, $element['juli']);
-			$excel->getActiveSheet()->SetCellValue('K' . $rowCount, $element['agustus']);
-			$excel->getActiveSheet()->SetCellValue('L' . $rowCount, $element['september']);
-			$excel->getActiveSheet()->SetCellValue('M' . $rowCount, $element['oktober']);
-			$excel->getActiveSheet()->SetCellValue('N' . $rowCount, $element['november']);
-			$excel->getActiveSheet()->SetCellValue('O' . $rowCount, $element['desember']);
+			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['counterpart']);
+			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['nilai']);
+		
 
 			//stile column No
 			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
@@ -742,8 +700,6 @@ class Keuanganhaji extends MY_Controller
 			$rowCount++;
 			$no++;
 		}
-
-
 		//header style
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
@@ -757,9 +713,22 @@ class Keuanganhaji extends MY_Controller
 			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
 		}
 
-		// Set judul file excel nya
-		$excel->getActiveSheet(0)->setTitle("SBN-SDHI Rupiah" . $tahun);
-		$excel->setActiveSheetIndex(0);
+		$excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A8')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A9')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A13')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A14')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A15')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A18')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A19')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A22')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A23')->getFont()->setBold(TRUE);
+
+		//auto column width
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
+		}
+
 
 		$objWriter = new PHPExcel_Writer_Excel2007($excel);
 		$objWriter->save('./uploads/excel/' . $fileName);
@@ -767,7 +736,6 @@ class Keuanganhaji extends MY_Controller
 		header("Content-Type: application/vnd.ms-excel");
 		redirect('./uploads/excel/' . $fileName);
 	}
-
 
 	//sbssn RUPIAH
 
@@ -777,10 +745,16 @@ class Keuanganhaji extends MY_Controller
 		$tahun = ($tahun != '') ? $tahun : date('Y');
 
 		$data['thn'] = $tahun;
-		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sbssn_rupiah(); // untuk menu pilihan tahun
+		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sbssn_rupiah();
 		$data['sbssn_rupiah'] = $this->keuanganhaji_model->get_sbssn_rupiah($tahun);
-
-		$data['view'] = 'keuanganhaji/sbssn_rupiah';
+		$data['view'] = 'sbssn_rupiah';
+		$this->load->view('admin/layout', $data);
+	}
+	public function detail_sbssn_rupiah($bulan=0, $tahun = 0)
+	{
+		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sbssn_rupiah();
+		$data['sbssn_rupiah'] = $this->keuanganhaji_model->get_detail_sbssn_rupiah($bulan, $tahun);
+		$data['view'] = 'detail_sbssn_rupiah';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -789,7 +763,7 @@ class Keuanganhaji extends MY_Controller
 
 		if (isset($_POST['submit'])) {
 
-			$upload_path = './uploads/excel';
+			$upload_path = './uploads/excel/keuanganhaji';
 
 			if (!is_dir($upload_path)) {
 				mkdir($upload_path, 0777, TRUE);
@@ -797,7 +771,7 @@ class Keuanganhaji extends MY_Controller
 			//$newName = "hrd-".date('Ymd-His');
 			$config = array(
 				'upload_path' => $upload_path,
-				'allowed_types' => "doc|docx|xls|xlsx|ppt|pptx|odt|rtf|jpg|png|pdf",
+				'allowed_types' => "xlsx",
 				'overwrite' => FALSE,
 			);
 
@@ -806,13 +780,15 @@ class Keuanganhaji extends MY_Controller
 			$upload = $this->upload->data();
 
 
-			if ($upload) { // Jika proses upload sukses
+			if ($upload) { // Jika proses upload sukses			    	
+
 				$excelreader = new PHPExcel_Reader_Excel2007();
-				$loadexcel = $excelreader->load('./uploads/excel/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
+				$loadexcel = $excelreader->load('./uploads/excel/keuanganhaji/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
 				$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 				$data['sheet'] = $sheet;
 				$data['file_excel'] = $upload['file_name'];
+
 
 				$data['view'] = 'tambah_sbssn_rupiah';
 				$this->load->view('admin/layout', $data);
@@ -833,90 +809,48 @@ class Keuanganhaji extends MY_Controller
 	{
 
 
-
 		$excelreader = new PHPExcel_Reader_Excel2007();
-		$loadexcel = $excelreader->load('./uploads/excel/' . $file_excel); // Load file yang telah diupload ke folder excel
+		$loadexcel = $excelreader->load('./uploads/excel/keuanganhaji/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 		$data = transposeData($sheet);
 
-		//cek data per tahun sudah ada apa belum
-
-		$this->db->select('*');
-		$this->db->from('sbssn_rupiah');
-		$this->db->where('tahun', $data["E"][1]);
-		$query = $this->db->get()->result();
-
-		if (count($query) > 0) { //jika ditemukan data tahun, maka update isinya	
-
-
-
-			$countdata = count($data["A"]);
-
-			for ($i = 2; $i <= $countdata; $i++) {
-
-				$this->db->select('instrumen');
-				$this->db->from('sbssn_rupiah');
-				$this->db->where('instrumen', $data["A"][$i]);
-				$this->db->where('tahun', $data["E"][1]);
-				$instrumen_check = $this->db->get()->result();
-
-				if (count($instrumen_check) > 0) {
-
-					$query = array(
-						$data["D"][1] => $data["D"][$i]
-					);
-
-
-					$this->db->where('tahun', $data["E"][1]);
-					$this->db->update('sbssn_rupiah', $query, "instrumen = '" . $data["A"][$i] . "'");
-				} else {
-
-					$query = array(
-						'instrumen' => $data["A"][$i],
-						'maturity' => $data["B"][$i],
-						'counterpart' => $data["C"][$i],
-						$data["D"][1] => $data["D"][$i],
-						'tahun' => $data["E"][1],
-					);
-
-					$this->db->insert('sbssn_rupiah', $query, "instrumen = '" . $data["A"][$i] . "'");
-				}
-			}
-		} else { // jika tidak ditemukan maka masukkan data bank/instrumen				
-
-			$data2 = array();
+		$data2 = array();
 
 			$numrow = 1;
 			foreach ($sheet as $row) {
-				// Cek $numrow apakah lebih dari 1
-				// Artinya karena baris pertama adalah nama-nama kolom
-				// Jadi dilewat saja, tidak usah diimport
 
 				if ($numrow > 1) {
 					// Kita push (add) array data ke variabel data
 					array_push($data2, array(
-						'instrumen' => $row['A'], // Insert data nis dari kolom A di
-						'maturity' => $row["B"],
+						'instrumen' => $row['A'], 
+						'maturity' => $row['B'],
 						'counterpart' => $row['C'],
-						$sheet['1']['D'] => $row['D'],
-						'tahun' => $data["E"][1],
+						'nilai' => $row['D'],
+						'bulan' => $data["E"][1],
+						'tahun' => $data["F"][1],
 					));
 				}
 
 				$numrow++; // Tambah 1 setiap kali looping
 			}
 
+	
 
-			$this->keuanganhaji_model->insert_sbssn_rupiah($data2);
-		}
-
+		// Panggil fungsi insert_sbssn_rupiah
+		$this->keuanganhaji_model->insert_sbssn_rupiah($data2);
 
 		redirect("keuanganhaji/sbssn_rupiah"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
+	public function hapus_sbssn_rupiah($bulan = 0, $tahun = 0, $uri = NULL)
+	{
+		$this->db->delete('sbssn_rupiah2', array('bulan' => $bulan, 'tahun' => $tahun));
+		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
+		redirect(base_url('keuanganhaji/sbssn_rupiah/'. $tahun));
+	}
 
-	public function export_sbssn_rupiah($tahun)
+	public function export_sbssn_rupiah($bulan,$tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -927,82 +861,52 @@ class Keuanganhaji extends MY_Controller
 
 		// create file name
 
-		$fileName = 'sbssn_rupiah_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
+		$fileName = 'laporan_sbssn_rupiah_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
-		$sebaran = $this->keuanganhaji_model->get_sbssn_rupiah($tahun);
-
-
+		$sebaran = $this->keuanganhaji_model->get_detail_sbssn_rupiah($bulan, $tahun);
+		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);
 		$excel = new PHPExcel();
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("SBN-SBSSN Rupiah Tahun " . $tahun)
-			->setSubject("SBN-SBSSN Rupiah Tahun " . $tahun)
-			->setDescription("SBN-SBSSN Rupiah Tahun " . $tahun)
-			->setKeywords("SBN-SBSSN Rupiah");
-
-
+			->setTitle("Laporan SBSSN Rupiah Bulan ". $bulan. " " . $tahun)
+			->setSubject("Laporan SBSSN Rupiah Bulan ". $bulan. " " . $tahun)
+			->setDescription("Laporan SBSSN Rupiah Bulan ". $bulan. " " . $tahun)
+			->setKeywords("Laporan SBSSN Rupiah");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Surat Berharga Negara (SBN) - SBSSN Rupiah " . $tahun); // Set kolom A1 
-		$excel->getActiveSheet()->mergeCells('A1:P1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan SBSSN Rupiah Bulan ". $bulan. " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
-		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia"); // Set kolom A1 
-		$excel->getActiveSheet()->mergeCells('A2:P2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
+		$excel->getActiveSheet()->mergeCells('A2:E2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A2
+		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
-
-		$excel->setActiveSheetIndex(0);
-		// set Header
-		$excel->getActiveSheet()->SetCellValue('A4', 'No.');
+		$excel->getActiveSheet()->SetCellValue('A4', 'No');
 		$excel->getActiveSheet()->SetCellValue('B4', 'Instrumen');
 		$excel->getActiveSheet()->SetCellValue('C4', 'Maturity');
 		$excel->getActiveSheet()->SetCellValue('D4', 'Counterpart');
-		$excel->getActiveSheet()->SetCellValue('E4', 'Januari');
-		$excel->getActiveSheet()->SetCellValue('F4', 'Februari');
-		$excel->getActiveSheet()->SetCellValue('G4', 'Maret');
-		$excel->getActiveSheet()->SetCellValue('H4', 'April');
-		$excel->getActiveSheet()->SetCellValue('I4', 'Mei');
-		$excel->getActiveSheet()->SetCellValue('J4', 'Juni');
-		$excel->getActiveSheet()->SetCellValue('K4', 'Juli');
-		$excel->getActiveSheet()->SetCellValue('L4', 'Agustus');
-		$excel->getActiveSheet()->SetCellValue('M4', 'September');
-		$excel->getActiveSheet()->SetCellValue('N4', 'Oktober');
-		$excel->getActiveSheet()->SetCellValue('O4', 'November');
-		$excel->getActiveSheet()->SetCellValue('P4', 'Desember');
-
-		//no 
-		$no = 1;
-		// set Row
+		$excel->getActiveSheet()->SetCellValue('E4', 'Nominal');
+		
+		$no=1;
 		$rowCount = 5;
 		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
-
 			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $no);
 			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['instrumen']);
 			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['maturity']);
 			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['counterpart']);
-			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['januari']);
-			$excel->getActiveSheet()->SetCellValue('F' . $rowCount, $element['februari']);
-			$excel->getActiveSheet()->SetCellValue('G' . $rowCount, $element['maret']);
-			$excel->getActiveSheet()->SetCellValue('H' . $rowCount, $element['april']);
-			$excel->getActiveSheet()->SetCellValue('I' . $rowCount, $element['mei']);
-			$excel->getActiveSheet()->SetCellValue('J' . $rowCount, $element['juni']);
-			$excel->getActiveSheet()->SetCellValue('K' . $rowCount, $element['juli']);
-			$excel->getActiveSheet()->SetCellValue('L' . $rowCount, $element['agustus']);
-			$excel->getActiveSheet()->SetCellValue('M' . $rowCount, $element['september']);
-			$excel->getActiveSheet()->SetCellValue('N' . $rowCount, $element['oktober']);
-			$excel->getActiveSheet()->SetCellValue('O' . $rowCount, $element['november']);
-			$excel->getActiveSheet()->SetCellValue('P' . $rowCount, $element['desember']);
+			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['nilai']);
+		
 
-			//style column No
+			//stile column No
 			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
 
 			//header style lainnya
@@ -1016,8 +920,6 @@ class Keuanganhaji extends MY_Controller
 			$rowCount++;
 			$no++;
 		}
-
-
 		//header style
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
@@ -1031,9 +933,22 @@ class Keuanganhaji extends MY_Controller
 			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
 		}
 
-		// Set judul file excel nya
-		$excel->getActiveSheet(0)->setTitle("SBN-SBSSN Rupiah" . $tahun);
-		$excel->setActiveSheetIndex(0);
+		$excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A8')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A9')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A13')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A14')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A15')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A18')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A19')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A22')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A23')->getFont()->setBold(TRUE);
+
+		//auto column width
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
+		}
+
 
 		$objWriter = new PHPExcel_Writer_Excel2007($excel);
 		$objWriter->save('./uploads/excel/' . $fileName);
@@ -1041,7 +956,6 @@ class Keuanganhaji extends MY_Controller
 		header("Content-Type: application/vnd.ms-excel");
 		redirect('./uploads/excel/' . $fileName);
 	}
-
 
 	//sbssn USD
 
@@ -1051,10 +965,16 @@ class Keuanganhaji extends MY_Controller
 		$tahun = ($tahun != '') ? $tahun : date('Y');
 
 		$data['thn'] = $tahun;
-		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sbssn_usd(); // untuk menu pilihan tahun
+		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sbssn_usd();
 		$data['sbssn_usd'] = $this->keuanganhaji_model->get_sbssn_usd($tahun);
-
-		$data['view'] = 'keuanganhaji/sbssn_usd';
+		$data['view'] = 'sbssn_usd';
+		$this->load->view('admin/layout', $data);
+	}
+	public function detail_sbssn_usd($bulan=0, $tahun = 0)
+	{
+		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sbssn_usd();
+		$data['sbssn_usd'] = $this->keuanganhaji_model->get_detail_sbssn_usd($bulan, $tahun);
+		$data['view'] = 'detail_sbssn_usd';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -1063,7 +983,7 @@ class Keuanganhaji extends MY_Controller
 
 		if (isset($_POST['submit'])) {
 
-			$upload_path = './uploads/excel';
+			$upload_path = './uploads/excel/keuanganhaji';
 
 			if (!is_dir($upload_path)) {
 				mkdir($upload_path, 0777, TRUE);
@@ -1071,7 +991,7 @@ class Keuanganhaji extends MY_Controller
 			//$newName = "hrd-".date('Ymd-His');
 			$config = array(
 				'upload_path' => $upload_path,
-				'allowed_types' => "doc|docx|xls|xlsx|ppt|pptx|odt|rtf|jpg|png|pdf",
+				'allowed_types' => "xlsx",
 				'overwrite' => FALSE,
 			);
 
@@ -1080,17 +1000,15 @@ class Keuanganhaji extends MY_Controller
 			$upload = $this->upload->data();
 
 
-			if ($upload) { // Jika proses upload sukses
-
-
-
+			if ($upload) { // Jika proses upload sukses			    	
 
 				$excelreader = new PHPExcel_Reader_Excel2007();
-				$loadexcel = $excelreader->load('./uploads/excel/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
+				$loadexcel = $excelreader->load('./uploads/excel/keuanganhaji/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
 				$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 				$data['sheet'] = $sheet;
 				$data['file_excel'] = $upload['file_name'];
+
 
 				$data['view'] = 'tambah_sbssn_usd';
 				$this->load->view('admin/layout', $data);
@@ -1111,86 +1029,48 @@ class Keuanganhaji extends MY_Controller
 	{
 
 
-
 		$excelreader = new PHPExcel_Reader_Excel2007();
-		$loadexcel = $excelreader->load('./uploads/excel/' . $file_excel); // Load file yang telah diupload ke folder excel
+		$loadexcel = $excelreader->load('./uploads/excel/keuanganhaji/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 		$data = transposeData($sheet);
 
-		//cek data per tahun sudah ada apa belum
-
-		$this->db->select('*');
-		$this->db->from('sbssn_usd');
-		$this->db->where('tahun', $data["E"][1]);
-		$query = $this->db->get()->result();
-
-		if (count($query) > 0) { //jika ditemukan data tahun, maka update isinya		    	
-
-			$countdata = count($data["A"]);
-
-			for ($i = 2; $i <= $countdata; $i++) {
-
-				//cek apakah BPS_BPIH sudah ada pada tabel
-				$this->db->select('instrumen');
-				$this->db->from('sbssn_usd');
-				$this->db->where('instrumen', $data["A"][$i]);
-				$this->db->where('tahun', $data["E"][1]);
-				$instrumen_check = $this->db->get()->result();
-
-				if (count($instrumen_check) > 0) {
-
-					$query = array(
-						$data["D"][1] => $data["D"][$i]
-					);
-					$this->db->where('tahun', $data["E"][1]);
-					$this->db->update('sbssn_usd', $query, "instrumen = '" . $data["A"][$i] . "'");
-				} else {
-					$query = array(
-						'instrumen' => $data["A"][$i],
-						'maturity' => $data["B"][$i],
-						'counterpart' => $data["C"][$i],
-						$data["D"][1] => $data["D"][$i],
-						'tahun' => $data["E"][1],
-					);
-					$this->db->insert('sbssn_usd', $query, "instrumen = '" . $data["A"][$i] . "'");
-				}
-			}
-		} else { // jika tidak ditemukan maka masukkan data bank/instrumen
-
-			$data2 = array();
+		$data2 = array();
 
 			$numrow = 1;
-			$bulan = $sheet['1']['B'];
 			foreach ($sheet as $row) {
-				// Cek $numrow apakah lebih dari 1
-				// Artinya karena baris pertama adalah nama-nama kolom
-				// Jadi dilewat saja, tidak usah diimport
 
 				if ($numrow > 1) {
 					// Kita push (add) array data ke variabel data
 					array_push($data2, array(
-						'instrumen' => $row['A'], // Insert data nis dari kolom A di
-						'maturity' => $row["B"],
+						'instrumen' => $row['A'], 
+						'maturity' => $row['B'],
 						'counterpart' => $row['C'],
-						$sheet['1']['D'] => $row['D'],
-						'tahun' => $data["E"][1],
+						'nilai' => $row['D'],
+						'bulan' => $data["E"][1],
+						'tahun' => $data["F"][1],
 					));
 				}
 
 				$numrow++; // Tambah 1 setiap kali looping
 			}
 
-			/* echo "<pre>";
-			    print_r($data2);
-			    echo "</pre>"; */
-			$this->keuanganhaji_model->insert_sbssn_usd($data2);
-		}
+	
+
+		// Panggil fungsi insert_sbssn_usd
+		$this->keuanganhaji_model->insert_sbssn_usd($data2);
 
 		redirect("keuanganhaji/sbssn_usd"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
-	public function export_sbssn_usd($tahun)
+	public function hapus_sbssn_usd($bulan = 0, $tahun = 0, $uri = NULL)
+	{
+		$this->db->delete('sbssn_usd2', array('bulan' => $bulan, 'tahun' => $tahun));
+		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
+		redirect(base_url('keuanganhaji/sbssn_usd/'. $tahun));
+	}
+
+	public function export_sbssn_usd($bulan,$tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -1201,82 +1081,52 @@ class Keuanganhaji extends MY_Controller
 
 		// create file name
 
-		$fileName = 'sbssn_usd_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
+		$fileName = 'laporan_sbssn_usd_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
-		$sebaran = $this->keuanganhaji_model->get_sbssn_usd($tahun);
-
-
+		$sebaran = $this->keuanganhaji_model->get_detail_sbssn_usd($bulan, $tahun);
+		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);
 		$excel = new PHPExcel();
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("SBN-SBSSN USD Tahun " . $tahun)
-			->setSubject("SBN-SBSSN USD Tahun " . $tahun)
-			->setDescription("SBN-SBSSN USD Tahun " . $tahun)
-			->setKeywords("SBN-SBSSN USD");
-
-
+			->setTitle("Laporan SBSSN USD Bulan ". $bulan. " " . $tahun)
+			->setSubject("Laporan SBSSN USD Bulan ". $bulan. " " . $tahun)
+			->setDescription("Laporan SBSSN USD Bulan ". $bulan. " " . $tahun)
+			->setKeywords("Laporan SBSSN USD");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Surat Berharga Negara (SBN) - SBSSN USD " . $tahun); // Set kolom A1 
-		$excel->getActiveSheet()->mergeCells('A1:P1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan SBSSN USD Bulan ". $bulan. " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
-		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia"); // Set kolom A1 
-		$excel->getActiveSheet()->mergeCells('A2:P2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
+		$excel->getActiveSheet()->mergeCells('A2:E2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A2
+		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
-
-		$excel->setActiveSheetIndex(0);
-		// set Header
-		$excel->getActiveSheet()->SetCellValue('A4', 'No.');
+		$excel->getActiveSheet()->SetCellValue('A4', 'No');
 		$excel->getActiveSheet()->SetCellValue('B4', 'Instrumen');
 		$excel->getActiveSheet()->SetCellValue('C4', 'Maturity');
 		$excel->getActiveSheet()->SetCellValue('D4', 'Counterpart');
-		$excel->getActiveSheet()->SetCellValue('E4', 'Januari');
-		$excel->getActiveSheet()->SetCellValue('F4', 'Februari');
-		$excel->getActiveSheet()->SetCellValue('G4', 'Maret');
-		$excel->getActiveSheet()->SetCellValue('H4', 'April');
-		$excel->getActiveSheet()->SetCellValue('I4', 'Mei');
-		$excel->getActiveSheet()->SetCellValue('J4', 'Juni');
-		$excel->getActiveSheet()->SetCellValue('K4', 'Juli');
-		$excel->getActiveSheet()->SetCellValue('L4', 'Agustus');
-		$excel->getActiveSheet()->SetCellValue('M4', 'September');
-		$excel->getActiveSheet()->SetCellValue('N4', 'Oktober');
-		$excel->getActiveSheet()->SetCellValue('O4', 'November');
-		$excel->getActiveSheet()->SetCellValue('P4', 'Desember');
-
-		//no 
-		$no = 1;
-		// set Row
+		$excel->getActiveSheet()->SetCellValue('E4', 'Nominal');
+		
+		$no=1;
 		$rowCount = 5;
 		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
-
 			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $no);
 			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['instrumen']);
 			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['maturity']);
 			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['counterpart']);
-			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['januari']);
-			$excel->getActiveSheet()->SetCellValue('F' . $rowCount, $element['februari']);
-			$excel->getActiveSheet()->SetCellValue('G' . $rowCount, $element['maret']);
-			$excel->getActiveSheet()->SetCellValue('H' . $rowCount, $element['april']);
-			$excel->getActiveSheet()->SetCellValue('I' . $rowCount, $element['mei']);
-			$excel->getActiveSheet()->SetCellValue('J' . $rowCount, $element['juni']);
-			$excel->getActiveSheet()->SetCellValue('K' . $rowCount, $element['juli']);
-			$excel->getActiveSheet()->SetCellValue('L' . $rowCount, $element['agustus']);
-			$excel->getActiveSheet()->SetCellValue('M' . $rowCount, $element['september']);
-			$excel->getActiveSheet()->SetCellValue('N' . $rowCount, $element['oktober']);
-			$excel->getActiveSheet()->SetCellValue('O' . $rowCount, $element['november']);
-			$excel->getActiveSheet()->SetCellValue('P' . $rowCount, $element['desember']);
+			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['nilai']);
+		
 
-			//style column No
+			//stile column No
 			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
 
 			//header style lainnya
@@ -1290,8 +1140,6 @@ class Keuanganhaji extends MY_Controller
 			$rowCount++;
 			$no++;
 		}
-
-
 		//header style
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
@@ -1305,9 +1153,22 @@ class Keuanganhaji extends MY_Controller
 			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
 		}
 
-		// Set judul file excel nya
-		$excel->getActiveSheet(0)->setTitle("SBN-SBSSN USD" . $tahun);
-		$excel->setActiveSheetIndex(0);
+		$excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A8')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A9')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A13')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A14')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A15')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A18')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A19')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A22')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A23')->getFont()->setBold(TRUE);
+
+		//auto column width
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
+		}
+
 
 		$objWriter = new PHPExcel_Writer_Excel2007($excel);
 		$objWriter->save('./uploads/excel/' . $fileName);
@@ -1318,16 +1179,24 @@ class Keuanganhaji extends MY_Controller
 
 	//sukuk korporasi
 
+	//sbssn RUPIAH
+
 	public function sukuk_korporasi($tahun = 0)
 	{
 
 		$tahun = ($tahun != '') ? $tahun : date('Y');
 
 		$data['thn'] = $tahun;
-		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sukuk_korporasi(); // untuk menu pilihan tahun
+		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sukuk_korporasi();
 		$data['sukuk_korporasi'] = $this->keuanganhaji_model->get_sukuk_korporasi($tahun);
-
-		$data['view'] = 'keuanganhaji/sukuk_korporasi';
+		$data['view'] = 'sukuk_korporasi';
+		$this->load->view('admin/layout', $data);
+	}
+	public function detail_sukuk_korporasi($bulan=0, $tahun = 0)
+	{
+		$data['tahun'] = $this->keuanganhaji_model->get_tahun_sukuk_korporasi();
+		$data['sukuk_korporasi'] = $this->keuanganhaji_model->get_detail_sukuk_korporasi($bulan, $tahun);
+		$data['view'] = 'detail_sukuk_korporasi';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -1336,7 +1205,7 @@ class Keuanganhaji extends MY_Controller
 
 		if (isset($_POST['submit'])) {
 
-			$upload_path = './uploads/excel';
+			$upload_path = './uploads/excel/keuanganhaji';
 
 			if (!is_dir($upload_path)) {
 				mkdir($upload_path, 0777, TRUE);
@@ -1344,7 +1213,7 @@ class Keuanganhaji extends MY_Controller
 			//$newName = "hrd-".date('Ymd-His');
 			$config = array(
 				'upload_path' => $upload_path,
-				'allowed_types' => "doc|docx|xls|xlsx|ppt|pptx|odt|rtf|jpg|png|pdf",
+				'allowed_types' => "xlsx",
 				'overwrite' => FALSE,
 			);
 
@@ -1353,17 +1222,15 @@ class Keuanganhaji extends MY_Controller
 			$upload = $this->upload->data();
 
 
-			if ($upload) { // Jika proses upload sukses
-
-
-
+			if ($upload) { // Jika proses upload sukses			    	
 
 				$excelreader = new PHPExcel_Reader_Excel2007();
-				$loadexcel = $excelreader->load('./uploads/excel/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
+				$loadexcel = $excelreader->load('./uploads/excel/keuanganhaji/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
 				$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 				$data['sheet'] = $sheet;
 				$data['file_excel'] = $upload['file_name'];
+
 
 				$data['view'] = 'tambah_sukuk_korporasi';
 				$this->load->view('admin/layout', $data);
@@ -1384,83 +1251,48 @@ class Keuanganhaji extends MY_Controller
 	{
 
 
-
 		$excelreader = new PHPExcel_Reader_Excel2007();
-		$loadexcel = $excelreader->load('./uploads/excel/' . $file_excel); // Load file yang telah diupload ke folder excel
+		$loadexcel = $excelreader->load('./uploads/excel/keuanganhaji/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 		$data = transposeData($sheet);
 
-		//cek data per tahun sudah ada apa belum
-
-		$this->db->select('*');
-		$this->db->from('sukuk_korporasi');
-		$this->db->where('tahun', $data["E"][1]);
-		$query = $this->db->get()->result();
-
-		if (count($query) > 0) { //jika ditemukan data tahun, maka update isinya		    	
-
-			$countdata = count($data["A"]);
-
-			for ($i = 2; $i <= $countdata; $i++) {
-
-				//cek apakah BPS_BPIH sudah ada pada tabel
-				$this->db->select('instrumen');
-				$this->db->from('sukuk_korporasi');
-				$this->db->where('instrumen', $data["A"][$i]);
-				$this->db->where('tahun', $data["E"][1]);
-				$instrumen_check = $this->db->get()->result();
-
-				if (count($instrumen_check) > 0) {
-
-					$query = array(
-						$data["D"][1] => $data["D"][$i]
-					);
-
-					$this->db->update('sukuk_korporasi', $query, "instrumen = '" . $data["A"][$i] . "'");
-				} else {
-					$query = array(
-						'instrumen' => $data["A"][$i],
-						'maturity' => $data["B"][$i],
-						'counterpart' => $data["C"][$i],
-						$data["D"][1] => $data["D"][$i],
-						'tahun' => $data["E"][1],
-					);
-					$this->db->insert('sukuk_korporasi', $query, "instrumen = '" . $data["A"][$i] . "'");
-				}
-			}
-		} else { // jika tidak ditemukan maka masukkan data bank/instrumen
-
-			$data2 = array();
+		$data2 = array();
 
 			$numrow = 1;
-			$bulan = $sheet['1']['B'];
 			foreach ($sheet as $row) {
-				// Cek $numrow apakah lebih dari 1
-				// Artinya karena baris pertama adalah nama-nama kolom
-				// Jadi dilewat saja, tidak usah diimport
 
 				if ($numrow > 1) {
 					// Kita push (add) array data ke variabel data
 					array_push($data2, array(
-						'instrumen' => $row['A'], // Insert data nis dari kolom A di
-						'maturity' => $row["B"],
+						'instrumen' => $row['A'], 
+						'maturity' => $row['B'],
 						'counterpart' => $row['C'],
-						$sheet['1']['D'] => $row['D'],
-						'tahun' => $data["E"][1],
+						'nilai' => $row['D'],
+						'bulan' => $data["E"][1],
+						'tahun' => $data["F"][1],
 					));
 				}
 
 				$numrow++; // Tambah 1 setiap kali looping
 			}
 
-			$this->keuanganhaji_model->insert_sukuk_korporasi($data2);
-		}
+	
+
+		// Panggil fungsi insert_sukuk_korporasi
+		$this->keuanganhaji_model->insert_sukuk_korporasi($data2);
 
 		redirect("keuanganhaji/sukuk_korporasi"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
-	public function export_sukuk_korporasi($tahun)
+	public function hapus_sukuk_korporasi($bulan = 0, $tahun = 0, $uri = NULL)
+	{
+		$this->db->delete('sukuk_korporasi2', array('bulan' => $bulan, 'tahun' => $tahun));
+		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
+		redirect(base_url('keuanganhaji/sukuk_korporasi/'. $tahun));
+	}
+
+	public function export_sukuk_korporasi($bulan,$tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -1471,82 +1303,52 @@ class Keuanganhaji extends MY_Controller
 
 		// create file name
 
-		$fileName = 'sukuk_korporasi_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
+		$fileName = 'laporan_sukuk_korporasi_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
-		$sebaran = $this->keuanganhaji_model->get_sukuk_korporasi($tahun);
-
-
+		$sebaran = $this->keuanganhaji_model->get_detail_sukuk_korporasi($bulan, $tahun);
+		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);
 		$excel = new PHPExcel();
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Sukuk Korporasi Tahun " . $tahun)
-			->setSubject("Sukuk Korporasi Tahun " . $tahun)
-			->setDescription("Sukuk Korporasi Tahun " . $tahun)
-			->setKeywords("Sukuk Korporasi");
-
-
+			->setTitle("Laporan Sukuk Korporasi Bulan ". $bulan. " " . $tahun)
+			->setSubject("Laporan Sukuk Korporasi Bulan ". $bulan. " " . $tahun)
+			->setDescription("Laporan Sukuk Korporasi Bulan ". $bulan. " " . $tahun)
+			->setKeywords("Laporan Sukuk Korporasi");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Sukuk Korporasi " . $tahun); // Set kolom A1 
-		$excel->getActiveSheet()->mergeCells('A1:P1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Sukuk Korporasi Bulan ". $bulan. " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
-		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia"); // Set kolom A1 
-		$excel->getActiveSheet()->mergeCells('A2:P2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
+		$excel->getActiveSheet()->mergeCells('A2:E2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A2
+		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
-
-		$excel->setActiveSheetIndex(0);
-		// set Header
-		$excel->getActiveSheet()->SetCellValue('A4', 'No.');
+		$excel->getActiveSheet()->SetCellValue('A4', 'No');
 		$excel->getActiveSheet()->SetCellValue('B4', 'Instrumen');
 		$excel->getActiveSheet()->SetCellValue('C4', 'Maturity');
 		$excel->getActiveSheet()->SetCellValue('D4', 'Counterpart');
-		$excel->getActiveSheet()->SetCellValue('E4', 'Januari');
-		$excel->getActiveSheet()->SetCellValue('F4', 'Februari');
-		$excel->getActiveSheet()->SetCellValue('G4', 'Maret');
-		$excel->getActiveSheet()->SetCellValue('H4', 'April');
-		$excel->getActiveSheet()->SetCellValue('I4', 'Mei');
-		$excel->getActiveSheet()->SetCellValue('J4', 'Juni');
-		$excel->getActiveSheet()->SetCellValue('K4', 'Juli');
-		$excel->getActiveSheet()->SetCellValue('L4', 'Agustus');
-		$excel->getActiveSheet()->SetCellValue('M4', 'September');
-		$excel->getActiveSheet()->SetCellValue('N4', 'Oktober');
-		$excel->getActiveSheet()->SetCellValue('O4', 'November');
-		$excel->getActiveSheet()->SetCellValue('P4', 'Desember');
-
-		//no 
-		$no = 1;
-		// set Row
+		$excel->getActiveSheet()->SetCellValue('E4', 'Nominal');
+		
+		$no=1;
 		$rowCount = 5;
 		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
-
 			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $no);
 			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['instrumen']);
 			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['maturity']);
 			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['counterpart']);
-			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['januari']);
-			$excel->getActiveSheet()->SetCellValue('F' . $rowCount, $element['februari']);
-			$excel->getActiveSheet()->SetCellValue('G' . $rowCount, $element['maret']);
-			$excel->getActiveSheet()->SetCellValue('H' . $rowCount, $element['april']);
-			$excel->getActiveSheet()->SetCellValue('I' . $rowCount, $element['mei']);
-			$excel->getActiveSheet()->SetCellValue('J' . $rowCount, $element['juni']);
-			$excel->getActiveSheet()->SetCellValue('K' . $rowCount, $element['juli']);
-			$excel->getActiveSheet()->SetCellValue('L' . $rowCount, $element['agustus']);
-			$excel->getActiveSheet()->SetCellValue('M' . $rowCount, $element['september']);
-			$excel->getActiveSheet()->SetCellValue('N' . $rowCount, $element['oktober']);
-			$excel->getActiveSheet()->SetCellValue('O' . $rowCount, $element['november']);
-			$excel->getActiveSheet()->SetCellValue('P' . $rowCount, $element['desember']);
+			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['nilai']);
+		
 
-			//style column No
+			//stile column No
 			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
 
 			//header style lainnya
@@ -1560,8 +1362,6 @@ class Keuanganhaji extends MY_Controller
 			$rowCount++;
 			$no++;
 		}
-
-
 		//header style
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
@@ -1575,9 +1375,22 @@ class Keuanganhaji extends MY_Controller
 			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
 		}
 
-		// Set judul file excel nya
-		$excel->getActiveSheet(0)->setTitle("Sukuk Korporasi" . $tahun);
-		$excel->setActiveSheetIndex(0);
+		$excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A8')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A9')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A13')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A14')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A15')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A18')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A19')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A22')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A23')->getFont()->setBold(TRUE);
+
+		//auto column width
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
+		}
+
 
 		$objWriter = new PHPExcel_Writer_Excel2007($excel);
 		$objWriter->save('./uploads/excel/' . $fileName);
@@ -3478,15 +3291,15 @@ class Keuanganhaji extends MY_Controller
 		redirect('./uploads/excel/' . $fileName);
 	}
 
-	public function porsi_investasi($tahun=0)
+	public function porsi_investasi($tahun = 0)
 	{
-		$tahun = ($tahun !='') ? $tahun : date('Y');
+		$tahun = ($tahun != '') ? $tahun : date('Y');
 
-			$data['thn'] = $tahun;
-			$data['tahun'] = $this->alokasi_model->get_tahun_alokasi_investasi();
-			$data['alokasi_investasi'] = $this->alokasi_model->get_alokasi_investasi($tahun);
-			$data['view'] = 'Alokasi/index';
-			$this->load->view('admin/layout', $data);
+		$data['thn'] = $tahun;
+		$data['tahun'] = $this->alokasi_model->get_tahun_alokasi_investasi();
+		$data['alokasi_investasi'] = $this->alokasi_model->get_alokasi_investasi($tahun);
+		$data['view'] = 'Alokasi/index';
+		$this->load->view('admin/layout', $data);
 	}
 
 	// SEBARAN DANA HAJI
@@ -3731,5 +3544,4 @@ class Keuanganhaji extends MY_Controller
 		header("Content-Type: application/vnd.ms-excel");
 		redirect('./uploads/excel/' . $fileName);
 	}
-
 } //class

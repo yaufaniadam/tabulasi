@@ -812,8 +812,9 @@ class Laporankeuangan extends MY_Controller
 			'aset_neto_terikat_permanen' => $data['B'][16],
 			'saldo_awal4' => $data['B'][17],
 			'surplus_tahun_berjalan_permanen' => $data['B'][18],
-			'saldo_akhir4' => $data['B'][19],
-			'total_aset_neto' => $data['B'][20],
+			'penggunaan_efisiensi_haji ' => $data['B'][19],
+			'saldo_akhir4' => $data['B'][20],
+			'total_aset_neto' => $data['B'][21],
 			'tahun' => $data['C'][1],
 			'bulan' => $data['B'][1],
 		);
@@ -828,7 +829,7 @@ class Laporankeuangan extends MY_Controller
 	{
 		$this->db->delete('perubahan_asetneto', array('id' => $id));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('laporankeuangan/perubahan_asetneto'));
+		redirect(base_url('laporankeuangan/perubahan_asetneto/'. $uri));
 	}
 
 	public function export_perubahan_asetneto($tahun)
@@ -884,12 +885,13 @@ class Laporankeuangan extends MY_Controller
 		$excel->getActiveSheet()->SetCellValue('A15', 'ASET NETO TERIKAT TEMPORER');
 		$excel->getActiveSheet()->SetCellValue('A16', 'Saldo awal');
 		$excel->getActiveSheet()->SetCellValue('A17', 'Surplus tahun berjalan');
-		$excel->getActiveSheet()->SetCellValue('A18', 'Saldo Akhir');
-		$excel->getActiveSheet()->SetCellValue('A19', 'ASET NETO TERIKAT PERMANEN');
-		$excel->getActiveSheet()->SetCellValue('A20', 'Saldo awal');
-		$excel->getActiveSheet()->SetCellValue('A21', 'Surplus tahun berjalan');
-		$excel->getActiveSheet()->SetCellValue('A22', 'Saldo Akhir');
-		$excel->getActiveSheet()->SetCellValue('A23', 'TOTAL ASET NETO');
+		$excel->getActiveSheet()->SetCellValue('A18', 'Penggunaan Efisiensi Haji Tahun Sebelumnya');
+		$excel->getActiveSheet()->SetCellValue('A19', 'Saldo Akhir');
+		$excel->getActiveSheet()->SetCellValue('A20', 'ASET NETO TERIKAT PERMANEN');
+		$excel->getActiveSheet()->SetCellValue('A21', 'Saldo awal');
+		$excel->getActiveSheet()->SetCellValue('A22', 'Surplus tahun berjalan');
+		$excel->getActiveSheet()->SetCellValue('A23', 'Saldo Akhir');
+		$excel->getActiveSheet()->SetCellValue('A24', 'TOTAL ASET NETO');
 
 
 		$i = 2;
@@ -909,12 +911,13 @@ class Laporankeuangan extends MY_Controller
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 15, $element['aset_neto_terikat_temporer']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 16, $element['saldo_awal3']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 17, $element['surplus_tahun_berjalan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 18, $element['saldo_akhir3']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 19, $element['aset_neto_terikat_permanen']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 20, $element['saldo_awal4']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 21, $element['surplus_tahun_berjalan_permanen']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 22, $element['saldo_akhir4']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 23, $element['total_aset_neto']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 18, $element['penggunaan_efisiensi_haji']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 19, $element['saldo_akhir3']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 20, $element['aset_neto_terikat_permanen']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 21, $element['saldo_awal4']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 22, $element['surplus_tahun_berjalan_permanen']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 23, $element['saldo_akhir4']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 24, $element['total_aset_neto']);
 
 			$i++;
 		}
@@ -924,7 +927,7 @@ class Laporankeuangan extends MY_Controller
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
 		}
 		//td style
-		for ($baris = 5; $baris <= 23; $baris++) {
+		for ($baris = 5; $baris <= 24; $baris++) {
 			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 				$excel->getActiveSheet()->getStyle($i . $baris)->applyFromArray($style_td);
 			}
@@ -940,10 +943,10 @@ class Laporankeuangan extends MY_Controller
 		$excel->getActiveSheet()->getStyle('A13')->getFont()->setBold(TRUE);
 		$excel->getActiveSheet()->getStyle('A14')->getFont()->setBold(TRUE);
 		$excel->getActiveSheet()->getStyle('A15')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A18')->getFont()->setBold(TRUE);
 		$excel->getActiveSheet()->getStyle('A19')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A22')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A20')->getFont()->setBold(TRUE);
 		$excel->getActiveSheet()->getStyle('A23')->getFont()->setBold(TRUE);
+		$excel->getActiveSheet()->getStyle('A24')->getFont()->setBold(TRUE);
 
 		//auto column width
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
@@ -1246,24 +1249,24 @@ class Laporankeuangan extends MY_Controller
 		$data = transposeData($sheet);
 		
 		$dataquery = array(
-			'kas_pih' => $data['B'][3],
-			'kas_nilai_manfaat' => $data['B'][4],
-			'realisasi_pend_tangguhan' => $data['B'][5],
-			'beban_pih' => $data['B'][6],
-			'beban_va' => $data['B'][7],
-			'beban_kemaslahatan' => $data['B'][8],
-			'belanja_pegawai' => $data['B'][9],
-			'belanja_admin_umum' => $data['B'][10],
-			'pembayaran_utang' => $data['B'][11],
-			'untung_selisih_kurs' => $data['B'][12],
-			'kas_bersih_aktivasi_operasi' => $data['B'][13],
-			'pembelian_aset_tetap' => $data['B'][15],
-			'pembelian_aset_takwujud' => $data['B'][16],
-			'penempatan_net' => $data['B'][17],
-			'investasi_net' => $data['B'][18],
-			'kas_bersih_aktivasi_investasi' => $data['B'][19],
-			'setoran_awal_waitinglist' => $data['B'][21],
-			'pengeluaran_pendapatan_ditangguhkan' => $data['B'][22],
+			'penerima_nilai_manfaat' => $data['B'][3],
+			'penerimaan_operasional_efisiensi' => $data['B'][4],
+			'penerimaan_jamaah_tdk_brkt' => $data['B'][5],
+			'penerimaan_lain' => $data['B'][6],
+			'pengeluaran_transfer_pih_dari_manfaat' => $data['B'][7],
+			'pengeluaran_pajak_manfaat' => $data['B'][8],
+			'operasional_bpkh' => $data['B'][9],
+			'pengeluaran_kemaslahatan_umat' => $data['B'][10],
+			'kas_bersih_aktivasi_operasi' => $data['B'][11],
+			'pembelian_aset_tetap' => $data['B'][13],
+			'pembelian_aset_takwujud' => $data['B'][14],
+			'penempatan_net' => $data['B'][15],
+			'investasi_net' => $data['B'][16],
+			'kas_bersih_aktivasi_investasi' => $data['B'][17],
+			'penerimaan_setoran_jamaah' => $data['B'][19],
+			'pengeluaran_transfer_pih_dr_jamaah' => $data['B'][20],
+			'pengeluaran_pengembalian_bpih' => $data['B'][21],
+			'pengeluaran_nilai_manfaat_ditangguhkan' => $data['B'][22],
 			'kas_bersih_aktivasi_pendanaan' => $data['B'][23],
 			'kenaikan_kas_setarakas' => $data['B'][24],
 			'kas_setara_kas_2' => $data['B'][25],

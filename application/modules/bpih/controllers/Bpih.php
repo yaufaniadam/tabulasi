@@ -130,7 +130,7 @@ class Bpih extends MY_Controller
 		redirect(base_url('bpih/pencapaian_perbidang/'. $tahun));
 	}
 
-	public function export_pencapaian_perbidang($tahun)
+	public function export_pencapaian_perbidang($bulan,$tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -143,77 +143,74 @@ class Bpih extends MY_Controller
 
 		$fileName = 'laporan_pencapaian_output_perbidang_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
-		$sebaran = $this->bpih_model->get_pencapaian_perbidang($tahun);
+		$sebaran = $this->bpih_model->get_detail_pencapaian_perbidang($bulan, $tahun);
 		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);
 		$excel = new PHPExcel();
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Pencapaian Output Perbidang Tahun " . $tahun)
-			->setSubject("Laporan Pencapaian Output Perbidang Tahun " . $tahun)
-			->setDescription("Laporan Pencapaian Output Perbidang Tahun " . $tahun)
+			->setTitle("Laporan Pencapaian Output Perbidang Bulan ". $bulan. " " . $tahun)
+			->setSubject("Laporan Pencapaian Output Perbidang Bulan ". $bulan. " " . $tahun)
+			->setDescription("Laporan Pencapaian Output Perbidang Bulan ". $bulan. " " . $tahun)
 			->setKeywords("Laporan Operasional Akumulasi");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Pencapaian Output Perbidang Tahun " . $tahun); // 
-		$excel->getActiveSheet()->mergeCells('A1:' . $maxcolumn . '1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Pencapaian Output Perbidang Bulan ". $bulan. " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
-		$excel->getActiveSheet()->mergeCells('A2:' . $maxcolumn . '2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->getActiveSheet()->mergeCells('A2:E2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
-		$excel->getActiveSheet()->SetCellValue('A4', 'BULAN');
-		$excel->getActiveSheet()->SetCellValue('A5', 'Pengembangan dan Kemaslahatan');
-		$excel->getActiveSheet()->SetCellValue('A6', 'Keuangan');
-		$excel->getActiveSheet()->SetCellValue('A7', 'Investasi');
-		$excel->getActiveSheet()->SetCellValue('A8', 'Operasional');
-		$excel->getActiveSheet()->SetCellValue('A9', 'Perencanaan dan Manajemen Risiko');
-		$excel->getActiveSheet()->SetCellValue('A10', 'SDM dan Pengadaan');
-		$excel->getActiveSheet()->SetCellValue('A11', 'Hukum dan Kepatuhan');
-		$excel->getActiveSheet()->SetCellValue('A12', 'Audit Internal');
-		$excel->getActiveSheet()->SetCellValue('A13', 'Sekretariat Badan Pelaksana');
-		$excel->getActiveSheet()->SetCellValue('A14', 'Sekretariat Badan Pelaksana');
-
-
-		$i = 2;
+		$excel->getActiveSheet()->SetCellValue('A4', 'No');
+		$excel->getActiveSheet()->SetCellValue('B4', 'Bidang');
+		$excel->getActiveSheet()->SetCellValue('C4', 'Target');
+		$excel->getActiveSheet()->SetCellValue('D4', 'Realisasi');
+		$excel->getActiveSheet()->SetCellValue('E4', 'Persentase');
+		
+		$no=1;
+		$rowCount = 5;
+		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
-			//echo $element['bulan'];echo konversiAngkaKeHuruf($i);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4, $element['bulan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 5, $element['pengembangan_dan_kemaslahatan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 6, $element['keuangan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 7, $element['investasi']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 8, $element['operasional']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 9, $element['perencanaan_dan_manajemen_risiko']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 10, $element['sdm_dan_pengadaan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 11, $element['hukum_dan_kepatuhan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 12, $element['audit_internal']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 13, $element['sekban']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 14, $element['sekdewas']);
+			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $no);
+			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['bidang']);
+			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['target']);
+			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['realisasi']);
+			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['persentase']);
+		
 
+			//stile column No
+			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
 
-			$i++;
+			//header style lainnya
+			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+				$excel->getActiveSheet()->getStyle($i . $rowCount)->applyFromArray($style_td);
+			}
+
+			//style column BPS/BPIH
+			$excel->getActiveSheet()->getStyle('B' . $rowCount)->applyFromArray($style_td_left);
+
+			$rowCount++;
+			$no++;
 		}
-
 		//header style
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
 		}
-		//td style
-		for ($baris = 5; $baris <= 14; $baris++) {
-			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
-				$excel->getActiveSheet()->getStyle($i . $baris)->applyFromArray($style_td);
-			}
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . $last_row)->applyFromArray($style_td_bold);
 		}
-
-		for ($i = 5; $i <= 14; $i++) {
-			$excel->getActiveSheet()->getStyle('A' . $i)->applyFromArray($style_td_left);
+		//auto column width
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
 		}
 
 		$excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(TRUE);
@@ -244,10 +241,18 @@ class Bpih extends MY_Controller
 	{
 
 		$tahun = ($tahun != '') ? $tahun : date('Y');
+
 		$data['thn'] = $tahun;
 		$data['tahun'] = $this->bpih_model->get_tahun_penyerapan_perbidang();
 		$data['penyerapan_perbidang'] = $this->bpih_model->get_penyerapan_perbidang($tahun);
 		$data['view'] = 'penyerapan_perbidang';
+		$this->load->view('admin/layout', $data);
+	}
+	public function detail_penyerapan_perbidang($bulan=0, $tahun = 0)
+	{
+		$data['tahun'] = $this->bpih_model->get_tahun_penyerapan_perbidang();
+		$data['penyerapan_perbidang'] = $this->bpih_model->get_detail_penyerapan_perbidang($bulan, $tahun);
+		$data['view'] = 'detail_penyerapan_perbidang';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -273,9 +278,7 @@ class Bpih extends MY_Controller
 			$upload = $this->upload->data();
 
 
-			if ($upload) { // Jika proses upload sukses
-
-
+			if ($upload) { // Jika proses upload sukses			    	
 
 				$excelreader = new PHPExcel_Reader_Excel2007();
 				$loadexcel = $excelreader->load('./uploads/excel/bpih/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
@@ -302,43 +305,48 @@ class Bpih extends MY_Controller
 
 	public function import_penyerapan_perbidang($file_excel)
 	{
-
-
 		$excelreader = new PHPExcel_Reader_Excel2007();
 		$loadexcel = $excelreader->load('./uploads/excel/bpih/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 		$data = transposeData($sheet);
 
-		$dataquery = array(
-			'pengembangan_dan_kemaslahatan' => $data['B'][2],
-			'keuangan' => $data['B'][3],
-			'investasi' => $data['B'][4],
-			'operasional' => $data['B'][5],
-			'perencanaan_dan_manajemen_risiko' => $data['B'][6],
-			'sdm_dan_pengadaan' => $data['B'][7],
-			'hukum_dan_kepatuhan' => $data['B'][8],
-			'audit_internal' => $data['B'][9],
-			'sekretariat_badan_pelaksana' => $data['B'][10],
-			'sekretariat_dewan_pengawas' => $data['B'][11],
-			'tahun' => $data['C'][1],
-			'bulan' => $data['B'][1],
-		);
+		$data2 = array();
+
+			$numrow = 1;
+			foreach ($sheet as $row) {
+
+				if ($numrow > 1) {
+					// Kita push (add) array data ke variabel data
+					array_push($data2, array(
+						'bidang' => $row['A'], 
+						'target' => $row['B'],
+						'efisiensi' => $row['C'],
+						'realisasi' => $row['D'],
+						'persentase' => $row['E'],
+						'bulan' => $data["F"][1],
+						'tahun' => $data["G"][1],
+					));
+				}
+
+				$numrow++; // Tambah 1 setiap kali looping
+			}
+	
 
 		// Panggil fungsi insert_penyerapan_perbidang
-		$this->bpih_model->insert_penyerapan_perbidang($dataquery);
+		$this->bpih_model->insert_penyerapan_perbidang($data2);
 
 		redirect("bpih/penyerapan_perbidang"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
-	public function hapus_penyerapan_perbidang($id = 0, $uri = NULL)
+	public function hapus_penyerapan_perbidang($bulan = 0, $tahun = 0, $uri = NULL)
 	{
-		$this->db->delete('penyerapan_perbidang', array('id' => $id));
+		$this->db->delete('penyerapan_perbidang2', array('bulan' => $bulan, 'tahun' => $tahun));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('bpih/penyerapan_perbidang'));
+		redirect(base_url('bpih/penyerapan_perbidang/'. $tahun));
 	}
 
-	public function export_penyerapan_perbidang($tahun)
+	public function export_penyerapan_perbidang($bulan,$tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -351,75 +359,76 @@ class Bpih extends MY_Controller
 
 		$fileName = 'laporan_penyerapan_output_perbidang_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
-		$sebaran = $this->bpih_model->get_penyerapan_perbidang($tahun);
+		$sebaran = $this->bpih_model->get_detail_penyerapan_perbidang($bulan, $tahun);
 		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);
 		$excel = new PHPExcel();
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Penyerapan Anggaran per Bidang Tahun " . $tahun)
-			->setSubject("Laporan Penyerapan Anggaran per Bidang Tahun " . $tahun)
-			->setDescription("Laporan Penyerapan Anggaran per Bidang Tahun " . $tahun)
+			->setTitle("Laporan Penyerapan Output Perbidang Bulan ". $bulan. " " . $tahun)
+			->setSubject("Laporan Penyerapan Output Perbidang Bulan ". $bulan. " " . $tahun)
+			->setDescription("Laporan Penyerapan Output Perbidang Bulan ". $bulan. " " . $tahun)
 			->setKeywords("Laporan Operasional Akumulasi");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Penyerapan Anggaran per Bidang Tahun " . $tahun); // 
-		$excel->getActiveSheet()->mergeCells('A1:' . $maxcolumn . '1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Penyerapan Output Perbidang Bulan ". $bulan. " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:F1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
-		$excel->getActiveSheet()->mergeCells('A2:' . $maxcolumn . '2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->getActiveSheet()->mergeCells('A2:F2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
-		$excel->getActiveSheet()->SetCellValue('A4', 'BULAN');
-		$excel->getActiveSheet()->SetCellValue('A5', 'Pengembangan dan Kemaslahatan');
-		$excel->getActiveSheet()->SetCellValue('A6', 'Keuangan');
-		$excel->getActiveSheet()->SetCellValue('A7', 'Investasi');
-		$excel->getActiveSheet()->SetCellValue('A8', 'Operasional');
-		$excel->getActiveSheet()->SetCellValue('A9', 'Perencanaan dan Manajemen Risiko');
-		$excel->getActiveSheet()->SetCellValue('A10', 'SDM dan Pengadaan');
-		$excel->getActiveSheet()->SetCellValue('A11', 'Hukum dan Kepatuhan');
-		$excel->getActiveSheet()->SetCellValue('A12', 'Audit Internal');
-		$excel->getActiveSheet()->SetCellValue('A13', 'Sekretariat Badan Pelaksana');
-		$excel->getActiveSheet()->SetCellValue('A14', 'Sekretariat Dewan Pengawas');
-
-		$i = 2;
+		$excel->getActiveSheet()->SetCellValue('A4', 'No');
+		$excel->getActiveSheet()->SetCellValue('B4', 'Bidang');
+		$excel->getActiveSheet()->SetCellValue('C4', 'RKAT-P');
+		$excel->getActiveSheet()->SetCellValue('D4', 'RKAT-P Efisiensi');
+		$excel->getActiveSheet()->SetCellValue('E4', 'Realisasi');
+		$excel->getActiveSheet()->SetCellValue('F4', 'Persentase');
+		
+		$no=1;
+		$rowCount = 5;
+		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
-			//echo $element['bulan'];echo konversiAngkaKeHuruf($i);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4, $element['bulan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 5, $element['pengembangan_dan_kemaslahatan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 6, $element['keuangan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 7, $element['investasi']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 8, $element['operasional']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 9, $element['perencanaan_dan_manajemen_risiko']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 10, $element['sdm_dan_pengadaan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 11, $element['hukum_dan_kepatuhan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 12, $element['audit_internal']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 13, $element['sekretariat_badan_pelaksana']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 14, $element['sekretariat_dewan_pengawas']);
+			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $no);
+			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['bidang']);
+			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['target']);
+			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['efisiensi']);
+			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['realisasi']);
+			$excel->getActiveSheet()->SetCellValue('F' . $rowCount, $element['persentase']);
+		
 
-			$i++;
+			//stile column No
+			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
+
+			//header style lainnya
+			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+				$excel->getActiveSheet()->getStyle($i . $rowCount)->applyFromArray($style_td);
+			}
+
+			//style column BPS/BPIH
+			$excel->getActiveSheet()->getStyle('B' . $rowCount)->applyFromArray($style_td_left);
+
+			$rowCount++;
+			$no++;
 		}
-
 		//header style
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
 		}
-		//td style
-		for ($baris = 5; $baris <= 14; $baris++) {
-			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
-				$excel->getActiveSheet()->getStyle($i . $baris)->applyFromArray($style_td);
-			}
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . $last_row)->applyFromArray($style_td_bold);
 		}
-
-		for ($i = 5; $i <= 14; $i++) {
-			$excel->getActiveSheet()->getStyle('A' . $i)->applyFromArray($style_td_left);
+		//auto column width
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
 		}
 
 		$excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(TRUE);
@@ -445,4 +454,5 @@ class Bpih extends MY_Controller
 		header("Content-Type: application/vnd.ms-excel");
 		redirect('./uploads/excel/' . $fileName);
 	}
+
 } //class

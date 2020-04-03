@@ -6,7 +6,7 @@
 			parent::__construct();
 			$this->load->library('excel');
 			$this->load->model('kemaslahatan_model', 'kemaslahatan_model');
-			$this->load->model('nonkeuanganbpkh/nonkeuanganbpkh_model', 'nonkeuanganbpkh_model');
+			$this->load->model('kemaslahatan/kemaslahatan_model', 'kemaslahatan_model');
 		}
 
 		public function index( $tahun=0 ){		
@@ -218,22 +218,72 @@
 	        header("Content-Type: application/vnd.ms-excel");
 	        redirect('./uploads/excel/'.$fileName); 			
 
-		}
+		}		
 
-		
-
-		public function regulasi_tentang_kemaslahatan(){
-			
+		public function regulasi_tentang_kemaslahatan(){			
 			$data['id'] = 'regulasi_tentang_kemaslahatan';
 			$data['class'] = 'penerima_manfaat';			
 			$data['judul'] = 'Regulasi Tentang Kemaslahatan';
-			$data['dokumen'] = $this->nonkeuanganbpkh_model->get_dokumen('regulasi_kemaslahatan');
+			$data['dokumen'] = $this->kemaslahatan_model->get_dokumen('regulasi_kemaslahatan');
 			$data['view'] = 'regulasi_kemaslahatan';
     		$this->load->view('admin/layout', $data);
 		}
 
+		public function tambah_dokumentasi($id){
+			if($this->input->post('submit')){
 
+				$this->form_validation->set_rules('judul_foto', 'Judul Foto', 'trim|required');
+					
+				if ($this->form_validation->run() == FALSE) {					
+				
+					$data['view'] = 'kemaslahatan/tambah_dokumentasi';
+    				$this->load->view('admin/layout', $data);
+				}
+				else{ 
 
+					$upload_path = './uploads/dokumen';
+
+						if (!is_dir($upload_path)) {
+						     mkdir($upload_path, 0777, TRUE);					
+						}
+					
+						$config = array(
+								'upload_path' => $upload_path,
+								'allowed_types' => "doc|docx|xls|xlsx|ppt|pptx|odt|rtf|jpg|png|pdf",
+								'overwrite' => FALSE,				
+						);					
+
+						$this->load->library('upload', $config);
+						$this->upload->do_upload('file_foto');
+					    $dokumen = $this->upload->data();							
+
+						$data = array(
+									
+							'judul_foto' => $this->input->post('judul_foto'),
+							'foto' => $upload_path.'/'.$dokumen['file_name'],	
+							'id_kemaslahatan' => $id									
+							
+						);
+									
+						$data = $this->security->xss_clean($data);
+						$result = $this->kemaslahatan_model->tambah_dokumentasi($data);
+
+						if($result){
+							$this->session->set_flashdata('msg', 'Foto telah ditambahkan!');
+							redirect(base_url('kemaslahatan/tambah_dokumentasi/'. $id));							
+						} 
+
+					} 
+
+				}
+
+				else{					
+					$data['nama_penerima'] = $this->kemaslahatan_model->get_penerima($id);
+					$data['dokumentasi'] = $this->kemaslahatan_model->get_dokumentasi($id);
+					$data['view'] = 'kemaslahatan/tambah_dokumentasi';
+    				$this->load->view('admin/layout', $data);
+				}
+		}
 
 	} //class
 

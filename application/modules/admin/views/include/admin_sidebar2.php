@@ -147,7 +147,7 @@
         </li>
         <li class="header">PROGRAM KEMASLAHATAN</li>
         <li id="kemaslahatan">
-          <a href="<?= base_url('kemaslahatan'); ?>"><span>Mitra Kemaslahatan</span></a>
+          <a href="<?= base_url('kemaslahatan'); ?>"><span>Lap. Realisasi Kemaslahatan</span></a>
         </li>
         
         <li id="regulasi_kemaslahatan">
