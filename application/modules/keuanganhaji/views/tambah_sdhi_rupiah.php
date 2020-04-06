@@ -94,10 +94,9 @@
   </div>  
 </section> 
 
-
 <script>
-    $("#pengelolaan_keuangan_haji").addClass('active');
-    $("#pengelolaan_keuangan_haji .sdhi_rupiah").addClass('active');
+	$("#alokasi_produk_investasi").addClass('active');
+	$("#alokasi_produk_investasi .sukuk").addClass('active');
 </script>
 
 
