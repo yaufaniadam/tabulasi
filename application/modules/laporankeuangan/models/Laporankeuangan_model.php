@@ -106,6 +106,7 @@ class Laporankeuangan_model extends CI_Model
 		$this->db->select('*,tahun');
 		$this->db->from('lap_bulanan');
 		$this->db->where('tahun', $tahun);
+		$this->db->order_by('bulan', 'ASC');
 		$query = $this->db->get();
 		return $result = $query->result_array();
 	}
@@ -144,7 +145,8 @@ class Laporankeuangan_model extends CI_Model
 	{
 		$this->db->select('*,tahun');
 		$this->db->from('lap_akumulasi');
-		$this->db->where('tahun', $tahun);
+		$this->db->where('tahun', $tahun);		
+		$this->db->order_by('bulan', 'ASC');
 		$query = $this->db->get();
 		return $result = $query->result_array();
 	}
@@ -184,6 +186,7 @@ class Laporankeuangan_model extends CI_Model
 		$this->db->select('*,tahun');
 		$this->db->from('perubahan_asetneto');
 		$this->db->where('tahun', $tahun);
+		$this->db->order_by('bulan', 'ASC');
 		$query = $this->db->get();
 		return $result = $query->result_array();
 	}
@@ -204,41 +207,52 @@ class Laporankeuangan_model extends CI_Model
 
 	// LAPORAN REALISASI ANGGARAN
 
-	public function get_tahun_realisasi_anggaran()
-	{
-
+	public function get_tahun_realisasi_anggaran(){
+			
 		$this->db->select('tahun');
-		$this->db->from('realisasi_anggaran');
-
+		$this->db->from('realisasi_anggaran2');			
+		
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
 		$query = $this->db->get();
-
-		return $result = $query->result_array();
+		return $result = $query->result_array();			
 	}
 
-	public function get_realisasi_anggaran($tahun)
-	{
-		$this->db->select('*,tahun');
-		$this->db->from('realisasi_anggaran');
+	public function get_realisasi_anggaran($tahun){
+		$this->db->select('bulan,tahun');
+		$this->db->from('realisasi_anggaran2');
 		$this->db->where('tahun', $tahun);
-		$query = $this->db->get();
+		$this->db->order_by('id', 'ASC');
+		$this->db->group_by('bulan');
+		$query = $this->db->get(); 
 		return $result = $query->result_array();
-	}
+	  }
 
-	public function get_detail_realisasi_anggaran($id)
-	{
+	  public function get_detail_realisasi_anggaran($bulan, $tahun){
 		$this->db->select('*');
-		$this->db->from('realisasi_anggaran');
-		$this->db->where('id', $id);
-		$query = $this->db->get();
-		return $result = $query->row_array();
+		$this->db->from('realisasi_anggaran2');
+		$this->db->where('bulan', $bulan);
+		$this->db->where('tahun', $tahun);
+		$this->db->order_by('id', 'ASC');
+		$query = $this->db->get(); 
+		return $result = $query->result_array();
+	  }		  
+	  
+	public function insert_realisasi_anggaran($data){
+		$this->db->insert_batch('realisasi_anggaran2', $data);
 	}
 
-	public function insert_realisasi_anggaran($data)
-	{
-		$this->db->insert('realisasi_anggaran', $data);
+	public function get_tahun_penyerapan_perbidang(){
+		
+		$this->db->select('tahun');
+		$this->db->from('penyerapan_perbidang2');			
+		
+		$this->db->order_by('tahun', 'ASC');
+		$this->db->group_by('tahun');
+
+		$query = $this->db->get();
+		return $result = $query->result_array();			
 	}
 
 	// LAPORAN BULANAN
@@ -262,6 +276,7 @@ class Laporankeuangan_model extends CI_Model
 		$this->db->select('*,tahun');
 		$this->db->from('lap_arus_kas');
 		$this->db->where('tahun', $tahun);
+		$this->db->order_by('bulan', 'ASC');
 		$query = $this->db->get();
 		return $result = $query->result_array();
 	}

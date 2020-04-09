@@ -19,7 +19,7 @@
            // Buat sebuah tag form untuk proses import data ke database
           echo form_open_multipart(base_url('keuanganhaji/alokasi/import_alokasi_investasi/'.$file_excel), 'class="form-horizontal"' );
 
-          
+          echo "<p class='alert alert-warning'>Data bulan ".$sheet['1']['B']." " . $sheet['1']['C'] . "</p>";          
           echo "<table class='keuangan table table-bordered table-striped'>
          
           <tr>

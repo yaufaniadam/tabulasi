@@ -22,7 +22,7 @@
 				<tr>
 					<td><strong>BULAN</strong></td>
 					<?php foreach($lap_arus_kas as $row ) { ?>
-					<th style="text-align: right"><?=$row['bulan']; ?> &nbsp;
+					<th style="text-align: right"><?=konversiBulanAngkaKeNama($row['bulan']);?> &nbsp;
 						
 						<a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger" data-href="<?=base_url('laporankeuangan/hapus_lap_arus_kas/'.$row['id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
 

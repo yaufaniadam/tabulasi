@@ -49,6 +49,7 @@
 			$this->db->from('per_instrumen');
 			$this->db->where('tahun', $tahun);
 			$this->db->order_by('tahun', 'ASC');
+			$this->db->order_by('bulan', 'ASC');
     		$query = $this->db->get(); 
     		return $result = $query->result_array();
   		}
@@ -121,7 +122,7 @@
 		public function get_bps_bpih_nilai_manfaat_produk(){
 			
 			$this->db->select('*');
-			$this->db->from('nilai_manfaat_produk');			
+			$this->db->from('nilai_manfaat_produk');	
 			$this->db->group_by('bps_bpih');
 			$query = $this->db->get();
 
@@ -134,7 +135,7 @@
 			$this->db->select('*');
 			$this->db->from('nilai_manfaat_produk');			
 			$this->db->where('tahun', $tahun);
-				
+			$this->db->order_by('bulan', 'ASC');	
 			$query = $this->db->get();
 
 			return $result = $query->result_array();			

@@ -19,7 +19,7 @@
            // Buat sebuah tag form untuk proses import data ke database
           echo form_open_multipart(base_url('keuanganhaji/import_sbssn_rupiah/'.$file_excel), 'class="form-horizontal"' );
 
-          
+          echo "<p class='alert alert-warning'>Data bulan ".$sheet['1']['E']." " . $sheet['1']['F'] . "</p>";
           echo "<table class='table table-bordered table-striped'>
          
           <tr>

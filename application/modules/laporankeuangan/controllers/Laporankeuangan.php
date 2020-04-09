@@ -381,7 +381,8 @@ class Laporankeuangan extends MY_Controller
 			'penghasilan_beban_komprehensif_lain' => $data['B'][15],
 			'total_surplus_komprehensif' => $data['B'][16],
 			'tahun' => $data['C'][1],
-			'bulan' => $data['B'][1],
+			'bulan' => konversi_bulan_ke_angka($data['B'][1]),
+			'upload_by' => $this->session->userdata('user_id'),
 		);
 
 		// Panggil fungsi insert_lap_bulanan
@@ -459,7 +460,7 @@ class Laporankeuangan extends MY_Controller
 		$i = 2;
 		foreach ($sebaran as $element) {
 			//echo $element['bulan'];echo konversiAngkaKeHuruf($i);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4, $element['bulan']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4, konversiBulanAngkaKeNama($element['bulan']));
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 5, $element['pendapatan_setoran_jemaah_berangkat']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 6, $element['beban_transfer_bpih_ke_kemenag']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 7, $element['surplus_defisit_bpih']);
@@ -597,7 +598,8 @@ class Laporankeuangan extends MY_Controller
 			'penghasilan_beban_komprehensif_lain' => $data['B'][15],
 			'total_surplus_komprehensif' => $data['B'][16],
 			'tahun' => $data['C'][1],
-			'bulan' => $data['B'][1],
+			'bulan' =>  konversi_bulan_ke_angka($data['B'][1]),
+			'upload_by' => $this->session->userdata('user_id'),
 		);
 
 		// Panggil fungsi insert_lap_akumulasi
@@ -673,7 +675,7 @@ class Laporankeuangan extends MY_Controller
 		$i = 2;
 		foreach ($sebaran as $element) {
 			//echo $element['bulan'];echo konversiAngkaKeHuruf($i);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4, $element['bulan']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4,  konversiBulanAngkaKeNama($element['bulan']));
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 5, $element['pendapatan_setoran_jemaah_berangkat']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 6, $element['beban_transfer_bpih_ke_kemenag']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 7, $element['surplus_defisit_bpih']);
@@ -816,7 +818,8 @@ class Laporankeuangan extends MY_Controller
 			'saldo_akhir4' => $data['B'][20],
 			'total_aset_neto' => $data['B'][21],
 			'tahun' => $data['C'][1],
-			'bulan' => $data['B'][1],
+			'bulan' =>  konversi_bulan_ke_angka($data['B'][1]),
+			'upload_by' => $this->session->userdata('user_id'),
 		);
 
 		// Panggil fungsi insert_perubahan_asetneto
@@ -897,7 +900,7 @@ class Laporankeuangan extends MY_Controller
 		$i = 2;
 		foreach ($sebaran as $element) {
 			//echo $element['bulan'];echo konversiAngkaKeHuruf($i);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4, $element['bulan']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4,  konversiBulanAngkaKeNama($element['bulan']));
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 5, $element['aset_neto_tidak_terikat']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 6, $element['saldo_awal1']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 7, $element['surplus_defisit_tahun_berjalan']);
@@ -965,10 +968,18 @@ class Laporankeuangan extends MY_Controller
 	{
 
 		$tahun = ($tahun != '') ? $tahun : date('Y');
+
 		$data['thn'] = $tahun;
 		$data['tahun'] = $this->laporankeuangan_model->get_tahun_realisasi_anggaran();
 		$data['realisasi_anggaran'] = $this->laporankeuangan_model->get_realisasi_anggaran($tahun);
 		$data['view'] = 'realisasi_anggaran';
+		$this->load->view('admin/layout', $data);
+	}
+	public function detail_realisasi_anggaran($bulan=0, $tahun = 0)
+	{
+		$data['tahun'] = $this->laporankeuangan_model->get_tahun_realisasi_anggaran();
+		$data['realisasi_anggaran'] = $this->laporankeuangan_model->get_detail_realisasi_anggaran($bulan, $tahun);
+		$data['view'] = 'detail_realisasi_anggaran';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -977,7 +988,7 @@ class Laporankeuangan extends MY_Controller
 
 		if (isset($_POST['submit'])) {
 
-			$upload_path = './uploads/excel/laporankeuangan';
+			$upload_path = './uploads/excel/bpih';
 
 			if (!is_dir($upload_path)) {
 				mkdir($upload_path, 0777, TRUE);
@@ -994,7 +1005,7 @@ class Laporankeuangan extends MY_Controller
 			$upload = $this->upload->data();
 
 
-			if ($upload) { // Jika proses upload sukses
+			if ($upload) { // Jika proses upload sukses			    	
 
 				$excelreader = new PHPExcel_Reader_Excel2007();
 				$loadexcel = $excelreader->load('./uploads/excel/bpih/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
@@ -1022,40 +1033,50 @@ class Laporankeuangan extends MY_Controller
 	public function import_realisasi_anggaran($file_excel)
 	{
 
+
 		$excelreader = new PHPExcel_Reader_Excel2007();
 		$loadexcel = $excelreader->load('./uploads/excel/bpih/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 		$data = transposeData($sheet);
 
-		$dataquery = array(
-			'penerimaan' => $data['B'][2],
-			'nilai_manfaat' => $data['B'][3],
-			'nilai_manfaat_penempatan_dana_bpih' => $data['B'][4],
-			'nilai_manfaat_investasi_dana_bpih' => $data['B'][5],
-			'nilai_manfaat_investasi_dau' => $data['B'][6],
-			'total_penerimaan' => $data['B'][7],
-			'belanja_bpih_dan_kemaslahatan' => $data['B'][8],
-			'belanja_pih_indirect_cost' => $data['B'][9],
-			'penyaluran_ke_rekening_virtual_jemaah_haji' => $data['B'][10],
-			'penyaluran_program_kemaslahatan' => $data['B'][11],
-			'total_belanja_bpih_dan_kemaslahatan' => $data['B'][12],
-			'belanja_operasional_bpkh' => $data['B'][13],
-			'belanja_pegawai' => $data['B'][14],
-			'belanja_operasional_kantor' => $data['B'][15],
-			'total_belanja_operasional_bpkh' => $data['B'][16],
+		$data2 = array();
 
-			'tahun' => $data['C'][1],
-			'bulan' => $data['B'][1],
-		);
+			$numrow = 1;
+			foreach ($sheet as $row) {
+
+				if ($numrow > 1) {
+					// Kita push (add) array data ke variabel data
+					array_push($data2, array(
+						'bidang' => $row['A'], 
+						'target' => $row['B'],
+						'realisasi' => $row['C'],
+						'persentase' => $row['D'],
+						'bulan' => konversi_bulan_ke_angka($data["E"][1]),
+						'tahun' => $data["F"][1],
+						'upload_by' => $this->session->userdata('user_id'),
+					));
+				}
+
+				$numrow++; // Tambah 1 setiap kali looping
+			}
+
+	
 
 		// Panggil fungsi insert_realisasi_anggaran
-		$this->laporankeuangan_model->insert_realisasi_anggaran($dataquery);
+		$this->laporankeuangan_model->insert_realisasi_anggaran($data2);
 
-		redirect("bpih/realisasi_anggaran"); // Redirect ke halaman awal (ke controller siswa fungsi index)
+		redirect("laporankeuangan/realisasi_anggaran"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
-	public function export_realisasi_anggaran($tahun)
+	public function hapus_realisasi_anggaran($bulan = 0, $tahun = 0, $uri = NULL)
+	{
+		$this->db->delete('realisasi_anggaran2', array('bulan' => $bulan, 'tahun' => $tahun));
+		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
+		redirect(base_url('bpih/realisasi_anggaran/'. $tahun));
+	}
+
+	public function export_realisasi_anggaran($bulan,$tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -1066,87 +1087,76 @@ class Laporankeuangan extends MY_Controller
 
 		// create file name
 
-		$fileName = 'laporan_realisasi_anggaran_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
+		$fileName = 'laporan_pencapaian_output_perbidang_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
-		$sebaran = $this->laporankeuangan_model->get_realisasi_anggaran($tahun);
+		$sebaran = $this->laporankeuangan_model->get_detail_realisasi_anggaran($bulan, $tahun);
 		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);
 		$excel = new PHPExcel();
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Realisasi Anggaran Tahun " . $tahun)
-			->setSubject("Laporan Realisasi Anggaran Tahun " . $tahun)
-			->setDescription("Laporan Realisasi Anggaran Tahun " . $tahun)
+			->setTitle("Laporan Realisasi Anggaran Bulan ". $bulan. " " . $tahun)
+			->setSubject("Laporan Realisasi Anggaran Bulan ". $bulan. " " . $tahun)
+			->setDescription("Laporan Realisasi Anggaran Bulan ". $bulan. " " . $tahun)
 			->setKeywords("Laporan Operasional Akumulasi");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Realisasi Anggaran Tahun " . $tahun); // 
-		$excel->getActiveSheet()->mergeCells('A1:' . $maxcolumn . '1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Realisasi Anggaran Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
-		$excel->getActiveSheet()->mergeCells('A2:' . $maxcolumn . '2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->getActiveSheet()->mergeCells('A2:E2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
-		$excel->getActiveSheet()->SetCellValue('A4', 'BULAN');
-		$excel->getActiveSheet()->SetCellValue('A5', 'PENERIMAAN');
-		$excel->getActiveSheet()->SetCellValue('A6', 'Nilai Manfaat');
-		$excel->getActiveSheet()->SetCellValue('A7', 'Nilai manfaat - penempatan dana BPIH');
-		$excel->getActiveSheet()->SetCellValue('A8', 'Nilai manfaat - investasi dana BPIH');
-		$excel->getActiveSheet()->SetCellValue('A9', 'Nilai manfaat - investasi DAU');
-		$excel->getActiveSheet()->SetCellValue('A10', 'TOTAL PENERIMAAN');
-		$excel->getActiveSheet()->SetCellValue('A11', 'BELANJA BPIH DAN KEMASLAHATAN');
-		$excel->getActiveSheet()->SetCellValue('A12', 'Belanja PIH - Indirect cost');
-		$excel->getActiveSheet()->SetCellValue('A13', 'Penyaluran ke rekening virtual jemaah haji');
-		$excel->getActiveSheet()->SetCellValue('A14', 'Penyaluran Program Kemaslahatan');
-		$excel->getActiveSheet()->SetCellValue('A15', 'TOTAL BELANJA BPIH DAN KEMASLAHATAN');
-		$excel->getActiveSheet()->SetCellValue('A16', 'BELANJA OPERASIONAL BPKH');
-		$excel->getActiveSheet()->SetCellValue('A17', 'Belanja Pegawai');
-		$excel->getActiveSheet()->SetCellValue('A18', 'Belanja Operasional Kantor');
-		$excel->getActiveSheet()->SetCellValue('A19', 'TOTAL BELANJA PERASIONAL BPKH');
-
-		$i = 2;
+		$excel->getActiveSheet()->SetCellValue('A4', 'No');
+		$excel->getActiveSheet()->SetCellValue('B4', 'Bidang');
+		$excel->getActiveSheet()->SetCellValue('C4', 'Target');
+		$excel->getActiveSheet()->SetCellValue('D4', 'Realisasi');
+		$excel->getActiveSheet()->SetCellValue('E4', 'Persentase');
+		
+		$no=1;
+		$rowCount = 5;
+		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
-			//echo $element['bulan'];echo konversiAngkaKeHuruf($i);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4, $element['bulan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 5, $element['penerimaan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 6, $element['nilai_manfaat']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 7, $element['nilai_manfaat_penempatan_dana_bpih']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 8, $element['nilai_manfaat_investasi_dana_bpih']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 9, $element['nilai_manfaat_investasi_dau']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 10, $element['total_penerimaan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 11, $element['belanja_bpih_dan_kemaslahatan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 12, $element['belanja_pih_indirect_cost']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 13, $element['penyaluran_ke_rekening_virtual_jemaah_haji']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 14, $element['penyaluran_program_kemaslahatan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 15, $element['total_belanja_bpih_dan_kemaslahatan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 16, $element['belanja_operasional_bpkh']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 17, $element['belanja_pegawai']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 18, $element['belanja_operasional_kantor']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 19, $element['total_belanja_operasional_bpkh']);
+			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $no);
+			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['bidang']);
+			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['target']);
+			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['realisasi']);
+			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['persentase']);
+		
 
-			$i++;
+			//stile column No
+			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
+
+			//header style lainnya
+			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+				$excel->getActiveSheet()->getStyle($i . $rowCount)->applyFromArray($style_td);
+			}
+
+			//style column BPS/BPIH
+			$excel->getActiveSheet()->getStyle('B' . $rowCount)->applyFromArray($style_td_left);
+
+			$rowCount++;
+			$no++;
 		}
-
 		//header style
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
 		}
-		//td style
-		for ($baris = 5; $baris <= 19; $baris++) {
-			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
-				$excel->getActiveSheet()->getStyle($i . $baris)->applyFromArray($style_td);
-			}
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . $last_row)->applyFromArray($style_td_bold);
 		}
-
-		for ($i = 5; $i <= 19; $i++) {
-			$excel->getActiveSheet()->getStyle('A' . $i)->applyFromArray($style_td_left);
+		//auto column width
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
 		}
 
 		$excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(TRUE);
@@ -1171,13 +1181,6 @@ class Laporankeuangan extends MY_Controller
 		// download file
 		header("Content-Type: application/vnd.ms-excel");
 		redirect('./uploads/excel/' . $fileName);
-	}
-
-	public function hapus_realisasi_anggaran($id = 0, $uri = NULL)
-	{
-		$this->db->delete('realisasi_anggaran', array('id' => $id));
-		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('bpih/realisasi_anggaran'));
 	}
 
 
@@ -1272,7 +1275,8 @@ class Laporankeuangan extends MY_Controller
 			'kas_setara_kas_2' => $data['B'][25],
 			'kas_setara_kas_1' => $data['B'][26],
 			'tahun' => $data['C'][1],
-			'bulan' => $data['B'][1],
+			'bulan' =>  konversi_bulan_ke_angka($data['B'][1]),
+			'upload_by' => $this->session->userdata('user_id'),
 		);
 
 		// Panggil fungsi insert_lap_arus_kas
@@ -1361,7 +1365,7 @@ class Laporankeuangan extends MY_Controller
 		$i = 2;
 		foreach ($sebaran as $element) {
 			//echo $element['bulan'];echo konversiAngkaKeHuruf($i);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4, $element['bulan']);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4,  konversiBulanAngkaKeNama($element['bulan']));
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 6, $element['kas_pih']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 7, $element['kas_nilai_manfaat']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 8, $element['realisasi_pend_tangguhan']);

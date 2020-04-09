@@ -17,15 +17,16 @@
         if(isset($_POST['submit'])) {
 
            // Buat sebuah tag form untuk proses import data ke database
-          echo form_open_multipart(base_url('bpih/import_realisasi_anggaran/'.$file_excel), 'class="form-horizontal"' );
+          echo form_open_multipart(base_url('laporankeuangan/import_realisasi_anggaran/'.$file_excel), 'class="form-horizontal"' );
 
-          
+          echo "<p class='alert alert-warning'>Data bulan ".$sheet['1']['B']." " . $sheet['1']['C'] . "</p>";
           echo "<table class='table table-bordered table-striped'>
          
           <tr>
             <th>Uraian</th>
-            <th>Jumlah</th>
-            <th>Posisi</th>            
+            <th>Anggaran</th>
+            <th>Realisasi</th>            
+            <th>% Realisasi</th>            
           </tr>";
           
           $numrow = 1;
@@ -48,7 +49,8 @@
               echo "<tr>";            
               echo "<td>".$bps_bpih."</td>"; 
               echo "<td>".$jumlah."</td>";
-              echo "<td>".$bulan."</td>";
+              echo "<td>".$row['C']."</td>";
+              echo "<td>".$row['D']."</td>";
             
               echo "</tr>";
             }
@@ -76,20 +78,20 @@
             
             // Buat sebuah tombol untuk mengimport data ke database
             echo "<button class='btn btn-success' type='submit' name='import'>Import</button>";
-            echo "  <a class='btn btn-warning' href='".base_url("bpih/realisasi_anggaran")."'>Cancel</a>";
+            echo "  <a class='btn btn-warning' href='".base_url("laporankeuangan/realisasi_anggaran")."'>Cancel</a>";
           }
           
           echo form_close(); 
 
         } else {
 
-          echo form_open_multipart(base_url('bpih/tambah_realisasi_anggaran'), 'class="form-horizontal"' )?> 
+          echo form_open_multipart(base_url('laporankeuangan/tambah_realisasi_anggaran'), 'class="form-horizontal"' )?> 
             <div class="form-group">
              <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i><strong> Panduan Import Data</strong></p>
 
               <ol class="panduan-pengisian">
                 <li>Ekstensi File yang didukung hanya .xlsx</li>
-                <li>Data yang diimport harus mengikuti template yang sudah disediakan. <a href="<?=base_url('public/template-excel/bpih/lap_realisasi_anggaran.xlsx'); ?>" class="btn btn-success btn-xs"><i class="fas fa-file-excel"></i> Unduh Template Excel</a></li>
+                <li>Data yang diimport harus mengikuti template yang sudah disediakan. <a href="<?=base_url('public/template-excel/lapkeuanganhaji/lap_realisasi_anggaran.xlsx'); ?>" class="btn btn-success btn-xs"><i class="fas fa-file-excel"></i> Unduh Template Excel</a></li>
                 <li>Kolom Tahun wajib diisi</li>
                 <li>Data yang dapat diimport hanya data satu bulan</li>
                 <li>Format Tahun : 2020, dst</li>               

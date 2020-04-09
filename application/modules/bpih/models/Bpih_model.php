@@ -19,7 +19,7 @@
 			$this->db->select('bulan,tahun');
 			$this->db->from('pencapaian_perbidang2');
 			$this->db->where('tahun', $tahun);
-			$this->db->order_by('id', 'ASC');
+			$this->db->order_by('bulan', 'ASC');
 			$this->db->group_by('bulan');
     		$query = $this->db->get(); 
     		return $result = $query->result_array();
@@ -54,7 +54,7 @@
 			$this->db->select('bulan,tahun');
 			$this->db->from('penyerapan_perbidang2');
 			$this->db->where('tahun', $tahun);
-			$this->db->order_by('id', 'ASC');
+			$this->db->order_by('bulan', 'ASC');
 			$this->db->group_by('bulan');
     		$query = $this->db->get(); 
     		return $result = $query->result_array();

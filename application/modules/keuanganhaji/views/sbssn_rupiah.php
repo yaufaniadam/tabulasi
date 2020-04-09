@@ -28,7 +28,7 @@
 				</tr>
 				<?php foreach ($sbssn_rupiah as $row) { ?>
 				<tr>
-					<td><?=$row['bulan']; ?></td>
+					<td><?=konversiBulanAngkaKeNama($row['bulan']); ?></td>
 					<td class="text-center">
 
 						<a style="color:#fff;" title="Lihat Detail" class="btn btn-xs btn-info"

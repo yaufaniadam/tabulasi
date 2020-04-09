@@ -125,6 +125,7 @@ class Keuanganhaji extends MY_Controller
 						'bps_bpih' => $data["A"][$i],
 						$data["B"][1] => $data["B"][$i],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					);
 					$this->db->insert('porsi_penempatan_bps_bpih2', $query, "bps_bpih = '" . $data["A"][$i] . "'");
 				}
@@ -146,6 +147,7 @@ class Keuanganhaji extends MY_Controller
 						'bps_bpih' => $row['A'], // Insert data nis dari kolom A di
 						$sheet['1']['B'] => $row['B'],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -369,6 +371,7 @@ class Keuanganhaji extends MY_Controller
 						'bps_bpih' => $data["A"][$i],
 						$data["B"][1] => $data["B"][$i],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					);
 					$this->db->insert('sebaran_dana_haji2', $query, "bps_bpih = '" . $data["A"][$i] . "'");
 				}
@@ -389,6 +392,7 @@ class Keuanganhaji extends MY_Controller
 						'bps_bpih' => $row['A'], // Insert data nis dari kolom A di
 						$sheet['1']['B'] => $row['B'],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -607,8 +611,9 @@ class Keuanganhaji extends MY_Controller
 						'maturity' => $row['B'],
 						'counterpart' => $row['C'],
 						'nilai' => $row['D'],
-						'bulan' => $data["E"][1],
+						'bulan' =>  konversi_bulan_ke_angka($data["E"][1]),
 						'tahun' => $data["F"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -827,8 +832,9 @@ class Keuanganhaji extends MY_Controller
 						'maturity' => $row['B'],
 						'counterpart' => $row['C'],
 						'nilai' => $row['D'],
-						'bulan' => $data["E"][1],
+						'bulan' => konversi_bulan_ke_angka($data["E"][1]),
 						'tahun' => $data["F"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -1047,8 +1053,9 @@ class Keuanganhaji extends MY_Controller
 						'maturity' => $row['B'],
 						'counterpart' => $row['C'],
 						'nilai' => $row['D'],
-						'bulan' => $data["E"][1],
+						'bulan' => konversi_bulan_ke_angka($data["E"][1]),
 						'tahun' => $data["F"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -1269,8 +1276,9 @@ class Keuanganhaji extends MY_Controller
 						'maturity' => $row['B'],
 						'counterpart' => $row['C'],
 						'nilai' => $row['D'],
-						'bulan' => $data["E"][1],
+						'bulan' =>  konversi_bulan_ke_angka($data["E"][1]),
 						'tahun' => $data["F"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -1501,6 +1509,7 @@ class Keuanganhaji extends MY_Controller
 						'instrumen' => $data["A"][$i],
 						$data["B"][1] => $data["B"][$i],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					);
 					$this->db->insert('reksadana_terproteksi_syariah', $query, "instrumen = '" . $data["A"][$i] . "'");
 				}
@@ -1522,6 +1531,7 @@ class Keuanganhaji extends MY_Controller
 						'instrumen' => $row['A'], // Insert data nis dari kolom A di
 						$sheet['1']['B'] => $row['B'],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -1759,6 +1769,7 @@ class Keuanganhaji extends MY_Controller
 						'instrumen' => $data["A"][$i],
 						$data["B"][1] => $data["B"][$i],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					);
 					$this->db->insert('reksadana_pasar_uang_syariah', $query, "instrumen = '" . $data["A"][$i] . "'");
 				}
@@ -1780,6 +1791,7 @@ class Keuanganhaji extends MY_Controller
 						'instrumen' => $row['A'], // Insert data nis dari kolom A di
 						$sheet['1']['B'] => $row['B'],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -1950,8 +1962,6 @@ class Keuanganhaji extends MY_Controller
 			if ($upload) { // Jika proses upload sukses
 
 
-
-
 				$excelreader = new PHPExcel_Reader_Excel2007();
 				$loadexcel = $excelreader->load('./uploads/excel/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
 				$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
@@ -1976,9 +1986,6 @@ class Keuanganhaji extends MY_Controller
 
 	public function import_penyertaan_saham($file_excel)
 	{
-
-
-
 		$excelreader = new PHPExcel_Reader_Excel2007();
 		$loadexcel = $excelreader->load('./uploads/excel/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
@@ -2017,6 +2024,8 @@ class Keuanganhaji extends MY_Controller
 						'bps_bpih' => $data["A"][$i],
 						$data["B"][1] => $data["B"][$i],
 						'tahun' => $data["C"][1],
+						'bulan' => konversi_bulan_ke_angka($data["B"][1]),
+						'upload_by' => $this->session->userdata('user_id'),
 					);
 					$this->db->insert('penyertaan_saham', $query, "bps_bpih = '" . $data["A"][$i] . "'");
 				}
@@ -2038,6 +2047,8 @@ class Keuanganhaji extends MY_Controller
 						'bps_bpih' => $row['A'], // Insert data nis dari kolom A di
 						$sheet['1']['B'] => $row['B'],
 						'tahun' => $data["C"][1],
+						'bulan' => konversi_bulan_ke_angka($data["B"][1]),
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -2938,6 +2949,7 @@ class Keuanganhaji extends MY_Controller
 						'bps_bpih' => $data["A"][$i],
 						$data["B"][1] => $data["B"][$i],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					);
 					$this->db->insert('akumulasi_kontribusi_bpsbpih', $query, "bps_bpih = '" . $data["A"][$i] . "'");
 				}
@@ -2959,6 +2971,7 @@ class Keuanganhaji extends MY_Controller
 						'bps_bpih' => $row['A'], // Insert data nis dari kolom A di
 						$sheet['1']['B'] => $row['B'],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -3152,9 +3165,6 @@ class Keuanganhaji extends MY_Controller
 
 	public function import_posisi_penempatan_produk($file_excel)
 	{
-
-
-
 		$excelreader = new PHPExcel_Reader_Excel2007();
 		$loadexcel = $excelreader->load('./uploads/excel/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
@@ -3166,12 +3176,13 @@ class Keuanganhaji extends MY_Controller
 			if ($numrow > 1) {
 				// Kita push (add) array data ke variabel data
 				array_push($data, array(
-					'bulan' => $row['A'], // Insert data nis dari kolom A di
+					'bulan' => konversi_bulan_ke_angka($row['A']), // Insert data nis dari kolom A di
 					'giro' => $row['B'],
 					'tabungan' => $row['C'],
 					'deposito' => $row['D'],
 					'jumlah' => $row['E'],
 					'tahun' => $row['F'],
+					'upload_by' => $this->session->userdata('user_id'),
 				));
 			}
 
@@ -3245,7 +3256,7 @@ class Keuanganhaji extends MY_Controller
 		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
 			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $no);
-			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['bulan']);
+			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, konversiBulanAngkaKeNama($element['bulan']));
 			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['giro']);
 			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['tabungan']);
 			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['deposito']);
@@ -3397,6 +3408,7 @@ class Keuanganhaji extends MY_Controller
 						'bps_bpih' => $data["A"][$i],
 						$data["B"][1] => $data["B"][$i],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					);
 					$this->db->insert('penempatan_dana_haji', $query, "bps_bpih = '" . $data["A"][$i] . "'");
 				}
@@ -3417,6 +3429,7 @@ class Keuanganhaji extends MY_Controller
 						'bps_bpih' => $row['A'], // Insert data nis dari kolom A di
 						$sheet['1']['B'] => $row['B'],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 

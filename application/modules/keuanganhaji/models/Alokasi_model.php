@@ -33,6 +33,7 @@
 			$this->db->select('*, tahun');
 			$this->db->from('alokasi_investasi');
 			$this->db->where('tahun', $tahun);
+			$this->db->order_by('bulan', 'ASC');
     		$query = $this->db->get(); 
     		return $result = $query->result_array();
   		}

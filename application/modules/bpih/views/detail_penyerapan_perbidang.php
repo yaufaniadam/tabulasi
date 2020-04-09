@@ -4,7 +4,7 @@
 	$bulan = $this->uri->segment($last-1);	 
   ?>
 <section class="content-header">
-	<h1><i class="fa fa-kaaba"></i> Laporan Penyerapan Output Perbidang <a
+	<h1><i class="fa fa-kaaba"></i> Laporan Penyerapan Anggaran Perbidang <a
 			href="<?= base_url('bpih/penyerapan_perbidang/'.$tahun); ?>" class="btn btn-warning btn-sm"><i
 				class="fas fa-chevron-left"></i>&nbsp; Kembali</a>
 	</h1>
@@ -17,7 +17,7 @@
 				<div class="box-body my-form-body">
 					<?php if ($penyerapan_perbidang) { ?>
 
-					<h4>Data <?=$bulan?> <?=$tahun?></h4>
+					<h4>Data <?=konversiBulanAngkaKeNama($bulan); ?> <?=$tahun?></h4>
 
 					<table id="table1" class="table table-striped table-bordered">
 						<tr>
@@ -27,15 +27,20 @@
 							<th class="text-center">Realisasi</th>
 							<th class="text-center">Persentase (%)</th>
 						</tr>
-						<?php foreach ($penyerapan_perbidang as $row) { ?>
-						<tr>
-							<td><?= $row['bidang']; ?></td>
-							<td style="text-align: center;"><?= $row['target']; ?></td>
-							<td style="text-align: center;"><?= $row['efisiensi']; ?></td>
-							<td style="text-align: center;"><?= $row['realisasi']; ?></td>
-							<td style="text-align: center;"><?= $row['persentase']; ?></td>
+						<?php 
+						$i=1; 
+						$totalrow= count($penyerapan_perbidang); 
+
+						foreach ($penyerapan_perbidang as $row) { ?>
+						<tr <?=( $i==$totalrow ) ? 'class="success text-bold"': ''; ?>>
+						<td><?= $row['bidang']; ?></td>
+							<td style="text-align: right;"><?= $row['target']; ?></td>
+							<td style="text-align: right;"><?= $row['efisiensi']; ?></td>
+							<td style="text-align: right;"><?= $row['realisasi']; ?></td>
+							<td style="text-align: right;"><?= $row['persentase']; ?></td>
 						</tr>
-						<?php } ?>
+						<?php $i++; 
+						} ?>
 					</table>
 				</div>
 			</div>

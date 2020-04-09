@@ -21,14 +21,13 @@
 				<div class="box-body my-form-body">
 				<table id="table1" class="table table-striped table-bordered">
 
-
 				<tr>
 					<th style="width:60%;">Bulan</th>
 					<th class="text-center">Aksi</th>
 				</tr>
 				<?php foreach ($sukuk_korporasi as $row) { ?>
 				<tr>
-					<td><?=$row['bulan']; ?></td>
+					<td><?=konversiBulanAngkaKeNama($row['bulan']); ?></td>
 					<td class="text-center">
 
 						<a style="color:#fff;" title="Lihat Detail" class="btn btn-xs btn-info"

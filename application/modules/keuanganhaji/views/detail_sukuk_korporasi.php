@@ -19,7 +19,7 @@
 				<div class="box-body my-form-body">
 					<?php if ($sukuk_korporasi) { ?>
 
-					<h4>Data <?=$bulan?> <?=$tahun?></h4>
+					<h4>Data <?=konversiBulanAngkaKeNama($bulan); ?> <?=$tahun?></h4>
 					
 					<table id="table1" class="table table-striped table-bordered">
 						<tr>

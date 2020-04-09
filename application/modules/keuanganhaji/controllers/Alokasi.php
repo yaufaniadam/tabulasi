@@ -97,7 +97,7 @@
 					'per_sumber_kas_haji'=>$data['B'][9],
 					'setoran_jemaah_haji'=>$data['B'][10],
 					'dau'=>$data['B'][11],					
-					'bulan'=>$data['B'][1],
+					'bulan'=>konversi_bulan_ke_angka($data['B'][1]),
 					'tahun'=>$data['C'][1],
 		    	);
 

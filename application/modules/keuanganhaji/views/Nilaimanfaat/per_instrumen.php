@@ -31,7 +31,7 @@
               echo "\t<th>" . $key . "</th>\n"; // create a table cell with the field name
               foreach ($values as $cell) // for every sub-array iterate through all values
               {
-                echo "\t<th class='text-center'>" . $cell . "</th>\n"; // write cells next to each other
+                echo "\t<th class='text-center'>" . konversiBulanAngkaKeNama($cell) . "</th>\n"; // write cells next to each other
               }
               echo "</tr>\n"; // end row
             } else if ($i == 2) {

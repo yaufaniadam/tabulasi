@@ -1,5 +1,5 @@
 <section class="content-header">
-	<h1><i class="fa fa-kaaba"></i> Laporan Penyerapan Output Perbidang <a
+	<h1><i class="fa fa-kaaba"></i> Laporan Penyerapan Anggaran Perbidang <a
 			href="<?= base_url('bpih/tambah_penyerapan_perbidang'); ?>" class="btn btn-warning btn-sm"><i
 				class="fas fa-plus"></i>&nbsp; Tambah Data</a>
 
@@ -25,7 +25,7 @@
 				</tr>
 				<?php foreach ($penyerapan_perbidang as $row) { ?>
 				<tr>
-					<td><?=$row['bulan']; ?></td>
+					<td><?=konversiBulanAngkaKeNama($row['bulan']); ?></td>
 					<td class="text-center">
 
 						<a style="color:#fff;" title="Lihat Detail" class="btn btn-xs btn-info"

@@ -109,8 +109,9 @@ class Nilaimanfaat extends MY_Controller
 			'emas' => $data['B'][15],
 			'total' => $data['B'][16],
 			'total_exclude_dau' => $data['B'][17],
-			'bulan' => $data['B'][1],
+			'bulan' => konversi_bulan_ke_angka($data['B'][1]),
 			'tahun' => $data['C'][1],
+			'upload_by' => $this->session->userdata('user_id'),
 		);
 
 		// Panggil fungsi insert_per_instrumen
@@ -185,8 +186,8 @@ class Nilaimanfaat extends MY_Controller
 
 		$i = 2;
 		foreach ($sebaran as $element) {
-			//echo $element['bulan'];echo konversiAngkaKeHuruf($i);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4, $element['bulan']);
+			//echo  konversiBulanAngkaKeNama($element['bulan']);echo konversiAngkaKeHuruf($i);
+			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4,  konversiBulanAngkaKeNama($element['bulan']));
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 5, $element['dau']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 6, $element['surat_berharga']);
 			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 7, $element['sdhi']);
@@ -338,6 +339,7 @@ class Nilaimanfaat extends MY_Controller
 						'bps_bpih' => $data["A"][$i],
 						$data["B"][1] => $data["B"][$i],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					);
 					$this->db->insert('nilai_manfaat_penempatan_di_bpsbpih', $query, "bps_bpih = '" . $data["A"][$i] . "'");
 				}
@@ -358,6 +360,7 @@ class Nilaimanfaat extends MY_Controller
 						'bps_bpih' => $row['A'], // Insert data nis dari kolom A di
 						$sheet['1']['B'] => $row['B'],
 						'tahun' => $data["C"][1],
+						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
 
@@ -582,8 +585,9 @@ class Nilaimanfaat extends MY_Controller
 					'tabungan' => $row['C'],
 					'deposito' => $row['D'],
 					'jumlah' => $row['E'],
-					'bulan' => $row['A'],
+					'bulan' => konversi_bulan_ke_angka($row['A']),
 					'tahun' => $row['F'],
+					'upload_by' => $this->session->userdata('user_id'),
 				));
 			}
 
@@ -658,7 +662,7 @@ class Nilaimanfaat extends MY_Controller
 		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
 			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $no);
-			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['bulan']);
+			$excel->getActiveSheet()->SetCellValue('B' . $rowCount,  konversiBulanAngkaKeNama($element['bulan']));
 			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['giro']);
 			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['tabungan']);
 			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['deposito']);

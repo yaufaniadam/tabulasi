@@ -43,7 +43,7 @@
 
 						<?php foreach($nilai_manfaat_produk as $produk ) { ?>
 						<tr>
-							<td><?=$produk['bulan'];?></td>
+							<td><?= konversiBulanAngkaKeNama($produk['bulan']);?></td>
 							<td style="text-align: right;"><?=$produk['giro'];?></td>
 							<td style="text-align: right;"><?=$produk['tabungan'];?></td>
 							<td style="text-align: right;"><?=$produk['deposito'];?></td>

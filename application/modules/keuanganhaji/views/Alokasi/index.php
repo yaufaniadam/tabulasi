@@ -24,7 +24,7 @@
           <tr class="mainheadingtable">
             <th style="width:25%;" class="first"><strong>Uraian</strong></td> 
               <?php foreach ($alokasi_investasi as $row) { ?>
-              <th style="text-align: right; width:20%"><?=$row['bulan']; ?>
+              <th style="text-align: right; width:20%"><?= konversiBulanAngkaKeNama($row['bulan']); ?>
                 
                 <a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger" data-href="<?=base_url('keuanganhaji/alokasi/hapus_alokasi_investasi/'.$row['id_alokasi_investasi']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
 

@@ -107,7 +107,7 @@ class Bpih extends MY_Controller
 						'target' => $row['B'],
 						'realisasi' => $row['C'],
 						'persentase' => $row['D'],
-						'bulan' => $data["E"][1],
+						'bulan' => konversi_bulan_ke_angka($data["E"][1]),
 						'tahun' => $data["F"][1],
 					));
 				}
@@ -150,13 +150,13 @@ class Bpih extends MY_Controller
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Pencapaian Output Perbidang Bulan ". $bulan. " " . $tahun)
-			->setSubject("Laporan Pencapaian Output Perbidang Bulan ". $bulan. " " . $tahun)
-			->setDescription("Laporan Pencapaian Output Perbidang Bulan ". $bulan. " " . $tahun)
+			->setTitle("Laporan Pencapaian Output Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
+			->setSubject("Laporan Pencapaian Output Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
+			->setDescription("Laporan Pencapaian Output Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
 			->setKeywords("Laporan Operasional Akumulasi");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Pencapaian Output Perbidang Bulan ". $bulan. " " . $tahun); // 
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Pencapaian Output Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun); // 
 		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
@@ -324,7 +324,7 @@ class Bpih extends MY_Controller
 						'efisiensi' => $row['C'],
 						'realisasi' => $row['D'],
 						'persentase' => $row['E'],
-						'bulan' => $data["F"][1],
+						'bulan' => konversi_bulan_ke_angka($data["F"][1]),
 						'tahun' => $data["G"][1],
 					));
 				}
@@ -366,13 +366,13 @@ class Bpih extends MY_Controller
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Penyerapan Output Perbidang Bulan ". $bulan. " " . $tahun)
-			->setSubject("Laporan Penyerapan Output Perbidang Bulan ". $bulan. " " . $tahun)
-			->setDescription("Laporan Penyerapan Output Perbidang Bulan ". $bulan. " " . $tahun)
+			->setTitle("Laporan Penyerapan Anggaran Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
+			->setSubject("Laporan Penyerapan Anggaran Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
+			->setDescription("Laporan Penyerapan Anggaran Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
 			->setKeywords("Laporan Operasional Akumulasi");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Penyerapan Output Perbidang Bulan ". $bulan. " " . $tahun); // 
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Penyerapan Anggaran Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun); // 
 		$excel->getActiveSheet()->mergeCells('A1:F1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1

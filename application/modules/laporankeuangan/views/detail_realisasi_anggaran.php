@@ -4,8 +4,8 @@
 	$bulan = $this->uri->segment($last-1);	 
   ?>
 <section class="content-header">
-	<h1><i class="fa fa-kaaba"></i> Detail SBSSN Rupiah <a
-			href="<?= base_url('keuanganhaji/sbssn_rupiah/'.$tahun); ?>" class="btn btn-warning btn-sm"><i
+	<h1><i class="fa fa-kaaba"></i> Laporan Pencapaian Output Perbidang <a
+			href="<?= base_url('laporankeuangan/realisasi_anggaran/'.$tahun); ?>" class="btn btn-warning btn-sm"><i
 				class="fas fa-chevron-left"></i>&nbsp; Kembali</a>
 	</h1>
 </section>
@@ -13,39 +13,27 @@
 	<div class="row">
 		<div class="col-md-12">
 
-		<?php menu_sukuk(); ?> <br>
-
 			<div class="box">
 				<div class="box-body my-form-body">
-					<?php if ($sbssn_rupiah) { ?>
+					<?php if ($realisasi_anggaran) { ?>
 
-					<h4>Data <?=konversiBulanAngkaKeNama($bulan); ?> <?=$tahun?></h4>
-					
+					<h4>Data <?=konversiBulanAngkaKeNama($bulan)?> <?=$tahun?></h4>
+
 					<table id="table1" class="table table-striped table-bordered">
 						<tr>
-							<th>No.</th>
-							<th>Instrumen</th>
-							<th class="text-center">Maturity</th>
-							<th class="text-center">Counterpart</th>
-							<th class="text-center">Nominal (US Dollar)</th>
+							<th>Uraian</th>
+							<th class="text-center">Target</th>
+							<th class="text-center">Realisasi</th>
+							<th class="text-center">Persentase (%)</th>
 						</tr>
-						<?php $i=1; foreach ($sbssn_rupiah as $row) { 
-                        if( $row['instrumen']== "TOTAL") { ?>
-						<tr class="success">
-							<th colspan="4"><?= $row['instrumen']; ?></th>
-							
-							<th style="text-align: right;"><?= $row['nilai']; ?></th>
+						<?php $i=1; foreach ($realisasi_anggaran as $row) { ?>
+						<tr <?=( $i==1 || $i==6 || $i==11|| $i==13 || $i==16 ) ? 'class="success text-bold"': ''; ?>>
+							<td><?= $row['bidang']; ?></td>
+							<td style="text-align: center;"><?= $row['target']; ?></td>
+							<td style="text-align: center;"><?= $row['realisasi']; ?></td>
+							<td style="text-align: center;"><?= $row['persentase']; ?></td>
 						</tr>
-                        <?php } else { ?>
-                        <tr>
-							<td><?=$i; ?></td>
-							<td><?= $row['instrumen']; ?></td>
-							<td style="text-align: center;"><?= $row['maturity']; ?></td>
-							<td style="text-align: center;"><?= $row['counterpart']; ?></td>
-							<td style="text-align: right;"><?= $row['nilai']; ?></td>
-						</tr>
-                       <?php } $i++;
-                     } ?>
+						<?php $i++; } ?>
 					</table>
 				</div>
 			</div>
@@ -86,6 +74,6 @@
 </script>
 
 <script>
-	$("#alokasi_produk_investasi").addClass('active');
-	$("#alokasi_produk_investasi .sukuk").addClass('active');
+	$("#realisasi_anggaran").addClass('active');
+
 </script>

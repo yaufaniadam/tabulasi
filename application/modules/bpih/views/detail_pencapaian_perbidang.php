@@ -17,7 +17,7 @@
 				<div class="box-body my-form-body">
 					<?php if ($pencapaian_perbidang) { ?>
 
-					<h4>Data <?=$bulan?> <?=$tahun?></h4>
+					<h4>Data <?=konversiBulanAngkaKeNama($bulan); ?> <?=$tahun?></h4>
 
 					<table id="table1" class="table table-striped table-bordered">
 						<tr>
@@ -26,14 +26,19 @@
 							<th class="text-center">Realisasi</th>
 							<th class="text-center">Persentase (%)</th>
 						</tr>
-						<?php foreach ($pencapaian_perbidang as $row) { ?>
-						<tr>
-							<td><?= $row['bidang']; ?></td>
+						<?php 
+						$i=1; 
+						$totalrow= count($pencapaian_perbidang); 
+
+						foreach ($pencapaian_perbidang as $row) { ?>
+						<tr <?=( $i==$totalrow ) ? 'class="success text-bold"': ''; ?>>
+						<td><?= $row['bidang']; ?></td>
 							<td style="text-align: center;"><?= $row['target']; ?></td>
 							<td style="text-align: center;"><?= $row['realisasi']; ?></td>
 							<td style="text-align: center;"><?= $row['persentase']; ?></td>
 						</tr>
-						<?php } ?>
+						<?php $i++; 
+						} ?>
 					</table>
 				</div>
 			</div>

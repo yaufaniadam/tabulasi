@@ -31,7 +31,7 @@
 
 
 					<tr>
-						<td><?=$row['bulan']; ?></td>
+						<td><?=konversiBulanAngkaKeNama($row['bulan']); ?></td>
 						<td style="text-align: right;"><?=$row['giro']; ?></td>
 						<td style="text-align: right;"><?=$row['tabungan']; ?></td>
 						<td style="text-align: right;"><?=$row['deposito']; ?></td>

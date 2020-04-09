@@ -37,6 +37,18 @@
 		    $this->db->insert_batch('program_kemaslahatan', $data);
 		}
 
+		public function get_dokumen(){
+			
+			$this->db->select('*');
+			$this->db->from('dokumen');	
+			$this->db->where('jenis_dokumen', 'regulasi_kemaslahatan');
+
+			$query = $this->db->get();
+			$result = array();
+			return $result = $query->result_array();
+			
+		}
+
 		public function get_dokumentasi($id){
 			
 			$this->db->select('*');
