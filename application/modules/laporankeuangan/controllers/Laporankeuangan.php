@@ -135,7 +135,7 @@ class Laporankeuangan extends MY_Controller
 	{
 		$this->db->delete('neraca', array('id' => $id));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('laporankeuangan/neraca'));
+		redirect(base_url('laporankeuangan/neraca/'.$uri));
 	}
 
 	public function export_neraca($tahun)

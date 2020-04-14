@@ -22,13 +22,16 @@
 
 if (count($neraca) > 0) {
 
+	$jumlah_col = count($neraca);
+	$tb_w =  ($jumlah_col <= 3) ? $jumlah_col * 400 : $jumlah_col * 200;
+
   foreach ($neraca as $key => $row) {
 	foreach ($row as $field => $value) {
 	  $recNew[$field][] = $value;
 	}
   }
   echo '<div class="well well-sm pre-scrollable" style="overflow-x: scroll; min-height:450px;">';
-	echo '<table id="table1" class="table table-striped table-bordered" style="width:2000px;">';
+	echo '<table id="table1" class="table table-striped table-bordered" style="width:'. $tb_w .'px;">';
 
   $i = 1;
   foreach ($recNew as $key => $values) // For every field name (id, name, last_name, gender)
@@ -46,7 +49,7 @@ if (count($neraca) > 0) {
 	  echo "\t<th style='width:200px !important'></th>\n"; // create a table cell with the field name
 	  foreach ($values as $cell) // for every sub-array iterate through all values
 	  {
-		echo '<th class="text-center"><a class="delete btn btn-xs btn-danger" data-href="'.base_url('laporankeuangan/neraca_detail/'. $cell).'" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
+		echo '<th class="text-center"><a class="delete btn btn-xs btn-danger" data-href="'.base_url('laporankeuangan/hapus_neraca/'. $cell.'/'.$thn).'" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
 		</th>'; // write cells next to each other
 	  }
 	  echo "</tr>\n"; // end row
