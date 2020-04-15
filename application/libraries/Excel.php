@@ -61,8 +61,15 @@ class Excel extends PHPExcel {
 	        ),
 		);
 
+		$style_td_bold_no_bg = array(
+		  	'font' => array('bold' => true),
+			  	'fill' => array(
+	            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+	        ),
+		);
 
-		$arr = array('style_header'=>$style_header, 'style_td'=>$style_td, 'style_td_left'=>$style_td_left, 'style_td_bold'=>$style_td_bold );
+
+		$arr = array('style_header'=>$style_header, 'style_td'=>$style_td, 'style_td_left'=>$style_td_left, 'style_td_bold'=>$style_td_bold,'style_td_bold_no_bg'=>$style_td_bold_no_bg );
 
 		return $arr[$style];
 

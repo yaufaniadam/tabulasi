@@ -87,82 +87,76 @@ class Laporankeuangan_model extends CI_Model
 
 	// LAPORAN BULANAN
 
-	public function get_tahun_lap_bulanan()
-	{
-
+	public function get_tahun_lap_bulanan(){
+			
 		$this->db->select('tahun');
-		$this->db->from('lap_bulanan');
-
+		$this->db->from('lap_bulanan2');			
+		
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
 		$query = $this->db->get();
-
-		return $result = $query->result_array();
+		return $result = $query->result_array();			
 	}
 
-	public function get_lap_bulanan($tahun)
-	{
-		$this->db->select('*,tahun');
-		$this->db->from('lap_bulanan');
+	public function get_lap_bulanan($tahun){
+		$this->db->select('bulan,tahun');
+		$this->db->from('lap_bulanan2');
 		$this->db->where('tahun', $tahun);
 		$this->db->order_by('bulan', 'ASC');
-		$query = $this->db->get();
+		$this->db->group_by('bulan');
+		$query = $this->db->get(); 
 		return $result = $query->result_array();
-	}
+	  }
 
-	public function get_detail_lap_bulanan($id)
-	{
+	  public function get_detail_lap_bulanan($bulan, $tahun){
 		$this->db->select('*');
-		$this->db->from('lap_bulanan');
-		$this->db->where('id', $id);
-		$query = $this->db->get();
-		return $result = $query->row_array();
+		$this->db->from('lap_bulanan2');
+		$this->db->where('bulan', $bulan);
+		$this->db->where('tahun', $tahun);
+		$query = $this->db->get(); 
+		return $result = $query->result_array();
+	  }		  
+	  
+	public function insert_lap_bulanan($data){
+		$this->db->insert_batch('lap_bulanan2', $data);
 	}
 
-	public function insert_lap_bulanan($data)
-	{
-		$this->db->insert('lap_bulanan', $data);
-	}
+	// LAPORAN BULANAN
 
-	// LAPORAN AKUMULASI
-
-	public function get_tahun_lap_akumulasi()
-	{
-
+	public function get_tahun_lap_akumulasi(){
+			
 		$this->db->select('tahun');
-		$this->db->from('lap_akumulasi');
-
+		$this->db->from('lap_akumulasi2');			
+		
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
 		$query = $this->db->get();
-
-		return $result = $query->result_array();
+		return $result = $query->result_array();			
 	}
 
-	public function get_lap_akumulasi($tahun)
-	{
-		$this->db->select('*,tahun');
-		$this->db->from('lap_akumulasi');
-		$this->db->where('tahun', $tahun);		
+	public function get_lap_akumulasi($tahun){
+		$this->db->select('bulan,tahun');
+		$this->db->from('lap_akumulasi2');
+		$this->db->where('tahun', $tahun);
 		$this->db->order_by('bulan', 'ASC');
-		$query = $this->db->get();
+		$this->db->group_by('bulan');
+		$query = $this->db->get(); 
 		return $result = $query->result_array();
-	}
+	  }
 
-	public function get_detail_lap_akumulasi($id)
-	{
+	  public function get_detail_lap_akumulasi($bulan, $tahun){
 		$this->db->select('*');
-		$this->db->from('lap_akumulasi');
-		$this->db->where('id', $id);
-		$query = $this->db->get();
-		return $result = $query->row_array();
-	}
-
-	public function insert_lap_akumulasi($data)
-	{
-		$this->db->insert('lap_akumulasi', $data);
+		$this->db->from('lap_akumulasi2');
+		$this->db->where('bulan', $bulan);
+		$this->db->where('tahun', $tahun);
+		$query = $this->db->get(); 
+		return $result = $query->result_array();
+	  }		  
+	  
+	public function insert_lap_akumulasi($data){
+		$this->db->insert_batch('lap_akumulasi2', $data);
 	}
 
 	// LAPORAN PERUBAHAN ASET NETO
