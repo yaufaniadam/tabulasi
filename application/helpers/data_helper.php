@@ -195,21 +195,23 @@ function konversiAngkaKeHuruf($angka)
         $CI = & get_instance();  
         ?>
 
-        <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Pilih tahun </a></li>
+<ol class="breadcrumb">
+	<li><a href="#"><i class="fa fa-dashboard"></i> Pilih tahun </a></li>
 
-        <?php foreach($tahun as $tahun) {
+	<?php foreach($tahun as $tahun) {
 
           if ($tahun['tahun'] == $thn ) { ?>
-            <li class="breadcrumb-item active" aria-current="page"> <?=$tahun['tahun']; ?></li>
-          <?php } else { ?> 
-            <li><a href="<?=base_url($dir."/".$CI->router->fetch_class().'/' . $CI->router->fetch_method() .'/'. $tahun['tahun']); ?>"> <?=$tahun['tahun']; ?></a></li>
-          <?php } //endif
+	<li class="breadcrumb-item active" aria-current="page"> <?=$tahun['tahun']; ?></li>
+	<?php } else { ?>
+	<li><a
+			href="<?=base_url($dir."/".$CI->router->fetch_class().'/' . $CI->router->fetch_method() .'/'. $tahun['tahun']); ?>">
+			<?=$tahun['tahun']; ?></a></li>
+	<?php } //endif
         } // end foreach ?>
 
-      </ol>
+</ol>
 
-      <?php
+<?php
     } */
 
 function breadcrumb($dir, $tahun, $thn)
@@ -221,75 +223,82 @@ function breadcrumb($dir, $tahun, $thn)
 
         <a class="btn btn-md btn-default">Pilih tahun</a>
 
-        <?php foreach ($tahun as $tahun) { ?>
-
-            <a href="<?= base_url($dir . "/" . $CI->router->fetch_class() . '/' . $CI->router->fetch_method() . '/' . $tahun['tahun']); ?>" class="btn btn-md <?= ($tahun['tahun'] == $thn) ? "disabled btn-success" : "btn-default" ?>"><?= $tahun['tahun']; ?></a>
-        <?php  } // end foreach 
+        <?php foreach ($tahun as $tahun) {
+            if ($tahun['tahun'] !== '') {
         ?>
+                <a href="<?= base_url($dir . "/" . $CI->router->fetch_class() . '/' . $CI->router->fetch_method() . '/' . $tahun['tahun']); ?>" class="btn btn-md <?= ($tahun['tahun'] == $thn) ? "disabled btn-success" : "btn-default" ?>"><?= $tahun['tahun']; ?></a>
 
+            <?php } 
+            }// end foreach 
+            ?>
     </div>
+<?php 
+    }
 
+    function menu_sukuk()
+    {
+
+        $CI = &get_instance();
+
+?>
+
+<div class="btn-group" role="group" style="margin-bottom: 20px;">
+
+    <a href="<?= base_url('keuanganhaji/sbssn_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+        SBSN Rupiah</a>
+    <a href="<?= base_url('keuanganhaji/sbssn_usd/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_usd') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+        SBSN USD</a>
+    <a href="<?= base_url('keuanganhaji/sdhi_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sdhi_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+        SDHI Rupiah</a>
+    <a href="<?= base_url('keuanganhaji/sukuk_korporasi/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sukuk_korporasi') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+        Korporasi</a>
+
+
+
+</div>
 
 
 <?php
-}
+    }
 
-function menu_sukuk()
-{
+    function menu_reksadana()
+    {
 
-    $CI = &get_instance();
+        $CI = &get_instance();
 
 ?>
 
     <div class="btn-group" role="group" style="margin-bottom: 20px;">
 
-        <a href="<?= base_url('keuanganhaji/sbssn_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk SBSN Rupiah</a>
-        <a href="<?= base_url('keuanganhaji/sbssn_usd/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_usd') ? "btn-info disabled" : "btn-default"; ?>">Sukuk SBSN USD</a>
-        <a href="<?= base_url('keuanganhaji/sdhi_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sdhi_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk SDHI Rupiah</a>
-        <a href="<?= base_url('keuanganhaji/sukuk_korporasi/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sukuk_korporasi') ? "btn-info disabled" : "btn-default"; ?>">Sukuk Korporasi</a>
-
+        <a href="<?= base_url('keuanganhaji/reksadana_terproteksi_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_terproteksi_syariah') ? "btn-info disabled" : "btn-default"; ?>">Terproteksi
+            Syariah</a>
+        <a href="<?= base_url('keuanganhaji/reksadana_pasar_uang_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_pasar_uang_syariah') ? "btn-info disabled" : "btn-default"; ?>">Pasar
+            Uang Syariah</a>
 
 
     </div>
 
 
 <?php
-}
+    }
 
-function menu_reksadana()
-{
+    function menu_non_dau()
+    {
 
-    $CI = &get_instance();
+        $CI = &get_instance();
 
 ?>
 
     <div class="btn-group" role="group" style="margin-bottom: 20px;">
 
-        <a href="<?= base_url('keuanganhaji/reksadana_terproteksi_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_terproteksi_syariah') ? "btn-info disabled" : "btn-default"; ?>">Terproteksi Syariah</a>
-        <a href="<?= base_url('keuanganhaji/reksadana_pasar_uang_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_pasar_uang_syariah') ? "btn-info disabled" : "btn-default"; ?>">Pasar Uang Syariah</a>
+        <a href="<?= base_url('keuanganhaji/porsi_penempatan_bps_bpih/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'porsi_penempatan_bps_bpih') ? "btn-info disabled" : "btn-default"; ?>">Porsi
+            Penempatan di Bank BPS-BPIH</a>
+        <a href="<?= base_url('keuanganhaji/sbssn_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'porsi_investasi') ? "btn-info disabled" : "btn-default"; ?>">Porsi
+            Investasi</a>
 
 
     </div>
 
 
 <?php
-}
-
-function menu_non_dau()
-{
-
-    $CI = &get_instance();
-
-?>
-
-    <div class="btn-group" role="group" style="margin-bottom: 20px;">
-
-        <a href="<?= base_url('keuanganhaji/porsi_penempatan_bps_bpih/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'porsi_penempatan_bps_bpih') ? "btn-info disabled" : "btn-default"; ?>">Porsi Penempatan di Bank BPS-BPIH</a>
-        <a href="<?= base_url('keuanganhaji/sbssn_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'porsi_investasi') ? "btn-info disabled" : "btn-default"; ?>">Porsi Investasi</a>
-
-
-    </div>
-
-
-<?php
-}
+    }
