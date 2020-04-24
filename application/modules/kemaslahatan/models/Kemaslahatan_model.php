@@ -5,7 +5,8 @@
 		public function get_tahun_kemaslahatan(){
 			
 			$this->db->select('tahun');
-			$this->db->from('program_kemaslahatan');			
+			$this->db->from('program_kemaslahatan');
+			$this->db->where('tahun !=', '');
 			
 			$this->db->order_by('tahun', 'ASC');
 			$this->db->group_by('tahun');
