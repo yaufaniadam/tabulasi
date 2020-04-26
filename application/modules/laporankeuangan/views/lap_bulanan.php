@@ -1,5 +1,5 @@
 <section class="content-header">
-	<h1><i class="fa fa-kaaba"></i> Tambah Laporan Operasional Bulanan <a
+	<h1><i class="fa fa-kaaba"></i> Laporan Operasional Bulanan <a
 			href="<?= base_url('laporankeuangan/tambah_lap_bulanan'); ?>" class="btn btn-warning btn-sm"><i
 				class="fas fa-plus"></i>&nbsp; Tambah Data</a>
 	</h1>
