@@ -22,9 +22,8 @@
 					<table id="table1" class="table table-striped table-bordered">
 						<tr>
 							<th>Uraian</th>
-							<th class="text-center">Catatan*</th>
-							<th class="text-center"><?=$tahun?> <br><em>(Unaudited)</em></th>
-							<th class="text-center"><?=$tahun-1?> <br><em>(Audited)</em></th>
+							<th class="text-center"><?=konversiBulanAngkaKeNama($bulan); ?> </th>
+					
 						</tr>
 						<?php 
 						$i=1; 
@@ -33,15 +32,13 @@
 						foreach ($lap_akumulasi as $row) { ?>
 						<tr <?=( $i==$totalrow ) ? 'class="success text-bold"': ''; ?>>
 						<td><?= $row['bidang']; ?></td>
-							<td style="text-align: center;"><?= $row['target']; ?></td>
-							<td style="text-align: right;"><?= $row['realisasi']; ?></td>
-							<td style="text-align: right;"><?= $row['persentase']; ?></td>
+							<td style="text-align: right;"><?= $row['target']; ?></td>
 						</tr>
 						<?php $i++; 
 						} ?>
                     </table>
                     
-                    <p>*Catatan atas Laporan Keuangan merupakan bagian yang tidak terpisahkan dari Laporan Keuangan ini</p>
+                   
 				</div>
 			</div>
 

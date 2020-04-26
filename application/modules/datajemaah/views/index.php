@@ -1,53 +1,65 @@
+<?php //get las URI
+$last = $this->uri->segment($this->uri->total_segments());
+?>
+
 <section class="content-header">
-  <h1><i class="fa fa-kaaba"></i> Mitra Kemaslahatan 
-    <a href="<?=base_url('kemaslahatan/tambah_kemaslahatan'); ?>" class="btn btn-warning btn-sm"><i class="fas fa-plus"></i>&nbsp;  Tambah Data</a>
-    <a href="<?=base_url('kemaslahatan/export_kemaslahatan/'.$thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp;  Export Data ke Excel</a>
-  </h1>
-  
+  <h1><i class="fa fa-file-pdf"></i> &nbsp; <?=$judul; ?>
+
+    <button class="btn btn-warning btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-plus"></i>&nbsp; Tambah Data
+    </button>
+
+  </h1>        
 </section>
 
+<style>
+  .error{ color:red; } 
+</style>
 
+<section class="content">
+  <div class="box">
+    <div class="box-header">
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body  my-form-body table-responsive">
 
-<section class="content">   
-    <div class="row">
-      <div class="col-lg-12">
-     <?php breadcrumb('',$tahun, $thn); ?> 
-     <div class="box-body smy-form-body box-keuangan">  
-      <table id="table1" class="table table-striped table-bordered">
+      <div class="collapse" id="collapseExample">
+        <div class="well">
+          <?=form_open(base_url('datajemaah/tambah/'. $kat),array('id'=>'form_datajemaah')); ?>
+         <!-- <input type="hidden" name="id" id="product_id">-->
+          <div class="row">
+            <input type="hidden" name="kat" value="<?=$kat; ?>">
+            <div class="col-md-5"><input type="number" name="tahun" value="" placeholder="Tahun" class="form-control" id="tahun" min="2000" max="2050"></div>
+            <div class="col-md-4"><input type="number" name="jumlah" value="" placeholder="Jumlah" class="form-control" id="jumlah"></div>
+            <div class="col-md-2"><input type="submit" name="submit" value="Tambah Data" class="btn btn-success"></div>
+          </div>
+          <?=form_close(); ?>
+          
+        </div>
+      </div>
+
+      <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
-          
-          <tr>  
-            <th style="text-align: center;width:160px;">Bulan</th>     
-            <th style="text-align: center;">Nama Penerima</th>
-            <th style="text-align: center;">Lokasi</th>
-            <th style="text-align: center;">Asnaf</th>
-            <th style="text-align: center;">Nilai</th>           
+          <tr>
+            <th>Tahun</th>
+            <th>Jumlah</th>
+            <th style="width:125px;text-align: center;">Action</th>
           </tr>
-          
         </thead>
-        <tbody>   
-
-          <?php foreach($kemaslahatan as $row ) { ?>
+        <tbody>
+          <?php foreach ($antri as $row) { ?>
             <tr>
-            <td>
-              
-               <a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger" data-href="<?=base_url('kemaslahatan/hapus_kemaslahatan/'.$row['id']); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
-               &nbsp;
-               <?=konversiBulanAngkaKeNama($row['bulan']) . " " . $row['tahun'];?>
-            </td> 
-
-            <td><?=$row['nama_penerima'];?></td>
-            <td><?=$row['lokasi'];?></td>
-            <td><?=$row['asnaf'];?></td>
-            <td style="text-align: right;"><?=$row['nilai'];?></td>       
-          </tr>         
-        <?php } ?>          
-        </tbody>
+              <td><?=$row['tahun']; ?></td>
+              <td><?=$row['jumlah']; ?></td>
+              <td class="text-center"><a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger" data-href="<?=base_url('datajemaah/hapus/'.$row['id'].'/'.$last); ?>" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a></td>
+             
+          <?php  } ?>
+        </tbody>           
       </table>
     </div>
-   </div>
+    <!-- /.box-body -->
   </div>
-</section>
+  <!-- /.box -->
+</section>  
 
 <!-- Modal -->
 <div id="confirm-delete" class="modal fade" role="dialog">
@@ -70,13 +82,64 @@
   </div>
 </div>
 
-  <script type="text/javascript">
-      $('#confirm-delete').on('show.bs.modal', function(e) {
-      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-    });
-  </script>
 
-<script>
-   $("#kemaslahatan").addClass('active');
+<!-- DataTables -->
+<script src="<?= base_url() ?>public/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url() ?>public/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+
+<script type="text/javascript">
+  $(function () {
+    $("#table").DataTable();
+  });
+    
+  var SITEURL = '<?php echo base_url(); ?>';
+  if ($("#form_datajemaah").length > 0) {
+    $("#form_datajemaah").validate( {
+      rules: {
+        tahun: {
+          required: true,
+          minlength: 2
+        },
+        jumlah: {
+          required: true,
+        }
+      },
+      messages: {
+        tahun: {
+          required: "Tahun wajib diisi",
+          minlength: jQuery.validator.format("At least {0} characters required!")
+        },
+        gdp_ina: {
+          required: "Jumlah wajib diisi",
+        }
+      },
+      submitHandler: function(form) {
+        $.ajax({
+          url: SITEURL + "datajemaah/tambah/<?=$kat; ?>",
+          data: $('#form_datajemaah').serialize(),
+          type:"post",
+          dataType: 'json',
+          success: function(res){
+             var gdp_ina = '<tr id="id_' + res.data.id + '"><td>' + res.data.tahun + '</td><td>' + res.data.jumlah + '</td><td class="text-center"><a style="color:#fff;" title="Hapus" class="delete btn btn-xs btn-danger" data-href="' + SITEURL + '/datajemaah/hapus/' + res.data.id + '" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a></td>';
+
+              $('#table').prepend(gdp_ina);          
+              $('#table tr#id_' + res.data.id).addClass("success").delay(1000).queue(function(){
+                $(this).removeClass("success", 1000).dequeue();
+              });
+            },
+           error: function (data) {
+                  console.log('Error:', data);
+               }
+        });
+      }
+    });  
+  } //endif
+
+  $('#confirm-delete').on('show.bs.modal', function(e) {
+    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+  });
+
+  $("#datajemaah").addClass('active');
+  $("#datajemaah .<?=$last; ?>").addClass('active');
 </script>
-

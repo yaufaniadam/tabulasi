@@ -18,16 +18,13 @@
 
           // Buat sebuah tag form untuk proses import data ke database
           echo form_open_multipart(base_url('laporankeuangan/import_lap_bulanan/'.$file_excel), 'class="form-horizontal"' ); 
-          $tahun_sblm = intval($sheet['1']['F'])-1;
-
-          echo "<p class='alert alert-warning'>Data bulan ".$sheet['1']['E']." " . $sheet['1']['F'] . "</p>";
+          echo "<p class='alert alert-warning'>Data bulan ".$sheet['1']['B']." " . $sheet['1']['C'] . "</p>";
           echo "<table class='table table-bordered table-striped'>
          
           <tr>
             <th>Uraian</th>
-            <th>Catatan</th>
-            <th class='text-center'> " .$sheet['1']['F'] ."<br><em>(Unaudited)</em></th>            
-            <th class='text-center'> " . $tahun_sblm ."<br><em>(Audited)</em></th>                  
+            <th class='text-center'> " .$sheet['1']['B'] ."</th>            
+            <th class='text-center'> Tahun </th>                            
           </tr>";
           
           $numrow = 1;
@@ -39,9 +36,8 @@
             if($numrow > 1){    
               echo "<tr>";            
               echo "<td>".$row['A']."</td>"; 
-              echo "<td>".$row['B']."</td>";
-              echo "<td class='text-right'>".$row['C']."</td>";
-              echo "<td class='text-right'>".$row['D']."</td>";            
+              echo "<td class='text-right'>".$row['B']."</td>";           
+              echo "<td class='text-center'>".$sheet['1']['C']."</td>";           
               echo "</tr>";
             }
             

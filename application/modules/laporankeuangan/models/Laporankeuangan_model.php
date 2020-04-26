@@ -114,6 +114,7 @@ class Laporankeuangan_model extends CI_Model
 		$this->db->from('lap_bulanan2');
 		$this->db->where('bulan', $bulan);
 		$this->db->where('tahun', $tahun);
+		$this->db->where('bidang !=', '');
 		$query = $this->db->get(); 
 		return $result = $query->result_array();
 	  }		  
@@ -150,7 +151,8 @@ class Laporankeuangan_model extends CI_Model
 		$this->db->select('*');
 		$this->db->from('lap_akumulasi2');
 		$this->db->where('bulan', $bulan);
-		$this->db->where('tahun', $tahun);
+		$this->db->where('tahun', $tahun);		
+		$this->db->where('bidang !=', '');
 		$query = $this->db->get(); 
 		return $result = $query->result_array();
 	  }		  

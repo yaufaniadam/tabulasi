@@ -135,7 +135,7 @@ class Laporankeuangan extends MY_Controller
 	{
 		$this->db->delete('neraca', array('id' => $id));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('laporankeuangan/neraca/'.$uri));
+		redirect(base_url('laporankeuangan/neraca/' . $uri));
 	}
 
 	public function export_neraca($tahun)
@@ -308,7 +308,7 @@ class Laporankeuangan extends MY_Controller
 		$data['view'] = 'lap_bulanan';
 		$this->load->view('admin/layout', $data);
 	}
-	public function detail_lap_bulanan($bulan=0, $tahun = 0)
+	public function detail_lap_bulanan($bulan = 0, $tahun = 0)
 	{
 		$data['tahun'] = $this->laporankeuangan_model->get_tahun_lap_bulanan();
 		$data['lap_bulanan'] = $this->laporankeuangan_model->get_detail_lap_bulanan($bulan, $tahun);
@@ -366,7 +366,6 @@ class Laporankeuangan extends MY_Controller
 	public function import_lap_bulanan($file_excel)
 	{
 
-
 		$excelreader = new PHPExcel_Reader_Excel2007();
 		$loadexcel = $excelreader->load('./uploads/excel/laporankeuangan/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
@@ -375,25 +374,21 @@ class Laporankeuangan extends MY_Controller
 
 		$data2 = array();
 
-			$numrow = 1;
-			foreach ($sheet as $row) {
+		$numrow = 1;
+		foreach ($sheet as $row) {
 
-				if ($numrow > 1) {
-					// Kita push (add) array data ke variabel data
-					array_push($data2, array(
-						'bidang' => $row['A'], 
-						'target' => $row['B'],
-						'realisasi' => $row['C'],
-						'persentase' => $row['D'],
-						'bulan' => konversi_bulan_ke_angka($data["E"][1]),
-						'tahun' => $data["F"][1],
-					));
-				}
-
-				$numrow++; // Tambah 1 setiap kali looping
+			if ($numrow > 1) {
+				// Kita push (add) array data ke variabel data
+				array_push($data2, array(
+					'bidang' => $row['A'],
+					'target' => $row['B'],
+					'bulan' => konversi_bulan_ke_angka($data["B"][1]),
+					'tahun' => $data["C"][1],
+				));
 			}
 
-	
+			$numrow++; // Tambah 1 setiap kali looping
+		}
 
 		// Panggil fungsi insert_lap_bulanan
 		$this->laporankeuangan_model->insert_lap_bulanan($data2);
@@ -405,10 +400,10 @@ class Laporankeuangan extends MY_Controller
 	{
 		$this->db->delete('lap_bulanan2', array('bulan' => $bulan, 'tahun' => $tahun));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('laporankeuangan/lap_bulanan/'. $tahun));
+		redirect(base_url('laporankeuangan/lap_bulanan/' . $tahun));
 	}
 
-	public function export_lap_bulanan($bulan,$tahun)
+	public function export_lap_bulanan($bulan, $tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -429,46 +424,40 @@ class Laporankeuangan extends MY_Controller
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Operasional Bulanan  Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
-			->setSubject("Laporan Operasional Bulanan  Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
-			->setDescription("Laporan Operasional Bulanan  Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
+			->setTitle("Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setSubject("Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setDescription("Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
 			->setKeywords("Laporan Operasional Bulanan");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Operasional Bulanan  Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun); // 
-		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:B1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
-		$excel->getActiveSheet()->mergeCells('A2:E2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->getActiveSheet()->mergeCells('A2:B2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 
 		$excel->getActiveSheet()->SetCellValue('A4', 'Uraian');
-		$excel->getActiveSheet()->SetCellValue('B4', 'Catatan');
-		$excel->getActiveSheet()->SetCellValue('C4', $tahun);
-		$excel->getActiveSheet()->SetCellValue('D4', $tahun-1);
+		$excel->getActiveSheet()->SetCellValue('B4', konversiBulanAngkaKeNama($bulan) );
 
 		$excel->getActiveSheet()->SetCellValue('A5', '');
 		$excel->getActiveSheet()->SetCellValue('B5', '');
-		$excel->getActiveSheet()->SetCellValue('C5', '(Unaudited)');
-		$excel->getActiveSheet()->SetCellValue('D5', '(Audited)');
-		
-		$no=1;
-		$rowCount = 6;
-		$last_row = count($sebaran) + 5;
+
+		$no = 1;
+		$rowCount = 5;
+		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
-			
+
 			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $element['bidang']);
 			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['target']);
-			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['realisasi']);
-			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['persentase']);
-		
+
 
 			//stile column No
 			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
@@ -488,18 +477,7 @@ class Laporankeuangan extends MY_Controller
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
 		}
-		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
-			$excel->getActiveSheet()->getStyle($i . '5')->applyFromArray($style_header);
-		}
-
-		$excel->getActiveSheet()
-		->getStyle('C5')
-		->getBorders()
-		->getBottom()
-		->setBorderStyle(PHPExcel_Style_Border::BORDER_DOUBLE);
-
-		$excel->getActiveSheet()->mergeCells('A4:A5'); // Set Merge Cell 
-		$excel->getActiveSheet()->mergeCells('B4:B5'); // Set Merge Cell 
+		
 
 		// last row style    		
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
@@ -550,7 +528,7 @@ class Laporankeuangan extends MY_Controller
 		$data['view'] = 'lap_akumulasi';
 		$this->load->view('admin/layout', $data);
 	}
-	public function detail_lap_akumulasi($bulan=0, $tahun = 0)
+	public function detail_lap_akumulasi($bulan = 0, $tahun = 0)
 	{
 		$data['tahun'] = $this->laporankeuangan_model->get_tahun_lap_akumulasi();
 		$data['lap_akumulasi'] = $this->laporankeuangan_model->get_detail_lap_akumulasi($bulan, $tahun);
@@ -617,25 +595,23 @@ class Laporankeuangan extends MY_Controller
 
 		$data2 = array();
 
-			$numrow = 1;
-			foreach ($sheet as $row) {
+		$numrow = 1;
+		foreach ($sheet as $row) {
 
-				if ($numrow > 1) {
-					// Kita push (add) array data ke variabel data
-					array_push($data2, array(
-						'bidang' => $row['A'], 
-						'target' => $row['B'],
-						'realisasi' => $row['C'],
-						'persentase' => $row['D'],
-						'bulan' => konversi_bulan_ke_angka($data["E"][1]),
-						'tahun' => $data["F"][1],
-					));
-				}
-
-				$numrow++; // Tambah 1 setiap kali looping
+			if ($numrow > 1) {
+				// Kita push (add) array data ke variabel data
+				array_push($data2, array(
+					'bidang' => $row['A'],
+					'target' => $row['B'],
+					'bulan' => konversi_bulan_ke_angka($data["B"][1]),
+					'tahun' => $data["C"][1],
+				));
 			}
 
-	
+			$numrow++; // Tambah 1 setiap kali looping
+		}
+
+
 
 		// Panggil fungsi insert_lap_akumulasi
 		$this->laporankeuangan_model->insert_lap_akumulasi($data2);
@@ -647,10 +623,10 @@ class Laporankeuangan extends MY_Controller
 	{
 		$this->db->delete('lap_akumulasi2', array('bulan' => $bulan, 'tahun' => $tahun));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('laporankeuangan/lap_akumulasi/'. $tahun));
+		redirect(base_url('laporankeuangan/lap_akumulasi/' . $tahun));
 	}
 
-	public function export_lap_akumulasi($bulan,$tahun)
+	public function export_lap_akumulasi($bulan, $tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -671,46 +647,40 @@ class Laporankeuangan extends MY_Controller
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Operasional Akumulasi  Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
-			->setSubject("Laporan Operasional Akumulasi  Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
-			->setDescription("Laporan Operasional Akumulasi  Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
+			->setTitle("Laporan Operasional Akumulasi  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setSubject("Laporan Operasional Akumulasi  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setDescription("Laporan Operasional Akumulasi  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
 			->setKeywords("Laporan Operasional Akumulasi");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Operasional Akumulasi  Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun); // 
-		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Operasional Akumulasi  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:B1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
-		$excel->getActiveSheet()->mergeCells('A2:E2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->getActiveSheet()->mergeCells('A2:B2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 
 		$excel->getActiveSheet()->SetCellValue('A4', 'Uraian');
-		$excel->getActiveSheet()->SetCellValue('B4', 'Catatan');
-		$excel->getActiveSheet()->SetCellValue('C4', $tahun);
-		$excel->getActiveSheet()->SetCellValue('D4', $tahun-1);
+		$excel->getActiveSheet()->SetCellValue('B4', konversiBulanAngkaKeNama($bulan) );
 
 		$excel->getActiveSheet()->SetCellValue('A5', '');
 		$excel->getActiveSheet()->SetCellValue('B5', '');
-		$excel->getActiveSheet()->SetCellValue('C5', '(Unaudited)');
-		$excel->getActiveSheet()->SetCellValue('D5', '(Audited)');
-		
-		$no=1;
-		$rowCount = 6;
-		$last_row = count($sebaran) + 5;
+
+		$no = 1;
+		$rowCount = 5;
+		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
-			
+
 			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $element['bidang']);
 			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['target']);
-			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['realisasi']);
-			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['persentase']);
-		
+
 
 			//stile column No
 			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
@@ -730,18 +700,7 @@ class Laporankeuangan extends MY_Controller
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
 		}
-		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
-			$excel->getActiveSheet()->getStyle($i . '5')->applyFromArray($style_header);
-		}
-
-		$excel->getActiveSheet()
-		->getStyle('C5')
-		->getBorders()
-		->getBottom()
-		->setBorderStyle(PHPExcel_Style_Border::BORDER_DOUBLE);
-
-		$excel->getActiveSheet()->mergeCells('A4:A5'); // Set Merge Cell 
-		$excel->getActiveSheet()->mergeCells('B4:B5'); // Set Merge Cell 
+		
 
 		// last row style    		
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
@@ -884,7 +843,7 @@ class Laporankeuangan extends MY_Controller
 	{
 		$this->db->delete('perubahan_asetneto', array('id' => $id));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('laporankeuangan/perubahan_asetneto/'. $uri));
+		redirect(base_url('laporankeuangan/perubahan_asetneto/' . $uri));
 	}
 
 	public function export_perubahan_asetneto($tahun)
@@ -1027,7 +986,7 @@ class Laporankeuangan extends MY_Controller
 		$data['view'] = 'realisasi_anggaran';
 		$this->load->view('admin/layout', $data);
 	}
-	public function detail_realisasi_anggaran($bulan=0, $tahun = 0)
+	public function detail_realisasi_anggaran($bulan = 0, $tahun = 0)
 	{
 		$data['tahun'] = $this->laporankeuangan_model->get_tahun_realisasi_anggaran();
 		$data['realisasi_anggaran'] = $this->laporankeuangan_model->get_detail_realisasi_anggaran($bulan, $tahun);
@@ -1094,26 +1053,26 @@ class Laporankeuangan extends MY_Controller
 
 		$data2 = array();
 
-			$numrow = 1;
-			foreach ($sheet as $row) {
+		$numrow = 1;
+		foreach ($sheet as $row) {
 
-				if ($numrow > 1) {
-					// Kita push (add) array data ke variabel data
-					array_push($data2, array(
-						'bidang' => $row['A'], 
-						'target' => $row['B'],
-						'realisasi' => $row['C'],
-						'persentase' => $row['D'],
-						'bulan' => konversi_bulan_ke_angka($data["E"][1]),
-						'tahun' => $data["F"][1],
-						'upload_by' => $this->session->userdata('user_id'),
-					));
-				}
-
-				$numrow++; // Tambah 1 setiap kali looping
+			if ($numrow > 1) {
+				// Kita push (add) array data ke variabel data
+				array_push($data2, array(
+					'bidang' => $row['A'],
+					'target' => $row['B'],
+					'realisasi' => $row['C'],
+					'persentase' => $row['D'],
+					'bulan' => konversi_bulan_ke_angka($data["E"][1]),
+					'tahun' => $data["F"][1],
+					'upload_by' => $this->session->userdata('user_id'),
+				));
 			}
 
-	
+			$numrow++; // Tambah 1 setiap kali looping
+		}
+
+
 
 		// Panggil fungsi insert_realisasi_anggaran
 		$this->laporankeuangan_model->insert_realisasi_anggaran($data2);
@@ -1125,10 +1084,10 @@ class Laporankeuangan extends MY_Controller
 	{
 		$this->db->delete('realisasi_anggaran2', array('bulan' => $bulan, 'tahun' => $tahun));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('bpih/realisasi_anggaran/'. $tahun));
+		redirect(base_url('bpih/realisasi_anggaran/' . $tahun));
 	}
 
-	public function export_realisasi_anggaran($bulan,$tahun)
+	public function export_realisasi_anggaran($bulan, $tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -1148,13 +1107,13 @@ class Laporankeuangan extends MY_Controller
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Realisasi Anggaran Bulan ". $bulan. " " . $tahun)
-			->setSubject("Laporan Realisasi Anggaran Bulan ". $bulan. " " . $tahun)
-			->setDescription("Laporan Realisasi Anggaran Bulan ". $bulan. " " . $tahun)
+			->setTitle("Laporan Realisasi Anggaran Bulan " . $bulan . " " . $tahun)
+			->setSubject("Laporan Realisasi Anggaran Bulan " . $bulan . " " . $tahun)
+			->setDescription("Laporan Realisasi Anggaran Bulan " . $bulan . " " . $tahun)
 			->setKeywords("Laporan Operasional Akumulasi");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Realisasi Anggaran Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun); // 
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Realisasi Anggaran Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun); // 
 		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
@@ -1172,8 +1131,8 @@ class Laporankeuangan extends MY_Controller
 		$excel->getActiveSheet()->SetCellValue('C4', 'Target');
 		$excel->getActiveSheet()->SetCellValue('D4', 'Realisasi');
 		$excel->getActiveSheet()->SetCellValue('E4', 'Persentase');
-		
-		$no=1;
+
+		$no = 1;
 		$rowCount = 5;
 		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
@@ -1182,7 +1141,7 @@ class Laporankeuangan extends MY_Controller
 			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['target']);
 			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['realisasi']);
 			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['persentase']);
-		
+
 
 			//stile column No
 			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
@@ -1302,7 +1261,7 @@ class Laporankeuangan extends MY_Controller
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
 		$data = transposeData($sheet);
-		
+
 		$dataquery = array(
 			'penerima_nilai_manfaat' => $data['B'][3],
 			'penerimaan_operasional_efisiensi' => $data['B'][4],
@@ -1336,7 +1295,7 @@ class Laporankeuangan extends MY_Controller
 
 		redirect("laporankeuangan/lap_arus_kas"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 
-	
+
 	}
 
 	public function hapus_lap_arus_kas($id = 0, $uri = NULL)
@@ -1481,5 +1440,4 @@ class Laporankeuangan extends MY_Controller
 		header("Content-Type: application/vnd.ms-excel");
 		redirect('./uploads/excel/' . $fileName);
 	}
-
 } //class

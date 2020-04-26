@@ -196,35 +196,13 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="data_jemaah_antri"><a href="<?= base_url('datajemaah/data_jemaah_antri'); ?>"> &nbsp;Data Jemaah Antri</a></li>
-            <li class="kuota_jemaah_berangkat"><a href="<?= base_url('datajemaah/kuota_jemaah_berangkat'); ?>"> &nbsp;Kuota Jemaah berangkat</a></li>
-            <li class="data_jemaah_batal"><a href="<?= base_url('datajemaah/data_jemaah_batal'); ?>"> &nbsp;Data Jemaah Batal</a></li>
+            <li class="antri"><a href="<?= base_url('datajemaah/antri'); ?>"> &nbsp;Data Jemaah Antri</a></li>
+            <li class="kuota"><a href="<?= base_url('datajemaah/kuota'); ?>"> &nbsp;Kuota Jemaah Berangkat</a></li>
+            <li class="batal"><a href="<?= base_url('datajemaah/batal'); ?>"> &nbsp;Data Jemaah Batal</a></li>
+            <li class="bipih"><a href="<?= base_url('datajemaah/bipih'); ?>"> &nbsp;Realisasi Bipih</a></li>
+            <li class="bpih"><a href="<?= base_url('datajemaah/bpih'); ?>"> &nbsp;Realisasi BPIH</a></li>
           </ul>
-        </li>
-        <li id="realisasi_bipih" class="treeview">
-          <a href="#">
-            <span>Realisasi Bipih</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li class="realisasi_bipih_2000"><a href="<?= base_url('datajemaah/realisasi_bipih_2000'); ?>"> &nbsp;Tahun 2000</a></li>
-            <li class="realisasi_bipih_2001"><a href="<?= base_url('datajemaah/realisasi_bipih_2001'); ?>"> &nbsp;Tahun 2001</a></li>
-          </ul>
-        </li>
-        <li id="realisasi_bpih" class="treeview">
-          <a href="#">
-            <span>Realisasi BPIH</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li class="realisasi_bpih_2000"><a href="<?= base_url('datajemaah/realisasi_bpih_2000'); ?>"> &nbsp;Tahun 2000</a></li>
-            <li class="realisasi_bpih_2001"><a href="<?= base_url('datajemaah/realisasi_bpih_2001'); ?>"> &nbsp;Tahun 2001</a></li>
-          </ul>
-        </li>
+        </li>      
 
         <li class="header">INFORMASI NON KEUANGAN BPKH</li>
         <li id="dokumen" class="treeview">

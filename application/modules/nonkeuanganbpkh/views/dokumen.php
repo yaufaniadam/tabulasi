@@ -1,8 +1,6 @@
 <?php //get las URI
 $last = $this->uri->total_segments();
 $record_num = $this->uri->segment($last);
-
-
 ?>
 <section class="content-header">
 	<h1><i class="fa fa-file-pdf"></i> &nbsp; Dokumen
