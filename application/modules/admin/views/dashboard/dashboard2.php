@@ -39,7 +39,12 @@
 					</div>
 				</div>
 				<div class="box-body">
-					<canvas id="penempatan" style="height:200px"></canvas>
+          <canvas id="penempatan" style="height:200px"></canvas>          
+          <p class="text-center" style="margin-top:50px;">
+            <a href="<?= base_url('keuanganhaji/porsi_penempatan_bps_bpih/'); ?>" class="btn btn-md btn-warning">
+            Lihat Porsi Penempatan</a>        
+          </p>
+         
 				</div>
 				<!-- /.box-body -->
 			</div>
@@ -64,6 +69,11 @@
         <div class="box-body">
           <div class="chart">
             <canvas id="investasi" style="height:230px"></canvas>
+
+            <p class="text-center" style="margin-top:50px;">
+              <a href="<?= base_url('keuanganhaji/sbssn_rupiah/'); ?>" class="btn btn-md btn-success">Lihat Porsi
+              Investasi</a>       
+            </p>
           </div>
         </div>
         <!-- /.box-body -->

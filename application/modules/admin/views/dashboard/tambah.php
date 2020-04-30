@@ -89,7 +89,7 @@
 
               <ol class="panduan-pengisian">
                 <li>Ekstensi File yang didukung hanya .xlsx</li>
-                <li>Data yang diimport harus mengikuti template yang sudah disediakan. <a href="<?=base_url('public/template-excel/dashboard/lap_dashboard.xlsx'); ?>" class="btn btn-success btn-xs"><i class="fas fa-file-excel"></i> Unduh Template Excel</a></li>
+                <li>Data yang diimport harus mengikuti template yang sudah disediakan. <a href="<?=base_url('public/template-excel/dashboard/dashboard.xlsx'); ?>" class="btn btn-success btn-xs"><i class="fas fa-file-excel"></i> Unduh Template Excel</a></li>
                 <li>Kolom Tahun wajib diisi</li>
                 <li>Data yang dapat diimport hanya data satu bulan</li>
                 <li>Format Tahun : 2020, dst</li>               

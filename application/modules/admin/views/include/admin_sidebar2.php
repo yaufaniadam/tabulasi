@@ -16,7 +16,7 @@
 
       <ul class="sidebar-menu">
         <li class="header">KEUANGAN HAJI</li>
-        <li id="pengelolaan_keuangan_haji" class="treeview">
+        <!--<li id="pengelolaan_keuangan_haji" class="treeview">
           <a href="<?= base_url('keuanganhaji'); ?>">
             <span>Pengelolaan Keu. Haji</span>
             <span class="pull-right-container">
@@ -27,7 +27,7 @@
             <li class="total_dana_kelolaan_non_dau"><a href="<?= base_url('keuanganhaji/total_dana_kelolaan_non_dau'); ?>">Total Dana Kelolaan (NON-DAU) </a></li>
             <li class="total_dana_kelolaan_dau"><a href="<?= base_url('keuanganhaji/total_dana_kelolaan_dau'); ?>">Total Dana Kelolaan DAU</a></li>
           </ul>
-        </li>
+        </li>-->
 
         <li id="alokasi_produk_perbankan" class="treeview">
           <a href="<?= base_url('keuanganhaji'); ?>">
