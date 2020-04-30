@@ -7,7 +7,7 @@
     <ul class="sidebar-menu">
       <li id="dashboard" class="treeview">
         <a href="<?= base_url('admin/dashboard'); ?>">
-          <i class="fa fa-home"></i> <span>Beranda</span>
+          <i class="fas fa-tachometer-alt"></i><span> Dashboard</span>
         </a>
       </li>
     </ul>
@@ -199,8 +199,7 @@
             <li class="antri"><a href="<?= base_url('datajemaah/antri'); ?>"> &nbsp;Data Jemaah Antri</a></li>
             <li class="kuota"><a href="<?= base_url('datajemaah/kuota'); ?>"> &nbsp;Kuota Jemaah Berangkat</a></li>
             <li class="batal"><a href="<?= base_url('datajemaah/batal'); ?>"> &nbsp;Data Jemaah Batal</a></li>
-            <li class="bipih"><a href="<?= base_url('datajemaah/bipih'); ?>"> &nbsp;Realisasi Bipih</a></li>
-            <li class="bpih"><a href="<?= base_url('datajemaah/bpih'); ?>"> &nbsp;Realisasi BPIH</a></li>
+             <li class="bpih"><a href="<?= base_url('datajemaah/realisasi_bpih'); ?>"> &nbsp;Realisasi BIPIH & BPIH</a></li>
           </ul>
         </li>      
 

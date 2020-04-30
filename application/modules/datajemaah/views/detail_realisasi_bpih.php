@@ -4,8 +4,8 @@
 	$bulan = $this->uri->segment($last-1);	 
   ?>
 <section class="content-header">
-	<h1><i class="fa fa-kaaba"></i> Laporan Realisasi Anggaran <a
-			href="<?= base_url('laporankeuangan/realisasi_anggaran/'.$tahun); ?>" class="btn btn-warning btn-sm"><i
+	<h1><i class="fa fa-kaaba"></i> Laporan Realisasi BPIH <a
+			href="<?= base_url('datajemaah/realisasi_bpih/'.$tahun); ?>" class="btn btn-warning btn-sm"><i
 				class="fas fa-chevron-left"></i>&nbsp; Kembali</a>
 	</h1>
 </section>
@@ -15,18 +15,18 @@
 
 			<div class="box">
 				<div class="box-body my-form-body">
-					<?php if ($realisasi_anggaran) { ?>
+					<?php if ($realisasi_bpih) { ?>
 
-					<h4>Data <?=konversiBulanAngkaKeNama($bulan)?> <?=$tahun?></h4>
+					<h4>Data <?=$tahun?></h4>
 
 					<table id="table1" class="table table-striped table-bordered">
 						<tr>
 							<th>Uraian</th>
-							<th class="text-center">Target</th>
+							<th class="text-center">Anggaran</th>
 							<th class="text-center">Realisasi</th>
 							<th class="text-center">Persentase (%)</th>
 						</tr>
-						<?php $i=1; foreach ($realisasi_anggaran as $row) { ?>
+						<?php $i=1; foreach ($realisasi_bpih as $row) { ?>
 						<tr <?=( $i==1 || $i==6 || $i==11|| $i==13 || $i==16 ) ? 'class="success text-bold"': ''; ?>>
 							<td><?= $row['bidang']; ?></td>
 							<td style="text-align: center;"><?= $row['target']; ?></td>
@@ -74,6 +74,6 @@
 </script>
 
 <script>
-	$("#realisasi_anggaran").addClass('active');
-
+	$("#datajemaah").addClass('active');
+	$("#datajemaah .bpih").addClass('active');
 </script>

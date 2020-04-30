@@ -20,7 +20,6 @@ class Laporankeuangan extends MY_Controller
 
 	public function neraca($tahun = 0)
 	{
-
 		$tahun = ($tahun != '') ? $tahun : date('Y');
 
 		$data['thn'] = $tahun;
@@ -32,7 +31,6 @@ class Laporankeuangan extends MY_Controller
 
 	public function detail_neraca($id = 0)
 	{
-
 		$data['neraca'] = $this->laporankeuangan_model->get_detail_neraca($id);
 		$data['view'] = 'detail_neraca';
 		$this->load->view('admin/layout', $data);

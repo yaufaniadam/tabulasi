@@ -1,52 +1,162 @@
+<!-- Content Header (Page header) -->
 <section class="content-header">
-  <h1>Beranda</h1>
-</section>      
+	<h1>
+		Dashboard <a href="<?= base_url('admin/dashboard/tambah'); ?>" class="btn btn-warning btn-sm"><i
+				class="fas fa-plus"></i>&nbsp; Tambah Data</a>
+  </h1>
+  
+</section>
 
+<!-- Main content -->
 <section class="content">
-      <!-- Info boxes -->
-      <div class="row">
-        <div class="col-md-6 col-sm-6 col-xs-12">
 
-          <div class="box box-widget widget-user-2">
-            <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="widget-user-header bg-yellow">
-              <!--<div class="widget-user-image">
-                <img class="img-circle" src="<?= base_url() ?>public/dist/img/user1-128x128.jpg" alt="User Avatar">
-              </div>
-              !-- /.widget-user-image -->
+<?php if($result) { ?>
+	<div class="row">
+		<div class="col-md-12">
+			<!-- DONUT CHART -->
+			<div class="box">
+				<div class="box-body">
+					<h3 class="text-center">IKHTISAR KEUANGAN LAPORAN PERTANGGUNGJAWABAN <br> PELAKSANAAN PENGELOLAAN KEUANGAN
+						KEUANGAN HAJI BPKH TAHUN <?=$result['tahun']; ?></h3>
+					<h4 class="text-center" style="text-transform:uppercase">DANA HAJI PER <?=$result['periode']; ?></h4>
+				</div>
+			</div>
+		</div>
+	</div>
 
-              <h3 class="widget-user-usernames"><?= getUserbyId($this->session->userdata('user_id')); ?></h3>
-              <h5 class="widget-user-dessc">Assalamu'alaikum, ahlan wasahlan.</h5>
+	<div class="row">
+		<div class="col-md-6">
+			<!-- DONUT CHART -->
+			<div class="box box-danger">
+				<div class="box-header with-border">
+					<h3 class="box-title">Penempatan Rp.<?=$result['penempatan']; ?></h3>
 
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+						</button>
+						<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+					</div>
+				</div>
+				<div class="box-body">
+					<canvas id="penempatan" style="height:200px"></canvas>
+				</div>
+				<!-- /.box-body -->
+			</div>
+			<!-- /.box -->
 
-            </div>
+		</div>
+	
+      	<!-- /.col (LEFT) -->
+		<div class="col-md-6">
 
-            <div class="box-body no-padding">             
-                <ul class="nav nav-stacked">
-                  <!--<li><a href="#">Terakhir login <span class="pull-right badge bg-gray">2 September 2018</span></a></li>                  
-                 -->
-                </ul>
-            </div>
+      <!-- BAR CHART -->
+      <div class="box box-success">
+        <div class="box-header with-border">
+          <h3 class="box-title">Investasi Rp.<?=$result['investasi']; ?></h3>
 
-            <div class="box-footer">             
-              <div class="pull-left">
-                <a href="  <?php  echo base_url('admin/profile');  ?>" class="btn btn-default btn-flat">Profil Saya</a>
-              </div>
-            </div>
-           
-          </div>         
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          </div>
         </div>
-
-        
+        <div class="box-body">
+          <div class="chart">
+            <canvas id="investasi" style="height:230px"></canvas>
+          </div>
+        </div>
+        <!-- /.box-body -->
       </div>
-      <!-- /.row -->
+      <!-- /.box -->
 
-     
+    </div>
+		<div class="col-md-12">
 
-     
-  </section>
-    <!-- /.content -->
+      <!-- BAR CHART -->
+      <div class="box box-success">
+        <div class="box-header with-border">
+          <h3 class="box-title">Grafik Tahun Lainnya</h3>
+
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div class="box-body">
+          <ul style="list-style: none;">
+              <?php foreach($all_grafik as $row) {
+                echo '<li style="padding:5px">
+                <a class="btn btn-md btn-warning" href="'.base_url('admin/dashboard/index/'. $row['tahun']).'">'.$row['tahun'] .'</a> 
+                <a title="Hapus" class="btn btn-xs btn-danger" href="'.base_url('admin/dashboard/hapus/'. $row['tahun']).'"><i class="fas fa-trash"></i></a></li>';
+              } ?>
+          </ul>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+
+    </div>
+	
+	</div>
+  <!-- /.row -->
+  
+ <?php } else {
+     echo "belum ada data";
+  }
+  ?>
+
+</section>
+<!-- /.content -->
+
+<!-- ChartJS 1.0.1 -->
+<script src="<?= base_url() ?>public/plugins/chartjs/Chart.min.js"></script>
+<script src="<?= base_url() ?>public/plugins/chartjs/utils.js"></script>
+<!-- FastClick -->
+<script src="<?= base_url() ?>public/plugins/fastclick/fastclick.js"></script>
+<!-- page script -->
+<script>
+	$(function () {
+    new Chart(document.getElementById("penempatan"), {
+    type: 'pie',
+    data: {
+      labels: ["Setoran Awal (<?=$result['setoran_awal']; ?>)", "Setoran Lunas (<?=$result['setoran_lunas']; ?>)", "Nilai Manfaat (<?=$result['nilai_manfaat']; ?>)", "DAU (<?=$result['dau']; ?>)"],
+      datasets: [{
+        label: "Penempatan",
+        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+        data: [<?=$result['setoran_awal_per']; ?>,<?=$result['setoran_lunas_per']; ?>,<?=$result['nilai_manfaat_per']; ?>,<?=$result['dau_per']; ?>]
+      }]
+    },
+    options: {
+      legend: {
+            display: true,
+            position : "right",
+           
+        }
+    }
+    });
+        new Chart(document.getElementById("investasi"), {
+        type: 'pie',
+        data: {
+          labels: ["Setoran Awal (<?=$result['setoran_awal_inv']; ?>)", "DAU (<?=$result['dau_inv']; ?>)"],
+          datasets: [{
+            label: "Investasi",
+            backgroundColor: ["#4ad840","#c5c146"],
+            data: [<?=$result['setoran_awal_inv_per']; ?>,<?=$result['dau_inv_per']; ?>]
+          }]
+        },
+        options: {
+          legend: {
+            display: true,
+            position : "right",           
+          }
+        }
+    });
+	}); 
+
+</script>
 
 <script>
-  $("#dashboard1").addClass('active');
+	$("#charts").addClass('active');
+	$("#chartjs").addClass('active');
 </script>

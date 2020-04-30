@@ -27,6 +27,10 @@
 			$this->db->where('kode =', 'b');
 			return $this->db->count_all_results('ci_unit_kerja');
 		}
+		public function tambah($data){
+			$this->db->insert('dashboard', $data);
+			return true;
+		}
 	}
 
 ?>
