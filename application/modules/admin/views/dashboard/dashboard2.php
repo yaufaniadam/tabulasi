@@ -16,9 +16,9 @@
 			<!-- DONUT CHART -->
 			<div class="box">
 				<div class="box-body">
-					<h3 class="text-center">IKHTISAR KEUANGAN LAPORAN PERTANGGUNGJAWABAN <br> PELAKSANAAN PENGELOLAAN KEUANGAN
-						KEUANGAN HAJI BPKH TAHUN <?=$result['tahun']; ?></h3>
-					<h4 class="text-center" style="text-transform:uppercase">DANA HAJI PER <?=$result['periode']; ?></h4>
+					<!--<h3 class="text-center">IKHTISAR KEUANGAN LAPORAN PERTANGGUNGJAWABAN <br> PELAKSANAAN PENGELOLAAN KEUANGAN
+						KEUANGAN HAJI BPKH TAHUN </h3>-->
+					<h3 class="text-center" style="text-transform:uppercase">Total Dana Kelolaan  <?=$result['periode']; ?> <?=$result['tahun']; ?></h3>
 					<h2 class="text-center alert alert-info btn-lg" style="font-size:4rem;">Rp<?=$result['total']; ?></h2>
 				</div>
 			</div>
