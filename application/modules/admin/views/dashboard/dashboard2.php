@@ -19,7 +19,7 @@
 					<h3 class="text-center">IKHTISAR KEUANGAN LAPORAN PERTANGGUNGJAWABAN <br> PELAKSANAAN PENGELOLAAN KEUANGAN
 						KEUANGAN HAJI BPKH TAHUN <?=$result['tahun']; ?></h3>
 					<h4 class="text-center" style="text-transform:uppercase">DANA HAJI PER <?=$result['periode']; ?></h4>
-					<h4 class="text-center" style="text-transform:uppercase">Rp<?=$result['total']; ?></h4>
+					<h2 class="text-center alert alert-info btn-lg" style="font-size:4rem;">Rp<?=$result['total']; ?></h2>
 				</div>
 			</div>
 		</div>
