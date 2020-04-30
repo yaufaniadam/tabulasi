@@ -1,5 +1,5 @@
 <section class="content-header">
-	<h1><i class="fa fa-kaaba"></i> Laporan Perubahan Aset Neto  Tahun <?=$thn; ?> 
+	<h1><i class="fa fa-kaaba"></i> Laporan Perubahan Aset Neto
 
 		<a href="<?=base_url('laporankeuangan/tambah_perubahan_asetneto'); ?>" class="btn btn-warning btn-sm"><i class="fas fa-plus"></i>&nbsp;  Tambah Data</a>
 
