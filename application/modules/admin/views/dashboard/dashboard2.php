@@ -19,6 +19,7 @@
 					<h3 class="text-center">IKHTISAR KEUANGAN LAPORAN PERTANGGUNGJAWABAN <br> PELAKSANAAN PENGELOLAAN KEUANGAN
 						KEUANGAN HAJI BPKH TAHUN <?=$result['tahun']; ?></h3>
 					<h4 class="text-center" style="text-transform:uppercase">DANA HAJI PER <?=$result['periode']; ?></h4>
+					<h4 class="text-center" style="text-transform:uppercase">Rp<?=$result['total']; ?></h4>
 				</div>
 			</div>
 		</div>
@@ -29,7 +30,7 @@
 			<!-- DONUT CHART -->
 			<div class="box box-danger">
 				<div class="box-header with-border">
-					<h3 class="box-title">Penempatan Rp.<?=$result['penempatan']; ?></h3>
+					<h3 class="box-title">Penempatan Rp<?=$result['penempatan']; ?></h3>
 
 					<div class="box-tools pull-right">
 						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -52,7 +53,7 @@
       <!-- BAR CHART -->
       <div class="box box-success">
         <div class="box-header with-border">
-          <h3 class="box-title">Investasi Rp.<?=$result['investasi']; ?></h3>
+          <h3 class="box-title">Investasi Rp<?=$result['investasi']; ?></h3>
 
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -120,7 +121,7 @@
     new Chart(document.getElementById("penempatan"), {
     type: 'pie',
     data: {
-      labels: ["Setoran Awal (<?=$result['setoran_awal']; ?>)", "Setoran Lunas (<?=$result['setoran_lunas']; ?>)", "Nilai Manfaat (<?=$result['nilai_manfaat']; ?>)", "DAU (<?=$result['dau']; ?>)"],
+      labels: ["Setoran Awal (Rp<?=$result['setoran_awal']; ?>)", "Setoran Lunas (Rp<?=$result['setoran_lunas']; ?>)", "Nilai Manfaat (Rp<?=$result['nilai_manfaat']; ?>)", "DAU (Rp<?=$result['dau']; ?>)"],
       datasets: [{
         label: "Penempatan",
         backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
@@ -138,7 +139,7 @@
         new Chart(document.getElementById("investasi"), {
         type: 'pie',
         data: {
-          labels: ["Setoran Awal (<?=$result['setoran_awal_inv']; ?>)", "DAU (<?=$result['dau_inv']; ?>)"],
+          labels: ["Setoran Awal (Rp<?=$result['setoran_awal_inv']; ?>)", "DAU (Rp<?=$result['dau_inv']; ?>)"],
           datasets: [{
             label: "Investasi",
             backgroundColor: ["#4ad840","#c5c146"],
