@@ -19,10 +19,10 @@
       <div class="well well-sm pre-scrollable" style="overflow-y:hidden;overflow-x: scroll; min-height:450px;">
 
       
-      <table id="table1" class="table table-striped table-bordered" style="width:<?=count($alokasi_investasi)*190;?>px; min-width: 50%">
+      <table id="table1" class="table table-striped table-bordered"
        
           <tr class="mainheadingtable">
-            <th style="width:25%;" class="first"><strong>Uraian</strong></td> 
+            <th class="first"><strong>Uraian</strong></td> 
               <?php foreach ($alokasi_investasi as $row) { ?>
               <th style="text-align: right; width:20%"><?= konversiBulanAngkaKeNama($row['bulan']); ?>
                 
@@ -36,63 +36,63 @@
           <tr>  
             <td><strong>PER JANGKA WAKTU</strong></td>
             <?php foreach ($alokasi_investasi as $row) { ?>
-              <td><strong><?=$row['per_jangka_waktu']; ?></strong></td>
+              <td class="text-right"><strong><?=$row['per_jangka_waktu']; ?></strong></td>
             <?php } ?>
           </tr>
           <tr> 
             <td>Jangka Pendek</td> 
              <?php foreach ($alokasi_investasi as $row) { ?>
-              <td><?=$row['jk_pendek']; ?></td>
+              <td class="text-right"><?=$row['jk_pendek']; ?></td>
             <?php } ?>
           </tr>
           <tr>
             <td>Jangka Panjang</td> 
              <?php foreach ($alokasi_investasi as $row) { ?>
-              <td><?=$row['jk_panjang']; ?></td>
+              <td class="text-right"><?=$row['jk_panjang']; ?></td>
             <?php } ?>
           </tr>
           <tr>
             <td><strong>PER JENIS PRODUK</strong></td> 
              <?php foreach ($alokasi_investasi as $row) { ?>
-              <td><strong><?=$row['per_jenis_produk']; ?></strong></td>
+              <td class="text-right"><strong><?=$row['per_jenis_produk']; ?></strong></td>
             <?php } ?>
           </tr>
           <tr> 
             <td>Sukuk</td> 
              <?php foreach ($alokasi_investasi as $row) { ?>
-              <td><?=$row['sukuk']; ?></td>
+              <td class="text-right"><?=$row['sukuk']; ?></td>
             <?php } ?>
           </tr>
           
           <tr>
             <td>Reksadana</td> 
              <?php foreach ($alokasi_investasi as $row) { ?>
-              <td><?=$row['reksadana']; ?></td>
+              <td class="text-right"><?=$row['reksadana']; ?></td>
             <?php } ?>
           </tr>
           
           <tr>
             <td>Penyertaan</td> 
              <?php foreach ($alokasi_investasi as $row) { ?>
-              <td><?=$row['penyertaan']; ?></td>
+              <td class="text-right"><?=$row['penyertaan']; ?></td>
             <?php } ?>
           </tr>
           <tr>
             <td><strong>PER SUMBER KAS HAJI</strong> </td> 
              <?php foreach ($alokasi_investasi as $row) { ?>
-              <td><strong><?=$row['per_sumber_kas_haji']; ?></strong></td>
+              <td class="text-right"><strong><?=$row['per_sumber_kas_haji']; ?></strong></td>
             <?php } ?>
           </tr>
           <tr>
             <td>Setoran Jemaah Haji </td>
              <?php foreach ($alokasi_investasi as $row) { ?>
-              <td><?=$row['setoran_jemaah_haji']; ?></td>
+              <td class="text-right"><?=$row['setoran_jemaah_haji']; ?></td>
             <?php } ?>
           </tr>
           <tr> 
             <td>DAU </td> 
              <?php foreach ($alokasi_investasi as $row) { ?>
-              <td><?=$row['dau']; ?></td>
+              <td class="text-right"><?=$row['dau']; ?></td>
             <?php } ?>          
           </tr>
         
