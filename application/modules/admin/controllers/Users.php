@@ -42,6 +42,7 @@
 				$this->form_validation->set_rules('mobile_no', 'Number', 'trim|required');
 	
 				if ($this->form_validation->run() == FALSE) {
+					$data['modules'] = $this->user_model->get_modules();
 					$data['view'] = 'admin/users/user_add';
 					$this->load->view('layout', $data);
 				}
@@ -68,7 +69,7 @@
 				}
 			}
 			else{
-				
+				$data['modules'] = $this->user_model->get_modules();
 				$data['view'] = 'admin/users/user_add';
 				$this->load->view('layout', $data);
 			}

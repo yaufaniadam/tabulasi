@@ -66,14 +66,14 @@
                   <input type="password" name="password" class="form-control" id="password" placeholder="">
                 </div>
               </div>
-              
+
               <div class="form-group">
                 <label for="role" class="col-sm-2 control-label">Pilih Modul</label>
                 <div class="col-sm-9">
                     <?php 
-                   $explode = explode(  ',', $user['modul']);
+                  
                     foreach($modules as $module): ?>
-                      <input name="modul[]" type="checkbox" value="<?= $module['id']; ?>" <?= (in_array( $module['id'] , $explode)) ? 'checked' :''; ?>/> <?= $module['modul'];  ?><br />
+                      <input name="modul[]" type="checkbox" value="<?= $module['id']; ?>" /> <?= $module['modul'];  ?><br />
                     <?php endforeach; ?>
                 
                 </div>
