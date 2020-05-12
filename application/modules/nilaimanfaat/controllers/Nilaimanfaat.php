@@ -12,7 +12,7 @@ class Nilaimanfaat extends Admin_Controller
 
 	public function index()
 	{
-		$data['view'] = 'Nilaimanfaat/index';
+		$data['view'] = 'index';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -24,7 +24,7 @@ class Nilaimanfaat extends Admin_Controller
 		$data['thn'] = $tahun;
 		$data['tahun'] = $this->nilaimanfaat_model->get_tahun_per_instrumen();
 		$data['per_instrumen'] = $this->nilaimanfaat_model->get_per_instrumen($tahun);
-		$data['view'] = 'Nilaimanfaat/per_instrumen';
+		$data['view'] = 'per_instrumen';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -32,7 +32,7 @@ class Nilaimanfaat extends Admin_Controller
 	{
 
 		$data['per_instrumen'] = $this->nilaimanfaat_model->get_detail_per_instrumen($id);
-		$data['view'] = 'Nilaimanfaat/detail_per_instrumen';
+		$data['view'] = 'detail_per_instrumen';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -68,17 +68,17 @@ class Nilaimanfaat extends Admin_Controller
 				$data['file_excel'] = $upload['file_name'];
 
 
-				$data['view'] = 'Nilaimanfaat/tambah_per_instrumen';
+				$data['view'] = 'tambah_per_instrumen';
 				$this->load->view('admin/layout', $data);
 			} else {
 
 				echo "gagal";
-				$data['view'] = 'Nilaimanfaat/tambah_per_instrumen';
+				$data['view'] = 'tambah_per_instrumen';
 				$this->load->view('admin/layout', $data);
 			}
 		} else {
 
-			$data['view'] = 'Nilaimanfaat/tambah_per_instrumen';
+			$data['view'] = 'tambah_per_instrumen';
 			$this->load->view('admin/layout', $data);
 		}
 	}
@@ -117,14 +117,14 @@ class Nilaimanfaat extends Admin_Controller
 		// Panggil fungsi insert_per_instrumen
 		$this->nilaimanfaat_model->insert_per_instrumen($dataquery);
 
-		redirect("keuanganhaji/nilaimanfaat/per_instrumen"); // Redirect ke halaman awal (ke controller siswa fungsi index)
+		redirect("nilaimanfaat/per_instrumen"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
 	public function hapus_per_instrumen($id = 0, $uri = NULL)
 	{
 		$this->db->delete('per_instrumen', array('id_per_instrumen' => $id));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('keuanganhaji/nilaimanfaat/per_instrumen/'.$uri));
+		redirect(base_url('nilaimanfaat/per_instrumen/'.$uri));
 	}
 
 	public function export_per_instrumen($tahun)
@@ -250,7 +250,7 @@ class Nilaimanfaat extends Admin_Controller
 		$data['tahun'] = $this->nilaimanfaat_model->get_tahun_nilai_manfaat_penempatan_di_bpsbpih(); // untuk menu pilihan tahun
 		$data['nilai_manfaat_penempatan_di_bpsbpih'] = $this->nilaimanfaat_model->get_nilai_manfaat_penempatan_di_bpsbpih($tahun);
 
-		$data['view'] = 'Nilaimanfaat/nilai_manfaat_penempatan_di_bpsbpih';
+		$data['view'] = 'nilai_manfaat_penempatan_di_bpsbpih';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -285,17 +285,17 @@ class Nilaimanfaat extends Admin_Controller
 				$data['sheet'] = $sheet;
 				$data['file_excel'] = $upload['file_name'];
 
-				$data['view'] = 'Nilaimanfaat/tambah_nilai_manfaat_penempatan_di_bpsbpih';
+				$data['view'] = 'tambah_nilai_manfaat_penempatan_di_bpsbpih';
 				$this->load->view('admin/layout', $data);
 			} else {
 
 				echo "gagal";
-				$data['view'] = 'Nilaimanfaat/tambah_nilai_manfaat_penempatan_di_bpsbpih';
+				$data['view'] = 'tambah_nilai_manfaat_penempatan_di_bpsbpih';
 				$this->load->view('admin/layout', $data);
 			}
 		} else {
 
-			$data['view'] = 'Nilaimanfaat/tambah_nilai_manfaat_penempatan_di_bpsbpih';
+			$data['view'] = 'tambah_nilai_manfaat_penempatan_di_bpsbpih';
 			$this->load->view('admin/layout', $data);
 		}
 	}
@@ -370,7 +370,7 @@ class Nilaimanfaat extends Admin_Controller
 			$this->nilaimanfaat_model->insert_nilai_manfaat_penempatan_di_bpsbpih($data2);
 		}
 
-		redirect("keuanganhaji/nilaimanfaat/penempatan_di_bpsbpih"); // Redirect ke halaman awal (ke controller siswa fungsi index)
+		redirect("nilaimanfaat/penempatan_di_bpsbpih"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
 	public function export_nilai_manfaat_penempatan_di_bpsbpih($tahun)
@@ -499,7 +499,7 @@ class Nilaimanfaat extends Admin_Controller
 		$this->db->where('tahun', $tahun);
 		$this->db->update('nilai_manfaat_penempatan_di_bpsbpih', array($bulan => ''));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('keuanganhaji/nilaimanfaat/penempatan_di_bpsbpih/'.$tahun));
+		redirect(base_url('nilaimanfaat/penempatan_di_bpsbpih/'.$tahun));
 	}
 	
 
@@ -513,7 +513,7 @@ class Nilaimanfaat extends Admin_Controller
 		$data['tahun'] = $this->nilaimanfaat_model->get_tahun_nilai_manfaat_produk(); // untuk menu pilihan tahun
 		$data['nilai_manfaat_produk'] = $this->nilaimanfaat_model->get_nilai_manfaat_produk($tahun);
 
-		$data['view'] = 'Nilaimanfaat/nilai_manfaat_produk';
+		$data['view'] = 'nilai_manfaat_produk';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -548,17 +548,17 @@ class Nilaimanfaat extends Admin_Controller
 				$data['sheet'] = $sheet;
 				$data['file_excel'] = $upload['file_name'];
 
-				$data['view'] = 'Nilaimanfaat/tambah_nilai_manfaat_produk';
+				$data['view'] = 'tambah_nilai_manfaat_produk';
 				$this->load->view('admin/layout', $data);
 			} else {
 
 				echo "gagal";
-				$data['view'] = 'Nilaimanfaat/tambah_nilai_manfaat_produk';
+				$data['view'] = 'tambah_nilai_manfaat_produk';
 				$this->load->view('admin/layout', $data);
 			}
 		} else {
 
-			$data['view'] = 'Nilaimanfaat/tambah_nilai_manfaat_produk';
+			$data['view'] = 'tambah_nilai_manfaat_produk';
 			$this->load->view('admin/layout', $data);
 		}
 	}
@@ -597,14 +597,14 @@ class Nilaimanfaat extends Admin_Controller
 		$this->nilaimanfaat_model->insert_nilai_manfaat_produk($data2);
 
 
-		redirect("keuanganhaji/nilaimanfaat/produk"); // Redirect ke halaman awal (ke controller siswa fungsi index)
+		redirect("nilaimanfaat/produk"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
 	public function hapus_produk($id = 0, $uri = NULL)
 	{
 		$this->db->delete('nilai_manfaat_produk', array('id' => $id));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('keuanganhaji/nilaimanfaat/produk/'.$uri));
+		redirect(base_url('nilaimanfaat/produk/'.$uri));
 	}
 
 	public function export_nilai_manfaat_produk($tahun)

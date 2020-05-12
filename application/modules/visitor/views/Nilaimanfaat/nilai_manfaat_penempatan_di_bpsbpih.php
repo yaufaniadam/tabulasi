@@ -1,7 +1,7 @@
 <section class="content-header">
 	<h1><i class="fa fa-kaaba"></i> &nbsp; Nilai Manfaat Hasil Penempatan di BPS BPIH
 
-		<a href="<?= base_url('visitor/keuanganhaji/nilaimanfaat/export_nilai_manfaat_penempatan_di_bpsbpih/' . $thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp; Export Data ke Excel</a>
+		<a href="<?= base_url('visitor/nilaimanfaat/export_nilai_manfaat_penempatan_di_bpsbpih/' . $thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp; Export Data ke Excel</a>
 	</h1>
 
 </section>
@@ -12,13 +12,13 @@
 
 			<div class="btn-group" role="group" style="margin-bottom: 20px;">
 
-				<a href="<?= base_url('visitor/keuanganhaji/nilaimanfaat/produk'); ?>" class="btn btn-md btn-default">Dana Haji
+				<a href="<?= base_url('visitor/nilaimanfaat/produk'); ?>" class="btn btn-md btn-default">Dana Haji
 					yang
 					Ditempatkan</a>
 				<a href="" class="btn btn-md btn-success disabled">Penempatan Dana Kelolaan di BPS BPIH</a>
 			</div> <br>
 
-			<?php breadcrumb('visitor/keuanganhaji', $tahun, $thn); ?>
+			<?php breadcrumb('visitor', $tahun, $thn); ?>
 
 			<div class="box-body smy-form-body box-keuangan">
 				

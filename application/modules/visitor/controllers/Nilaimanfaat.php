@@ -12,7 +12,7 @@ class Nilaimanfaat extends MY_Controller
 
 	public function index()
 	{
-		$data['view'] = 'Nilaimanfaat/index';
+		$data['view'] = 'index';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -24,7 +24,7 @@ class Nilaimanfaat extends MY_Controller
 		$data['thn'] = $tahun;
 		$data['tahun'] = $this->nilaimanfaat_model->get_tahun_per_instrumen();
 		$data['per_instrumen'] = $this->nilaimanfaat_model->get_per_instrumen($tahun);
-		$data['view'] = 'keuanganhaji/Nilaimanfaat/per_instrumen';
+		$data['view'] = 'nilaimanfaat/per_instrumen';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -32,7 +32,7 @@ class Nilaimanfaat extends MY_Controller
 	{
 
 		$data['per_instrumen'] = $this->nilaimanfaat_model->get_detail_per_instrumen($id);
-		$data['view'] = 'Nilaimanfaat/detail_per_instrumen';
+		$data['view'] = 'detail_per_instrumen';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -160,7 +160,7 @@ class Nilaimanfaat extends MY_Controller
 		$data['tahun'] = $this->nilaimanfaat_model->get_tahun_nilai_manfaat_penempatan_di_bpsbpih(); // untuk menu pilihan tahun
 		$data['nilai_manfaat_penempatan_di_bpsbpih'] = $this->nilaimanfaat_model->get_nilai_manfaat_penempatan_di_bpsbpih($tahun);
 
-		$data['view'] = 'keuanganhaji/Nilaimanfaat/nilai_manfaat_penempatan_di_bpsbpih';
+		$data['view'] = 'nilaimanfaat/nilai_manfaat_penempatan_di_bpsbpih';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -306,7 +306,7 @@ class Nilaimanfaat extends MY_Controller
 		$data['tahun'] = $this->nilaimanfaat_model->get_tahun_nilai_manfaat_produk(); // untuk menu pilihan tahun
 		$data['nilai_manfaat_produk'] = $this->nilaimanfaat_model->get_nilai_manfaat_produk($tahun);
 
-		$data['view'] = 'keuanganhaji/Nilaimanfaat/nilai_manfaat_produk';
+		$data['view'] = 'nilaimanfaat/nilai_manfaat_produk';
 		$this->load->view('admin/layout', $data);
 	}
 

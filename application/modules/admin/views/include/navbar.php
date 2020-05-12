@@ -1,6 +1,6 @@
 <header class="main-header">
 	<!-- Logo -->
-	<a href="<?= base_url('admin'); ?>" class="logo">
+	<a href="<?= base_url((is_admin()==1) ? 'admin/dashboard' : 'visitor/dashboard'); ?>" class="logo">
 		<!-- mini logo for sidebar mini 50x50 pixels -->
 		<span class="logo-mini"><img style="padding:10px 10px 10px 0;" width="130" height=""
 				src="<?= base_url() ?>public/dist/img/logo-bpkh-small.png" alt="SI BPKH"></span>

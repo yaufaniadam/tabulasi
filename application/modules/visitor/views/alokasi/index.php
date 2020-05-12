@@ -1,7 +1,7 @@
 <section class="content-header">
   <h1><i class="fa fa-kaaba"></i> Alokasi Investasi BPKH 
 
-    <a href="<?=base_url('visitor/keuanganhaji/alokasi/export_alokasi_investasi/'.$thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp;  Export Data ke Excel</a>
+    <a href="<?=base_url('visitor/alokasi/export_alokasi_investasi/'.$thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp;  Export Data ke Excel</a>
 
   </h1>
  
@@ -11,7 +11,7 @@
 <section class="content">   
     <div class="row no-gutters" style="" >
 
-      <?php breadcrumb('visitor/keuanganhaji',$tahun, $thn); ?> 
+      <?php breadcrumb('visitor',$tahun, $thn); ?> 
       <?php if($alokasi_investasi) { ?>
       <div class="well well-sm pre-scrollable" style="overflow-y:hidden;overflow-x: scroll; min-height:450px;">
 

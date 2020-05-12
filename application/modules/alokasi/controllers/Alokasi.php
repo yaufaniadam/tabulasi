@@ -1,12 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 	
-	class Alokasi extends MY_Controller {
+	class Alokasi extends Admin_Controller {
 		//private $filename = "import_data";
 
 		public function __construct(){
 			parent::__construct();
 			$this->load->library('excel');	
-			$this->load->model('keuanganhaji/alokasi_model', 'alokasi_model');
+			$this->load->model('alokasi_model', 'alokasi_model');
 		}
 
 		public function index( $tahun=0 ){;
@@ -16,7 +16,7 @@
 			$data['thn'] = $tahun;
 			$data['tahun'] = $this->alokasi_model->get_tahun_alokasi_investasi();
 			$data['alokasi_investasi'] = $this->alokasi_model->get_alokasi_investasi($tahun);
-			$data['view'] = 'keuanganhaji/Alokasi/index';
+			$data['view'] = 'Alokasi/index';
 			$this->load->view('admin/layout', $data);
 		}
 
@@ -27,7 +27,94 @@
 			$this->load->view('admin/layout', $data);
 		}
 
+		public function tambah_alokasi_investasi(){	
+			
+			if(isset($_POST['submit'])){ 
+
+			    $upload_path = './uploads/excel/alokasi_investasi';
+
+				if (!is_dir($upload_path)) {
+				    mkdir($upload_path, 0777, TRUE);					
+				}
+						//$newName = "hrd-".date('Ymd-His');
+				$config = array(
+					'upload_path' => $upload_path,
+					'allowed_types' => "xlsx",
+					'overwrite' => FALSE,				
+				);					
+
+				$this->load->library('upload', $config);
+				$this->upload->do_upload('file');
+				$upload = $this->upload->data();
+
+			      
+			    if($upload){ // Jika proses upload sukses
+
+			        
+			        $excelreader = new PHPExcel_Reader_Excel2007();
+			        $loadexcel = $excelreader->load('./uploads/excel/alokasi_investasi/'.$upload['file_name']); // Load file yang tadi diupload ke folder excel
+			        $sheet = $loadexcel->getActiveSheet()->toArray(null, true, true ,true);
+			        
+			        $data['sheet'] = $sheet; 
+			        $data['file_excel'] =$upload['file_name'];
+			       
+
+			        $data['view'] = 'Alokasi/tambah_alokasi_investasi';
+    				$this->load->view('admin/layout', $data);
+
+			    }else{ 
+			    	
+			        echo "gagal";
+			        $data['view'] = 'Alokasi/tambah_alokasi_investasi';
+    				$this->load->view('admin/layout', $data);
+
+			    }
+		    } else {
+
+				$data['view'] = 'Alokasi/tambah_alokasi_investasi';
+    			$this->load->view('admin/layout', $data);
+
+		    }
+
+		}
+
+		public function import_alokasi_investasi($file_excel){
+		    
+		    $excelreader = new PHPExcel_Reader_Excel2007();
+		    $loadexcel = $excelreader->load('./uploads/excel/alokasi_investasi/'.$file_excel); // Load file yang telah diupload ke folder excel
+		    $sheet = $loadexcel->getActiveSheet()->toArray(null, true, true ,true);		    
+
+		   	$data = transposeData($sheet);
+
+		    $dataquery = array (		    		
+		    		'per_jangka_waktu'=>$data['B'][2],
+		    		'jk_pendek'=>$data['B'][3],
+					'jk_panjang'=>$data['B'][4],
+					'per_jenis_produk'=>$data['B'][5],
+					'sukuk'=>$data['B'][6],					
+					'reksadana'=>$data['B'][7],				
+					'penyertaan'=>$data['B'][8],
+					'per_sumber_kas_haji'=>$data['B'][9],
+					'setoran_jemaah_haji'=>$data['B'][10],
+					'dau'=>$data['B'][11],					
+					'bulan'=>konversi_bulan_ke_angka($data['B'][1]),
+					'tahun'=>$data['C'][1],
+		    	);
+
+		   
+
+		    // Panggil fungsi insert_alokasi_investasi
+		  	$this->alokasi_model->insert_alokasi_investasi($dataquery);
 		
+		    redirect("alokasi"); // Redirect ke halaman awal (ke controller siswa fungsi index)
+		}
+
+		public function hapus_alokasi_investasi($id = 0, $uri = NULL){	
+			$this->db->delete('alokasi_investasi', array('id_alokasi_investasi' => $id));
+			$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
+			redirect(base_url('alokasi'));
+		}
+
 		public function export_alokasi_investasi($tahun){
 
 			// ambil style untuk table dari library Excel.php

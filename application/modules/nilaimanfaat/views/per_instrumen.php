@@ -1,7 +1,8 @@
 <section class="content-header">
   <h1><i class="fa fa-kaaba"></i> Produk Investasi
+    <a href="<?= base_url('nilaimanfaat/tambah_per_instrumen'); ?>" class="btn btn-warning btn-sm"><i class="fas fa-plus"></i>&nbsp; Tambah Data</a>
 
-    <a href="<?= base_url('visitor/keuanganhaji/nilaimanfaat/export_per_instrumen/' . $thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp; Export Data ke Excel</a>
+    <a href="<?= base_url('nilaimanfaat/export_per_instrumen/' . $thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp; Export Data ke Excel</a>
 
   </h1>
 
@@ -10,7 +11,7 @@
 <section class="content">
   <div class="row no-gutters">
     <div class="col-md-12">
-      <?php breadcrumb('visitor/keuanganhaji', $tahun, $thn); ?>
+      <?php breadcrumb('', $tahun, $thn); ?>
       <?php if (count($per_instrumen) > 0) { ?>
       <div class="box-body smy-form-body box-keuangan">
         <?php        
@@ -32,11 +33,16 @@
               {
                 echo "\t<th class='text-center'>" . konversiBulanAngkaKeNama($cell) . "</th>\n"; // write cells next to each other
               }
-            
+              echo "</tr>\n"; // end row
             } else if ($i == 2) {
-              
-              
-            
+              echo "<tr>\n"; // start the row
+              echo "\t<th>Hapus</th>\n"; // create a table cell with the field name
+              foreach ($values as $cell) // for every sub-array iterate through all values
+              {
+                echo '<th class="text-center"><a class="delete btn btn-xs btn-danger" data-href="' . base_url('nilaimanfaat/hapus_per_instrumen/' . $cell . "/" . $thn) . '" data-toggle="modal" data-target="#confirm-delete"> <i class="fa fa-trash-alt"></i></a>
+            </th>'; // write cells next to each other
+              }
+              echo "</tr>\n"; // end row
             } else {
               echo "<tr>\n"; // start the row
               echo "\t<td>" . $key . "</td>\n"; // create a table cell with the field name

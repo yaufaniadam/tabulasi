@@ -46,7 +46,7 @@
 							'username' => $result['username'],
 							'role' => $result['role'],
 							'is_login' => TRUE,
-										
+							'modul' => $result['modul'],										
 						);
 
 						$this->session->set_userdata($user_data);

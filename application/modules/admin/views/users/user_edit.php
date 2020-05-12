@@ -70,22 +70,7 @@
                 </div>
               </div>
              
-             <!--<div class="form-group">
-                <label for="role" class="col-sm-2 control-label">Select Group</label>
-
-                <div class="col-sm-9">
-                  <select name="group" class="form-control">
-                    <option value="">Select Group</option>
-                    <?php foreach($user_groups as $group): ?>
-                      <?php if($group['id'] == $user['role']): ?>
-                      <option value="<?= $group['id']; ?>" selected><?= $group['group_name']; ?></option>
-                      <?php else: ?>
-                      <option value="<?= $group['id']; ?>"><?= $group['group_name']; ?></option>
-                      <?php endif; ?>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-              </div>
+            
 
               <div class="form-group">
                 <label for="role" class="col-sm-2 control-label">Pilih Role</label>
@@ -98,19 +83,19 @@
                   >Staf</option>
                   </select>
                 </div>
-              </div> -->
+              </div> 
 
-              <!--<div class="form-group">
-                <label for="role" class="col-sm-2 control-label">Pilih Unit Kerja</label>
+              <div class="form-group">
+                <label for="role" class="col-sm-2 control-label">Pilih Modul</label>
                 <div class="col-sm-9">
-                  <select name="unit_kerja" class="form-control">
-                    <option value="">Pilih Unit Kerja</option>
-                    <?php foreach($unit_kerja as $unit_kerja): ?>
-                      <option value="<?= $unit_kerja['id']; ?>" <?php  if( $user['unit_kerja'] == $unit_kerja['id']) echo 'selected="selected"'; ?> ><?= $unit_kerja['nama_unit'];  ?></option>
+                    <?php 
+                   $explode = explode(  ',', $user['modul']);
+                    foreach($modules as $module): ?>
+                      <input name="modul[]" type="checkbox" value="<?= $module['id']; ?>" <?= (in_array( $module['id'] , $explode)) ? 'checked' :''; ?>/> <?= $module['modul'];  ?><br />
                     <?php endforeach; ?>
-                  </select>
+                
                 </div>
-              </div> -->
+              </div> 
 
               <div class="form-group">
                 <div class="col-md-11">

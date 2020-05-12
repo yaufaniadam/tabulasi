@@ -105,6 +105,7 @@
 						'password' =>  $pass,
 						'updated_at' => date('Y-m-d : h:m:s'),
 						'is_active' => $this->input->post('status'),
+						'modul' => implode(',',$this->input->post('modul')),
 					);
 					$data = $this->security->xss_clean($data);
 					$result = $this->user_model->edit_user($data, $id);
@@ -116,6 +117,7 @@
 			}
 			else{
 				$data['user'] = $this->user_model->get_user_by_id($id);		
+				$data['modules'] = $this->user_model->get_modules();		
 				$data['view'] = 'admin/users/user_edit';
 				$this->load->view('layout', $data);
 			}

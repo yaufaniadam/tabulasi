@@ -97,9 +97,9 @@
 
 		//---------------------------------------------------
 		// Get User Role/Group
-		public function get_user_groups(){
-			$query = $this->db->get('ci_user_groups');
-			return $result = $query->result_array();
+		public function get_modules(){
+			$query = $this->db->get_where('modul', array('parent' => 0));
+			return $query->result_array();
 		}
 
 	

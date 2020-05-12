@@ -48,8 +48,12 @@
 				<!--header end-->
 				<!--sidebar start-->
 				<aside>
+				<?php if (is_admin() == 1) {				
+					include('include/admin_sidebar.php');				
+				 } else {
+					include('include/visitor_sidebar.php');	
+				 }?>
 					
-					<?php include('include/admin_sidebar2.php'); ?>
 				
 				</aside>
 				<!--sidebar end-->

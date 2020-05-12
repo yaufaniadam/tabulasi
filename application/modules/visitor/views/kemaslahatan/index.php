@@ -1,6 +1,6 @@
 <section class="content-header">
   <h1><i class="fa fa-file-pdf"></i> &nbsp; Laporan Realisasi Program Kemaslahatan
-    <a href="<?=base_url('kemaslahatan/export_kemaslahatan/'.$thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp;  Export Data ke Excel</a>
+    <a href="<?=base_url('visitor/kemaslahatan/export_kemaslahatan/'.$thn); ?>" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i>&nbsp;  Export Data ke Excel</a>
   </h1>
     
 </section>
