@@ -40,12 +40,6 @@
 				$this->form_validation->set_rules('firstname', 'Firstname', 'trim|required');
 				$this->form_validation->set_rules('email', 'Email', 'trim|valid_email|required');
 				$this->form_validation->set_rules('mobile_no', 'Number', 'trim|required');
-
-				if ($this->input->post('password') =='') {
-					$pass = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
-				} else {
-					$pass = $this->input->post('password_hidden');
-				}
 	
 				if ($this->form_validation->run() == FALSE) {
 					$data['view'] = 'admin/users/user_add';
@@ -57,12 +51,13 @@
 						'firstname' => $this->input->post('firstname'),
 						'email' => $this->input->post('email'),
 						'mobile_no' => $this->input->post('mobile_no'),
-						'password' =>  $pass,
+						'password' =>  password_hash($this->input->post('password'), PASSWORD_BCRYPT),
 						'created_at' => date('Y-m-d : h:m:s'),
 						'updated_at' => date('Y-m-d : h:m:s'),
 						'is_verify' => 1,
 						'is_active' => 1,
 						'role' => 2,
+						'modul' => implode(',',$this->input->post('modul')),
 					);
 					$data = $this->security->xss_clean($data);
 					$result = $this->user_model->add_user($data);

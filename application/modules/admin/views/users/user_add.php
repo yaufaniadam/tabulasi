@@ -66,31 +66,18 @@
                   <input type="password" name="password" class="form-control" id="password" placeholder="">
                 </div>
               </div>
-           
-<!-- 
+              
               <div class="form-group">
-                <label for="role" class="col-sm-2 control-label">Pilih Role</label>
-
+                <label for="role" class="col-sm-2 control-label">Pilih Modul</label>
                 <div class="col-sm-9">
-                  <select name="role" class="form-control">
-                    <option value="">Pilih Role</option>
-                    <option value="1">Administrator</option>
-                    <option value="2">Non Administrator</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="role" class="col-sm-2 control-label">Pilih Unit Kerja</label>
-                <div class="col-sm-9">
-                  <select name="unit_kerja" class="form-control">
-                    <option value="">Pilih Unit Kerja</option>
-                    <?php foreach($unit_kerja as $unit_kerja): ?>
-                      <option value="<?= $unit_kerja['id']; ?>"><?= $unit_kerja['nama_unit'];  ?></option>
+                    <?php 
+                   $explode = explode(  ',', $user['modul']);
+                    foreach($modules as $module): ?>
+                      <input name="modul[]" type="checkbox" value="<?= $module['id']; ?>" <?= (in_array( $module['id'] , $explode)) ? 'checked' :''; ?>/> <?= $module['modul'];  ?><br />
                     <?php endforeach; ?>
-                  </select>
+                
                 </div>
-              </div> -->
+              </div> 
 
               <div class="form-group">
                 <div class="col-md-11">
