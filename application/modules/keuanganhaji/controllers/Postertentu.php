@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 	
-	class Postertentu extends MY_Controller {
+	class Postertentu extends Admin_Controller {
 		//private $filename = "import_data";
 
 		public function __construct(){

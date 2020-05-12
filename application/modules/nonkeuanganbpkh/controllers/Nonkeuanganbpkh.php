@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 	
-	class Nonkeuanganbpkh extends MY_Controller {
+	class Nonkeuanganbpkh extends Admin_Controller {
 		
 		public function __construct(){
 			parent::__construct();

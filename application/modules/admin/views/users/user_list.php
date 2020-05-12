@@ -4,10 +4,10 @@
     <div class="col-md-12">
       <div class="box box-body">
         <div class="col-md-6">
-          <h4><i class="fa fa-users"></i> &nbsp; Users</h4>
+          <h4><i class="fa fa-users"></i> &nbsp; Semua Pengguna</h4>
         </div>
         <div class="col-md-6 text-right">
-          <a href="<?= base_url('admin/users/add'); ?>" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Staf</a>
+          <a href="<?= base_url('admin/users/add'); ?>" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Pengguna</a>
         </div>
         
       </div>

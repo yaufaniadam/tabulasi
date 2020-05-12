@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-class Makro extends MY_Controller
+class Makro extends Admin_Controller
 {
 
 	public function __construct()

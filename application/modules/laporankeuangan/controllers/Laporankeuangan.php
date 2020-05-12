@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-class Laporankeuangan extends MY_Controller
+class Laporankeuangan extends Admin_Controller
 {
 	//private $filename = "import_data";
 

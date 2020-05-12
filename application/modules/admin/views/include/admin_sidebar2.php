@@ -231,7 +231,7 @@
 			<?php if (is_admin() == 1) { ?>
 			<li id="users" class="staf">
 				<a href="<?= base_url($role.'admin/users'); ?>">
-					<i class="fa fa-users"></i> <span>Staf BPKH</span>
+					<i class="fa fa-users"></i> <span>Manajemen Pengguna</span>
 				</a>
 			</li>
 			<?php } ?>

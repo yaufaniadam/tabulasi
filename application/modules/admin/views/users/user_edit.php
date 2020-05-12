@@ -3,10 +3,10 @@
     <div class="col-md-12">
       <div class="box box-body">
         <div class="col-md-6">
-          <h4><i class="fas fa-user-edit"></i> &nbsp; Ubah Profil Staf</h4>
+          <h4><i class="fas fa-user-edit"></i> &nbsp; Ubah Profil Pengguna</h4>
         </div>
         <div class="col-md-6 text-right">
-          <a href="<?= base_url('admin/users'); ?>" class="btn btn-success"><i class="fa fa-list"></i> Semua Staf</a>
+          <a href="<?= base_url('admin/users'); ?>" class="btn btn-success"><i class="fa fa-list"></i> Semua Pengguna</a>
          
         </div>
         
