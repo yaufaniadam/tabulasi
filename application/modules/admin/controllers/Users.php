@@ -73,7 +73,7 @@
 				}
 			}
 			else{
-				$data['user_groups'] = $this->user_model->get_user_groups();
+				
 				$data['view'] = 'admin/users/user_add';
 				$this->load->view('layout', $data);
 			}
