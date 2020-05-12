@@ -50,7 +50,11 @@
 						);
 
 						$this->session->set_userdata($user_data);
-						redirect(base_url('admin/dashboard'), 'refresh');						
+						if($this->session->userdata('role')==1) {
+							redirect(base_url('admin/dashboard'), 'refresh'); 
+						}else if($this->session->userdata('role')==2) {
+							redirect(base_url('visitor/dashboard'), 'refresh');
+						}							
 					}
 
 					else{
@@ -64,62 +68,7 @@
 			}
 		}	
 
-		//-------------------------------------------------------------------------
-		public function register(){
-			if($this->input->post('submit')){
-				$this->form_validation->set_rules('username', 'Username', 'trim|required');
-				$this->form_validation->set_rules('firstname', 'Firstname', 'trim|required');
-				$this->form_validation->set_rules('lastname', 'Lastname', 'trim|required');
-				$this->form_validation->set_rules('email', 'Email', 'trim|valid_email|is_unique[ci_users.email]|required');
-				$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[8]');
-				$this->form_validation->set_rules('confirm_password', 'Password Confirmation', 'trim|required|matches[password]');
-
-				if ($this->form_validation->run() == FALSE) {
-					$data['title'] = 'Create an Account';
-					$this->load->view('auth/register', $data);
-				}
-				else{
-					$data = array(
-						'username' => $this->input->post('username'),
-						'firstname' => $this->input->post('firstname'),
-						'lastname' => $this->input->post('lastname'),
-						'email' => $this->input->post('email'),
-						'password' =>  password_hash($this->input->post('password'), PASSWORD_BCRYPT),
-						'is_active' => 1,
-						'is_verify' => 1,
-						'token' => md5(rand(0,1000)),    
-						'last_ip' => '',
-						'created_at' => date('Y-m-d : h:m:s'),
-						'updated_at' => date('Y-m-d : h:m:s'),
-					);
-					$data = $this->security->xss_clean($data);
-					$result = $this->auth_model->register($data);
-					if($result){
-						//sending welcome email to user
-						$name = $data['firstname'].' '.$data['lastname'];
-						$email_verification_link = base_url('auth/verify/').'/'.$data['token'];
-						$body = $this->mailer->Tpl_Registration($name, $email_verification_link);
-						$this->load->helper('email_helper');
-						$to = $data['email'];
-						$subject = 'Activate your account';
-						$message =  $body ;
-						$email = sendEmail($to, $subject, $message, $file = '' , $cc = '');
-						$email = true;
-						if($email){
-							$this->session->set_flashdata('success', 'Your Account has been made, please verify it by clicking the activation link that has been send to your email.');	
-							redirect(base_url('auth/login'));
-						}	
-						else{
-							echo 'Email Error';
-						}
-					}
-				}
-			}
-			else{
-				$data['title'] = 'Create an Account';
-				$this->load->view('auth/register', $data);
-			}
-		}
+		
 
 		//----------------------------------------------------------	
 		public function verify(){

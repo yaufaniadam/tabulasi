@@ -168,6 +168,6 @@
 </script>
 
 <script>
-	$("#charts").addClass('active');
-	$("#chartjs").addClass('active');
+	$("#dashboard").addClass('active');
+	$("#dashboard").addClass('active');
 </script>

@@ -84,7 +84,7 @@
 		$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
 	});
 
-	$("#dokumen").addClass('active');
-	$("#dokumen .<?=$record_num;?>").addClass('active');
+	$("#makro").addClass('active');
+	$("#makro .<?=$record_num;?>").addClass('active');
 
 </script>

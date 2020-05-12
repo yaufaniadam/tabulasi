@@ -20,14 +20,17 @@
 		  <link rel="stylesheet" href="<?= base_url() ?>public/plugins/datatables/dataTables.bootstrap.css">
 		  <!-- Custom CSS -->
 		  <link rel="stylesheet" href="<?= base_url() ?>public/dist/css/style.css">		
-		  <!-- AdminLTE Skins. Choose a skin from the css/skins
-			   folder instead of downloading all of them to reduce the load. -->
-		  <link rel="stylesheet" href="<?= base_url() ?>public/dist/css/skins/skin-green.min.css">
+
+		  <?php if (is_admin() == 1) { ?>		
+		 	 <link rel="stylesheet" href="<?= base_url() ?>public/dist/css/skins/skin-green.min.css">
+		  <?php }else { ?>
+			 <link rel="stylesheet" href="<?= base_url() ?>public/dist/css/skins/skin-yellow.min.css">
+		  <?php } ?>
 		  <!-- jQuery 2.2.3 -->
 		  <script src="<?= base_url() ?>public/plugins/jQuery/jquery-2.2.3.min.js"></script>
 		
 	</head>
-	<body class="hold-transition skin-green sidebar-mini">
+	<body class="hold-transition  <?= (is_admin() == 1)  ? "skin-green" : "skin-yellow"; ?> sidebar-mini">
 		<div class="wrapper" style="height: auto;">
 			<?php if($this->session->flashdata('msg') != ''): ?>
 			    <div class="alert alert-warning flash-msg alert-dismissible">

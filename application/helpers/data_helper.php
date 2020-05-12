@@ -228,51 +228,51 @@ function breadcrumb($dir, $tahun, $thn)
         ?>
                 <a href="<?= base_url($dir . "/" . $CI->router->fetch_class() . '/' . $CI->router->fetch_method() . '/' . $tahun['tahun']); ?>" class="btn btn-md <?= ($tahun['tahun'] == $thn) ? "disabled btn-success" : "btn-default" ?>"><?= $tahun['tahun']; ?></a>
 
-            <?php } 
-            }// end foreach 
-            ?>
+        <?php }
+        } // end foreach 
+        ?>
     </div>
-<?php 
-    }
-
-    function menu_sukuk()
-    {
-
-        $CI = &get_instance();
-
-?>
-
-<div class="btn-group" role="group" style="margin-bottom: 20px;">
-
-    <a href="<?= base_url('keuanganhaji/sbssn_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
-        SBSN Rupiah</a>
-    <a href="<?= base_url('keuanganhaji/sbssn_usd/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_usd') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
-        SBSN USD</a>
-    <a href="<?= base_url('keuanganhaji/sdhi_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sdhi_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
-        SDHI Rupiah</a>
-    <a href="<?= base_url('keuanganhaji/sukuk_korporasi/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sukuk_korporasi') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
-        Korporasi</a>
-
-
-
-</div>
-
-
 <?php
-    }
+}
 
-    function menu_reksadana()
-    {
+function menu_sukuk()
+{
 
-        $CI = &get_instance();
+    $CI = &get_instance();
 
 ?>
 
     <div class="btn-group" role="group" style="margin-bottom: 20px;">
 
-        <a href="<?= base_url('keuanganhaji/reksadana_terproteksi_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_terproteksi_syariah') ? "btn-info disabled" : "btn-default"; ?>">Terproteksi
+        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/sbssn_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+            SBSN Rupiah</a>
+        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/sbssn_usd/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_usd') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+            SBSN USD</a>
+        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/sdhi_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sdhi_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+            SDHI Rupiah</a>
+        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/sukuk_korporasi/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sukuk_korporasi') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+            Korporasi</a>
+
+
+
+    </div>
+
+
+<?php
+}
+
+function menu_reksadana()
+{
+
+    $CI = &get_instance();
+
+?>
+
+    <div class="btn-group" role="group" style="margin-bottom: 20px;">
+
+        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/reksadana_terproteksi_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_terproteksi_syariah') ? "btn-info disabled" : "btn-default"; ?>">Terproteksi
             Syariah</a>
-        <a href="<?= base_url('keuanganhaji/reksadana_pasar_uang_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_pasar_uang_syariah') ? "btn-info disabled" : "btn-default"; ?>">Pasar
+        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/reksadana_pasar_uang_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_pasar_uang_syariah') ? "btn-info disabled" : "btn-default"; ?>">Pasar
             Uang Syariah</a>
 
 
@@ -280,12 +280,12 @@ function breadcrumb($dir, $tahun, $thn)
 
 
 <?php
-    }
+}
 
-    function menu_non_dau()
-    {
+function menu_non_dau()
+{
 
-        $CI = &get_instance();
+    $CI = &get_instance();
 
 ?>
 
@@ -301,4 +301,4 @@ function breadcrumb($dir, $tahun, $thn)
 
 
 <?php
-    }
+}

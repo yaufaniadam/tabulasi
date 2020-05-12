@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-class Keuanganhaji extends MY_Controller
+class Keuanganhaji extends Admin_Controller
 {
 
 	public function __construct()
