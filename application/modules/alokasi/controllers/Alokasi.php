@@ -16,14 +16,14 @@
 			$data['thn'] = $tahun;
 			$data['tahun'] = $this->alokasi_model->get_tahun_alokasi_investasi();
 			$data['alokasi_investasi'] = $this->alokasi_model->get_alokasi_investasi($tahun);
-			$data['view'] = 'Alokasi/index';
+			$data['view'] = 'alokasi/index';
 			$this->load->view('admin/layout', $data);
 		}
 
 		public function detail_alokasi_investasi($id=0){
 
 			$data['alokasi_investasi'] = $this->alokasi_model->get_detail_alokasi_investasi($id);
-			$data['view'] = 'Alokasi/detail_alokasi_investasi';
+			$data['view'] = 'alokasi/detail_alokasi_investasi';
 			$this->load->view('admin/layout', $data);
 		}
 
@@ -59,19 +59,19 @@
 			        $data['file_excel'] =$upload['file_name'];
 			       
 
-			        $data['view'] = 'Alokasi/tambah_alokasi_investasi';
+			        $data['view'] = 'alokasi/tambah_alokasi_investasi';
     				$this->load->view('admin/layout', $data);
 
 			    }else{ 
 			    	
 			        echo "gagal";
-			        $data['view'] = 'Alokasi/tambah_alokasi_investasi';
+			        $data['view'] = 'alokasi/tambah_alokasi_investasi';
     				$this->load->view('admin/layout', $data);
 
 			    }
 		    } else {
 
-				$data['view'] = 'Alokasi/tambah_alokasi_investasi';
+				$data['view'] = 'alokasi/tambah_alokasi_investasi';
     			$this->load->view('admin/layout', $data);
 
 		    }
