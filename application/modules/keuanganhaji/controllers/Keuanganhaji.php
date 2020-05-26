@@ -2024,7 +2024,7 @@ class Keuanganhaji extends Admin_Controller
 						'bps_bpih' => $data["A"][$i],
 						$data["B"][1] => $data["B"][$i],
 						'tahun' => $data["C"][1],
-						'bulan' => konversi_bulan_ke_angka($data["B"][1]),
+					//	'bulan' => konversi_bulan_ke_angka($data["B"][1]),
 						'upload_by' => $this->session->userdata('user_id'),
 					);
 					$this->db->insert('penyertaan_saham', $query, "bps_bpih = '" . $data["A"][$i] . "'");
@@ -2047,7 +2047,7 @@ class Keuanganhaji extends Admin_Controller
 						'bps_bpih' => $row['A'], // Insert data nis dari kolom A di
 						$sheet['1']['B'] => $row['B'],
 						'tahun' => $data["C"][1],
-						'bulan' => konversi_bulan_ke_angka($data["B"][1]),
+					//	'bulan' => konversi_bulan_ke_angka($data["B"][1]),
 						'upload_by' => $this->session->userdata('user_id'),
 					));
 				}
