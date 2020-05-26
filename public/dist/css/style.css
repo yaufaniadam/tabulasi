@@ -401,8 +401,6 @@ label{
     padding: 20px;
 }
 
-
-
 .panel-heading{
 	margin-bottom:10px;
 }
@@ -414,18 +412,19 @@ label{
 }
 
 .skin-green .main-header .logo {
-    background-color: #399e9a !important;
+    background-color: #0b3355 !important;
 }
 
 .skin-green .main-header .navbar {
-    background-color: #079992 !important;
-    background-image: url(../img/bg-header.png);
+    background-color: #0b3355 !important;
+    background-image: url(../img/bg-header2.png);
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: left center;
 }
 
 .skin-green .main-header .navbar .sidebar-toggle:hover {
-    background-color: #399e9a !important;
+    background-color: #0b3355 !important;
 }
 
 .skin-green .sidebar-menu>li.active>a {
