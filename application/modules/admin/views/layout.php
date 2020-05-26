@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		  <title><?=isset($title)?$title:'Sistem Informasi BPKH' ?></title>
+		  <title><?=isset($title)?$title:'Database Keuangan dan Ekonomi BPKH RI' ?></title>
 		  <!-- Tell the browser to be responsive to screen width -->
 		  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-		  <meta name = "keywords" content = "Sistem Informasi Badan Pengelola Keuangan Haji RI" />
-      	  <meta name = "description" content = "Sistem Informasi Badan Pengelola Keuangan Haji RI" />
+		  <meta name = "keywords" content = "Database Keuangan dan Ekonomi BPKH RI" />
+      	  <meta name = "description" content = "Database Keuangan dan Ekonomi BPKH RI" />
       	  <meta name = "author" content = "Yaufani Adam" />
 		  <!-- Bootstrap 3.3.6 -->
 		  <link rel="stylesheet" href="<?= base_url() ?>public/bootstrap/css/bootstrap.min.css">
