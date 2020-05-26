@@ -20,7 +20,7 @@
                 
                 <div class="col-md-4 col-md-offset-4 text-center">
                     <div class="login-title">
-                         <h3><img width="200" height="" src="<?= base_url() ?>public/dist/img/logo-bpkh.png" alt="SIKIMAS BMT"></h3>
+                         <h3><img width="200" height="" src="<?= base_url() ?>public/dist/img/logo-bpkh-w.png" alt="SIKIMAS BMT"></h3>
                     </div>
                     <?php if(isset($msg) || validation_errors() !== ''): ?>
                     <div class="alert alert-warning alert-dismissible">
