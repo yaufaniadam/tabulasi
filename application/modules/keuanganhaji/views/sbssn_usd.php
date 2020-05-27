@@ -1,5 +1,5 @@
 <section class="content-header">
-	<h1><i class="fa fa-kaaba"></i> Laporan SBSSN USD <a
+	<h1><i class="fa fa-kaaba"></i> Laporan SBSN USD <a
 			href="<?= base_url('keuanganhaji/tambah_sbssn_usd'); ?>" class="btn btn-warning btn-sm"><i
 				class="fas fa-plus"></i>&nbsp; Tambah Data</a>
 

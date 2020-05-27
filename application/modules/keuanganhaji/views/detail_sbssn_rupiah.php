@@ -4,7 +4,7 @@
 	$bulan = $this->uri->segment($last-1);	 
   ?>
 <section class="content-header">
-	<h1><i class="fa fa-kaaba"></i> Detail SBSSN Rupiah <a
+	<h1><i class="fa fa-kaaba"></i> Detail SBSN Rupiah <a
 			href="<?= base_url('keuanganhaji/sbssn_rupiah/'.$tahun); ?>" class="btn btn-warning btn-sm"><i
 				class="fas fa-chevron-left"></i>&nbsp; Kembali</a>
 	</h1>
@@ -27,7 +27,7 @@
 							<th>Instrumen</th>
 							<th class="text-center">Maturity</th>
 							<th class="text-center">Counterpart</th>
-							<th class="text-center">Nominal (US Dollar)</th>
+							<th class="text-center">Nominal (Rupiah)</th>
 						</tr>
 						<?php $i=1; foreach ($sbssn_rupiah as $row) { 
                         if( $row['instrumen']== "TOTAL") { ?>

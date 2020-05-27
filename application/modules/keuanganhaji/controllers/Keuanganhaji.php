@@ -876,13 +876,13 @@ class Keuanganhaji extends Admin_Controller
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan SBSSN Rupiah Bulan ". $bulan. " " . $tahun)
-			->setSubject("Laporan SBSSN Rupiah Bulan ". $bulan. " " . $tahun)
-			->setDescription("Laporan SBSSN Rupiah Bulan ". $bulan. " " . $tahun)
-			->setKeywords("Laporan SBSSN Rupiah");
+			->setTitle("Laporan SBSN Rupiah Bulan ". $bulan. " " . $tahun)
+			->setSubject("Laporan SBSN Rupiah Bulan ". $bulan. " " . $tahun)
+			->setDescription("Laporan SBSN Rupiah Bulan ". $bulan. " " . $tahun)
+			->setKeywords("Laporan SBSN Rupiah");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan SBSSN Rupiah Bulan ". $bulan. " " . $tahun); // 
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan SBSN Rupiah Bulan ". $bulan. " " . $tahun); // 
 		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
@@ -1097,13 +1097,13 @@ class Keuanganhaji extends Admin_Controller
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan SBSSN USD Bulan ". $bulan. " " . $tahun)
-			->setSubject("Laporan SBSSN USD Bulan ". $bulan. " " . $tahun)
-			->setDescription("Laporan SBSSN USD Bulan ". $bulan. " " . $tahun)
-			->setKeywords("Laporan SBSSN USD");
+			->setTitle("Laporan SBSN USD Bulan ". $bulan. " " . $tahun)
+			->setSubject("Laporan SBSN USD Bulan ". $bulan. " " . $tahun)
+			->setDescription("Laporan SBSN USD Bulan ". $bulan. " " . $tahun)
+			->setKeywords("Laporan SBSN USD");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan SBSSN USD Bulan ". $bulan. " " . $tahun); // 
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan SBSN USD Bulan ". $bulan. " " . $tahun); // 
 		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1

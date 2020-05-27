@@ -16,7 +16,7 @@
 
       <?php breadcrumb('',$tahun, $thn); ?> 
       <?php if($alokasi_investasi) { ?>
-      <div class="well well-sm pre-scrollable" style="overflow-y:hidden;overflow-x: scroll; min-height:450px;">
+      <div class="well well-sm pre-scrollable" style="overflow-y:hidden;overflow-x: scroll; min-height:650px;">
 
       
       <table id="table1" class="table table-striped table-bordered"

@@ -1,5 +1,5 @@
 <section class="content-header">
-  <h1><i class="fa fa-kaaba"></i> &nbsp; Tambah Surat Berharga Negara (SBN) - SBSSN USD </h1>        
+  <h1><i class="fa fa-kaaba"></i> &nbsp; Tambah Surat Berharga Negara (SBN) - SBSN USD </h1>        
 </section>
 
 <section class="content">
