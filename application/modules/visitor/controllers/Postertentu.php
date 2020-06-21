@@ -1,5 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-	
+	use PhpOffice\PhpSpreadsheet\Spreadsheet;
+	use PhpOffice\PhpSpreadsheet\IOFactory; 
+	use PhpOffice\PhpSpreadsheet\Style\Alignment; 
 	class Postertentu extends MY_Controller {
 		//private $filename = "import_data";
 
@@ -140,7 +142,7 @@
 
 	        $sebaran = $this->postertentu_model->get_portfolio_investasi($tahun);
 	        $maxcolumn = konversiAngkaKeHuruf(count($sebaran)+1);
-	        $excel = new PHPExcel();
+	        $excel = new Spreadsheet;
 
 	        // Settingan awal file excel
 			$excel->getProperties()->setCreator('BPKH')
@@ -155,14 +157,14 @@
 			$excel->getActiveSheet()->mergeCells('A1:'.$maxcolumn.'1'); // Set Merge Cell pada kolom A1 sampai F1
 			$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 			$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
-			$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+			$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 			//sub judul baris ke 2
 			$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia"); 
 			$excel->getActiveSheet()->mergeCells('A2:'.$maxcolumn.'2'); // Set Merge Cell pada kolom A1 sampai F1
 			$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 			$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-			$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+			$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 	        $excel->getActiveSheet()->SetCellValue('A4', 'Uraian');
 	        $excel->getActiveSheet()->SetCellValue('A5', 'INVESTASI');
@@ -236,7 +238,7 @@
         	
 			
 
-	        $objWriter = new PHPExcel_Writer_Excel2007($excel);
+	        $objWriter = IOFactory::createWriter($excel, "Xlsx");
 	        $objWriter->save('./uploads/excel/'.$fileName);
 	   		// download file
 	        header("Content-Type: application/vnd.ms-excel");
@@ -373,7 +375,7 @@
 	        $sebaran = $this->postertentu_model->get_manfaat_investasi($tahun);
 	        $maxcolumn = konversiAngkaKeHuruf(count($sebaran)+1);
 
-	        $excel = new PHPExcel();
+	        $excel = new Spreadsheet;
 
 	        // Settingan awal file excel
 			$excel->getProperties()->setCreator('BPKH')
@@ -388,14 +390,14 @@
 			$excel->getActiveSheet()->mergeCells('A1:'.$maxcolumn.'1'); // Set Merge Cell pada kolom A1 sampai F1
 			$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 			$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
-			$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+			$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 			//sub judul baris ke 2
 			$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia"); 
 			$excel->getActiveSheet()->mergeCells('A2:'.$maxcolumn.'2'); // Set Merge Cell pada kolom A1 sampai F1
 			$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 			$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-			$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+			$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 	        $excel->getActiveSheet()->SetCellValue('A4', 'Uraian');
 	        $excel->getActiveSheet()->SetCellValue('A5', 'INVESTASI');
@@ -474,7 +476,7 @@
 			    $excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
 			}
   		
-  		    $objWriter = new PHPExcel_Writer_Excel2007($excel);
+  		    $objWriter = IOFactory::createWriter($excel, "Xlsx");
 	        $objWriter->save('./uploads/excel/'.$fileName);
 	   		// download file
 	        header("Content-Type: application/vnd.ms-excel");

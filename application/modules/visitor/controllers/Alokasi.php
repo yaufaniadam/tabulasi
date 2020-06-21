@@ -1,5 +1,8 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
-	
+	use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+	use PhpOffice\PhpSpreadsheet\Spreadsheet;
+	use PhpOffice\PhpSpreadsheet\IOFactory; 
+	use PhpOffice\PhpSpreadsheet\Style\Alignment; 
 	class Alokasi extends MY_Controller {
 		//private $filename = "import_data";
 
@@ -45,7 +48,7 @@
 
 	        $maxcolumn = konversiAngkaKeHuruf(count($bulan)+1);
 
-	        $excel = new PHPExcel();
+	        $excel = new Spreadsheet;
 
 	        // Settingan awal file excel
 			$excel->getProperties()->setCreator('BPKH')
@@ -60,14 +63,14 @@
 			$excel->getActiveSheet()->mergeCells('A1:'.$maxcolumn.'1' ); // Set Merge Cell pada kolom A1 sampai F1
 			$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 			$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
-			$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+			$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 			//sub judul baris ke 2
 			$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia"); // Set kolom A1 dengan tulisan "DATA SISWA"
 			$excel->getActiveSheet()->mergeCells('A2:'.$maxcolumn.'2'); // Set Merge Cell pada kolom A1 sampai F1
 			$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 			$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-			$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+			$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 
 	        $excel->setActiveSheetIndex(0);
@@ -133,7 +136,7 @@
 			$excel->getActiveSheet(0)->setTitle("Posisi Sebaran Dana Haji" . $tahun);
 			$excel->setActiveSheetIndex(0);
 
-	        $objWriter = new PHPExcel_Writer_Excel2007($excel);
+	        $objWriter = Alignment
 	        $objWriter->save('./uploads/excel/'.$fileName);
 	   		// download file
 	        header("Content-Type: application/vnd.ms-excel");

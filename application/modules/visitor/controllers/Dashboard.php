@@ -6,7 +6,7 @@ class Dashboard extends MY_Controller
 	{
 		parent::__construct();
 		$this->load->model('admin/dashboard_model', 'dashboard_model');
-		$this->load->library('excel');
+
 	}
 
 	public function index($tahun=0)

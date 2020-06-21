@@ -1,5 +1,10 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 	
+	use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+	use PhpOffice\PhpSpreadsheet\Spreadsheet;
+	use PhpOffice\PhpSpreadsheet\IOFactory; 
+	use PhpOffice\PhpSpreadsheet\Style\Alignment; 
+	
 	class Kemaslahatan extends Admin_Controller {
 	
 		public function __construct(){
@@ -42,13 +47,12 @@
 			      
 			    if($upload){ // Jika proses upload sukses
 
-			        $excelreader = new PHPExcel_Reader_Excel2007();
+			        $excelreader = new Xlsx;
 			        $loadexcel = $excelreader->load('./uploads/excel/kemaslahatan/'.$upload['file_name']); // Load file yang tadi diupload ke folder excel
 			        $sheet = $loadexcel->getActiveSheet()->toArray(null, true, true ,true);
 			        
 			        $data['sheet'] = $sheet; 
-			        $data['file_excel'] =$upload['file_name'];
-			       
+			        $data['file_excel'] =$upload['file_name'];			       
 
 			        $data['view'] = 'tambah_kemaslahatan';
     				$this->load->view('admin/layout', $data);
@@ -71,11 +75,9 @@
 
 		public function import_kemaslahatan($file_excel){
 		
-		    $excelreader = new PHPExcel_Reader_Excel2007();
+		    $excelreader = new Xlsx;
 		    $loadexcel = $excelreader->load('./uploads/excel/kemaslahatan/'.$file_excel); // Load file yang telah diupload ke folder excel
-		    $sheet = $loadexcel->getActiveSheet()->toArray(null, true, true ,true);		    
-
-		   	
+		    $sheet = $loadexcel->getActiveSheet()->toArray(null, true, true ,true);			   	
 		  
 		    $data2 = array();
 
@@ -127,7 +129,7 @@
 	        $fileName = 'program_kemaslahatan_'.$tahun.'-('. date('d-m-Y H-i-s', time()) .').xlsx';  
 
 	        $sebaran = $this->kemaslahatan_model->get_kemaslahatan($tahun);
-	        $excel = new PHPExcel();
+	        $excel = new Spreadsheet;
 
 	        // Settingan awal file excel
 			$excel->getProperties()->setCreator('BPKH')
@@ -142,14 +144,14 @@
 			$excel->getActiveSheet()->mergeCells('A1:F1'); // Set Merge Cell pada kolom A1 sampai F1
 			$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 			$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
-			$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+			$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 			//sub judul baris ke 2
 			$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia"); 
 			$excel->getActiveSheet()->mergeCells('A2:F2'); // Set Merge Cell pada kolom A1 sampai F1
 			$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 			$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-			$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+			$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 
 	        $excel->setActiveSheetIndex(0);
@@ -207,12 +209,13 @@
 			    $excel->getActiveSheet()->getStyle($i.$last_row)->applyFromArray($style_td_bold);
 			} 
 			
+			
 
 	        /* Set judul file excel n
 			$excel->getActiveSheet(0)->setTitle("Posisi Penempatan Thn " . $tahun);
 			$excel->setActiveSheetIndex(0); */
 
-	        $objWriter = new PHPExcel_Writer_Excel2007($excel);
+	        $objWriter = IOFactory::createWriter($excel, "Xlsx");
 	        $objWriter->save('./uploads/excel/'.$fileName);
 	   		// download file
 	        header("Content-Type: application/vnd.ms-excel");

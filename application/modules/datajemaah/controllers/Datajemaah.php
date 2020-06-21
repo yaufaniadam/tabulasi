@@ -1,5 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
-
+	use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+	use PhpOffice\PhpSpreadsheet\Spreadsheet;
+	use PhpOffice\PhpSpreadsheet\IOFactory; 
+	use PhpOffice\PhpSpreadsheet\Style\Alignment; 
 class Datajemaah extends Admin_Controller
 {
 
@@ -123,7 +126,7 @@ class Datajemaah extends Admin_Controller
 
 			if ($upload) { // Jika proses upload sukses			    	
 
-				$excelreader = new PHPExcel_Reader_Excel2007();
+				$excelreader = new Xlsx;
 				$loadexcel = $excelreader->load('./uploads/excel/bpih/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
 				$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
@@ -150,7 +153,7 @@ class Datajemaah extends Admin_Controller
 	{
 
 
-		$excelreader = new PHPExcel_Reader_Excel2007();
+		$excelreader = new Xlsx;
 		$loadexcel = $excelreader->load('./uploads/excel/bpih/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
@@ -207,7 +210,7 @@ class Datajemaah extends Admin_Controller
 
 		$sebaran = $this->datajemaah_model->get_detail_realisasi_bpih($tahun);
 		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);
-		$excel = new PHPExcel();
+		$excel = new Spreadsheet;
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
@@ -222,14 +225,14 @@ class Datajemaah extends Admin_Controller
 		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
 		$excel->getActiveSheet()->mergeCells('A2:E2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		$excel->getActiveSheet()->SetCellValue('A4', 'No');
 		$excel->getActiveSheet()->SetCellValue('B4', 'Bidang');
@@ -292,7 +295,7 @@ class Datajemaah extends Admin_Controller
 		}
 
 
-		$objWriter = new PHPExcel_Writer_Excel2007($excel);
+		$objWriter = IOFactory::createWriter($excel, "Xlsx");
 		$objWriter->save('./uploads/excel/' . $fileName);
 		// download file
 		header("Content-Type: application/vnd.ms-excel");

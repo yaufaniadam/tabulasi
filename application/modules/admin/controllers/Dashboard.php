@@ -1,5 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
-
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory; 
+use PhpOffice\PhpSpreadsheet\Style\Alignment; 
 class Dashboard extends Admin_Controller
 {
 	public function __construct()
@@ -61,7 +64,7 @@ class Dashboard extends Admin_Controller
 
 			if ($upload) { // Jika proses upload sukses			    	
 
-				$excelreader = new PHPExcel_Reader_Excel2007();
+				$excelreader = new Xlsx;
 				$loadexcel = $excelreader->load('./uploads/excel/dashboard/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
 				$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
@@ -86,7 +89,7 @@ class Dashboard extends Admin_Controller
     
     public function import_dashboard($file_excel)
 	{
-		$excelreader = new PHPExcel_Reader_Excel2007();
+		$excelreader = new Xlsx;
 		$loadexcel = $excelreader->load('./uploads/excel/dashboard/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 

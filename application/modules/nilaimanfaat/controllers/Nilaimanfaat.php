@@ -1,5 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
-
+	use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+	use PhpOffice\PhpSpreadsheet\Spreadsheet;
+	use PhpOffice\PhpSpreadsheet\IOFactory; 
+	use PhpOffice\PhpSpreadsheet\Style\Alignment; 
 class Nilaimanfaat extends Admin_Controller
 {
 
@@ -60,7 +63,7 @@ class Nilaimanfaat extends Admin_Controller
 
 			if ($upload) { // Jika proses upload sukses
 
-				$excelreader = new PHPExcel_Reader_Excel2007();
+				$excelreader = new Xlsx;
 				$loadexcel = $excelreader->load('./uploads/excel/nilaimanfaat/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
 				$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
@@ -86,7 +89,7 @@ class Nilaimanfaat extends Admin_Controller
 	public function import_per_instrumen($file_excel)
 	{
 
-		$excelreader = new PHPExcel_Reader_Excel2007();
+		$excelreader = new Xlsx;
 		$loadexcel = $excelreader->load('./uploads/excel/nilaimanfaat/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
@@ -142,7 +145,7 @@ class Nilaimanfaat extends Admin_Controller
 
 		$sebaran = $this->nilaimanfaat_model->get_per_instrumen_export($tahun);
 		$totalbulan = konversiAngkaKeHuruf(count($sebaran) + 1);
-		$excel = new PHPExcel();
+		$excel = new Spreadsheet;
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
@@ -157,14 +160,14 @@ class Nilaimanfaat extends Admin_Controller
 		$excel->getActiveSheet()->mergeCells('A1:' . $totalbulan . '1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
 		$excel->getActiveSheet()->mergeCells('A2:' . $totalbulan . '2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		$excel->getActiveSheet()->SetCellValue('A4', 'Nilai Manfaat');
 		$excel->getActiveSheet()->SetCellValue('A5', 'DAU (SDHI & SBSN)');
@@ -233,7 +236,7 @@ class Nilaimanfaat extends Admin_Controller
 			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
 		}
 
-		$objWriter = new PHPExcel_Writer_Excel2007($excel);
+		$objWriter = IOFactory::createWriter($excel, "Xlsx");
 		$objWriter->save('./uploads/excel/' . $fileName);
 		// download file
 		header("Content-Type: application/vnd.ms-excel");
@@ -278,7 +281,7 @@ class Nilaimanfaat extends Admin_Controller
 
 			if ($upload) { // Jika proses upload sukses
 
-				$excelreader = new PHPExcel_Reader_Excel2007();
+				$excelreader = new Xlsx;
 				$loadexcel = $excelreader->load('./uploads/excel/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
 				$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
@@ -302,7 +305,7 @@ class Nilaimanfaat extends Admin_Controller
 
 	public function import_nilai_manfaat_penempatan_di_bpsbpih($file_excel)
 	{
-		$excelreader = new PHPExcel_Reader_Excel2007();
+		$excelreader = new Xlsx;
 		$loadexcel = $excelreader->load('./uploads/excel/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
@@ -387,7 +390,7 @@ class Nilaimanfaat extends Admin_Controller
 		$fileName = 'nilai_manfaat_penempatan_di_bpsbpih_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
 		$sebaran = $this->nilaimanfaat_model->get_nilai_manfaat_penempatan_di_bpsbpih($tahun);
-		$excel = new PHPExcel();
+		$excel = new Spreadsheet;
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
@@ -404,14 +407,14 @@ class Nilaimanfaat extends Admin_Controller
 		$excel->getActiveSheet()->mergeCells('A1:N1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia"); // Set kolom A1 dengan tulisan "DATA SISWA"
 		$excel->getActiveSheet()->mergeCells('A2:N2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 
 		$excel->setActiveSheetIndex(0);
@@ -487,7 +490,7 @@ class Nilaimanfaat extends Admin_Controller
 			$excel->getActiveSheet(0)->setTitle("Nilai Manfaat Hasil Penempatan di BPS BPIH" . $tahun);
 			$excel->setActiveSheetIndex(0); */
 
-		$objWriter = new PHPExcel_Writer_Excel2007($excel);
+		$objWriter = IOFactory::createWriter($excel, "Xlsx");
 		$objWriter->save('./uploads/excel/' . $fileName);
 		// download file
 		header("Content-Type: application/vnd.ms-excel");
@@ -541,7 +544,7 @@ class Nilaimanfaat extends Admin_Controller
 
 			if ($upload) { // Jika proses upload sukses
 
-				$excelreader = new PHPExcel_Reader_Excel2007();
+				$excelreader = new Xlsx;
 				$loadexcel = $excelreader->load('./uploads/excel/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
 				$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
@@ -566,7 +569,7 @@ class Nilaimanfaat extends Admin_Controller
 	public function import_nilai_manfaat_produk($file_excel)
 	{
 
-		$excelreader = new PHPExcel_Reader_Excel2007();
+		$excelreader = new Xlsx;
 		$loadexcel = $excelreader->load('./uploads/excel/' . $file_excel); // Load file yang telah diupload ke folder excel
 		$sheet = $loadexcel->getActiveSheet()->toArray(null, true, true, true);
 
@@ -621,7 +624,7 @@ class Nilaimanfaat extends Admin_Controller
 		$fileName = 'nilai_manfaat_produk_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
 		$sebaran = $this->nilaimanfaat_model->get_nilai_manfaat_produk($tahun);
-		$excel = new PHPExcel();
+		$excel = new Spreadsheet;
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
@@ -636,14 +639,14 @@ class Nilaimanfaat extends Admin_Controller
 		$excel->getActiveSheet()->mergeCells('A1:F1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
 		$excel->getActiveSheet()->mergeCells('A2:F2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
-		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 
 		$excel->setActiveSheetIndex(0);
@@ -701,7 +704,7 @@ class Nilaimanfaat extends Admin_Controller
 			$excel->getActiveSheet(0)->setTitle("Posisi Penempatan Thn " . $tahun);
 			$excel->setActiveSheetIndex(0); */
 
-		$objWriter = new PHPExcel_Writer_Excel2007($excel);
+		$objWriter = IOFactory::createWriter($excel, "Xlsx");
 		$objWriter->save('./uploads/excel/' . $fileName);
 		// download file
 		header("Content-Type: application/vnd.ms-excel");
