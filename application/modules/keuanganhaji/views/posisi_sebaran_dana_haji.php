@@ -12,9 +12,8 @@
 
         <?php breadcrumb('',$tahun, $thn); ?>
         <?php if($sebaran_dana_haji) { ?>
-        <p>*) Dalam Rupiah</p>
         <div class="box-body smy-form-body box-keuangan">        
-          
+
           <table class="keuangan table table-striped table-bordered" style="width:2200px;min-width: 100%;">
             <thead>
               <tr class="text-center">

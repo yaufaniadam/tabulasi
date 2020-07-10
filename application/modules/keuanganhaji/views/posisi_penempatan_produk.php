@@ -14,7 +14,6 @@
 
 			<?php breadcrumb('',$tahun, $thn); ?>
 			<?php if($posisi_penempatan_produk) { ?>
-			<p>*) Dalam Rupiah</p>
 			<div class="box-body smy-form-body box-keuangan">
 
 				<table class="keuangan table table-striped table-bordered">

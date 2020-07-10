@@ -4,7 +4,7 @@
 	$bulan = $this->uri->segment($last-1);	 
   ?>
 <section class="content-header">
-	<h1><i class="fa fa-kaaba"></i> Detail SBSN USD <a
+	<h1><i class="fa fa-kaaba"></i> Detail SBSSN USD <a
 			href="<?= base_url('keuanganhaji/sbssn_usd/'.$tahun); ?>" class="btn btn-warning btn-sm"><i
 				class="fas fa-chevron-left"></i>&nbsp; Kembali</a>
 	</h1>
