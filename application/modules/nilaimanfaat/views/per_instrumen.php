@@ -12,9 +12,11 @@
   <div class="row no-gutters">
     <div class="col-md-12">
       <?php breadcrumb('', $tahun, $thn); ?>
+      <p>* Dalam Triliun</p>
       <?php if (count($per_instrumen) > 0) { ?>
-      <div class="box-body smy-form-body box-keuangan">
-        <?php        
+        <div class="box-body smy-form-body box-keuangan">
+
+          <?php
 
           foreach ($per_instrumen as $key => $row) {
             foreach ($row as $field => $value) {
@@ -56,15 +58,15 @@
             $i++;
           }
           echo "</table>";
-         ?>
+          ?>
 
 
-      
+
+        </div>
+      <?php } else {
+        echo '<p class="alert alert-success"> Pilih tahun</p>';
+      } ?>
     </div>
-    <?php } else {
-          echo '<p class="alert alert-success"> Pilih tahun</p>';
-        } ?>
-  </div>
 </section>
 
 <!-- Modal -->

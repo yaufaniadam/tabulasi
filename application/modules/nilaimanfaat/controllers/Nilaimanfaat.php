@@ -1,8 +1,10 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
-	use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-	use PhpOffice\PhpSpreadsheet\Spreadsheet;
-	use PhpOffice\PhpSpreadsheet\IOFactory; 
-	use PhpOffice\PhpSpreadsheet\Style\Alignment; 
+
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+
 class Nilaimanfaat extends Admin_Controller
 {
 
@@ -127,7 +129,7 @@ class Nilaimanfaat extends Admin_Controller
 	{
 		$this->db->delete('per_instrumen', array('id_per_instrumen' => $id));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('nilaimanfaat/per_instrumen/'.$uri));
+		redirect(base_url('nilaimanfaat/per_instrumen/' . $uri));
 	}
 
 	public function export_per_instrumen($tahun)
@@ -168,6 +170,9 @@ class Nilaimanfaat extends Admin_Controller
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
+		//sub judul baris ke 2
+		$excel->setActiveSheetIndex(0)->setCellValue('A3', "*Dalam triliun"); // Set kolom A1 dengan tulisan "DATA SISWA"
+		$excel->getActiveSheet()->mergeCells('A3:B3'); // Set Merge Cell pada kolom A1 sampai F1
 
 		$excel->getActiveSheet()->SetCellValue('A4', 'Nilai Manfaat');
 		$excel->getActiveSheet()->SetCellValue('A5', 'DAU (SDHI & SBSN)');
@@ -400,8 +405,6 @@ class Nilaimanfaat extends Admin_Controller
 			->setDescription("Nilai Manfaat Hasil Penempatan di BPS BPIH Tahun " . $tahun)
 			->setKeywords("Nilai Manfaat Hasil Penempatan di BPS BPIH");
 
-
-
 		//judul baris ke 1
 		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Nilai Manfaat Hasil Penempatan di BPS BPIH Tahun " . $tahun); // Set kolom A1 dengan tulisan "DATA SISWA"
 		$excel->getActiveSheet()->mergeCells('A1:N1'); // Set Merge Cell pada kolom A1 sampai F1
@@ -411,7 +414,7 @@ class Nilaimanfaat extends Admin_Controller
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia"); // Set kolom A1 dengan tulisan "DATA SISWA"
-		$excel->getActiveSheet()->mergeCells('A2:N2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->getActiveSheet()->mergeCells('A2:2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
@@ -502,9 +505,9 @@ class Nilaimanfaat extends Admin_Controller
 		$this->db->where('tahun', $tahun);
 		$this->db->update('nilai_manfaat_penempatan_di_bpsbpih', array($bulan => ''));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('nilaimanfaat/penempatan_di_bpsbpih/'.$tahun));
+		redirect(base_url('nilaimanfaat/penempatan_di_bpsbpih/' . $tahun));
 	}
-	
+
 
 	// nilai manfaat produk
 	public function produk($tahun = 0)
@@ -607,7 +610,7 @@ class Nilaimanfaat extends Admin_Controller
 	{
 		$this->db->delete('nilai_manfaat_produk', array('id' => $id));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('nilaimanfaat/produk/'.$uri));
+		redirect(base_url('nilaimanfaat/produk/' . $uri));
 	}
 
 	public function export_nilai_manfaat_produk($tahun)

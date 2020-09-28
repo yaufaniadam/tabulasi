@@ -2,8 +2,8 @@
 
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\IOFactory; 
-use PhpOffice\PhpSpreadsheet\Style\Alignment; 
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class Laporankinerja extends Admin_Controller
 {
@@ -35,7 +35,7 @@ class Laporankinerja extends Admin_Controller
 		$data['view'] = 'pencapaian_perbidang';
 		$this->load->view('admin/layout', $data);
 	}
-	public function detail_pencapaian_perbidang($bulan=0, $tahun = 0)
+	public function detail_pencapaian_perbidang($bulan = 0, $tahun = 0)
 	{
 		$data['tahun'] = $this->laporankinerja_model->get_tahun_pencapaian_perbidang();
 		$data['pencapaian_perbidang'] = $this->laporankinerja_model->get_detail_pencapaian_perbidang($bulan, $tahun);
@@ -102,25 +102,25 @@ class Laporankinerja extends Admin_Controller
 
 		$data2 = array();
 
-			$numrow = 1;
-			foreach ($sheet as $row) {
+		$numrow = 1;
+		foreach ($sheet as $row) {
 
-				if ($numrow > 1) {
-					// Kita push (add) array data ke variabel data
-					array_push($data2, array(
-						'bidang' => $row['A'], 
-						'target' => $row['B'],
-						'realisasi' => $row['C'],
-						'persentase' => $row['D'],
-						'bulan' => konversi_bulan_ke_angka($data["E"][1]),
-						'tahun' => $data["F"][1],
-					));
-				}
-
-				$numrow++; // Tambah 1 setiap kali looping
+			if ($numrow > 1) {
+				// Kita push (add) array data ke variabel data
+				array_push($data2, array(
+					'bidang' => $row['A'],
+					'target' => $row['B'],
+					'realisasi' => $row['C'],
+					'persentase' => $row['D'],
+					'bulan' => konversi_bulan_ke_angka($data["E"][1]),
+					'tahun' => $data["F"][1],
+				));
 			}
 
-	
+			$numrow++; // Tambah 1 setiap kali looping
+		}
+
+
 
 		// Panggil fungsi insert_pencapaian_perbidang
 		$this->laporankinerja_model->insert_pencapaian_perbidang($data2);
@@ -132,10 +132,10 @@ class Laporankinerja extends Admin_Controller
 	{
 		$this->db->delete('pencapaian_perbidang2', array('bulan' => $bulan, 'tahun' => $tahun));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('laporankinerja/pencapaian_perbidang/'. $tahun));
+		redirect(base_url('laporankinerja/pencapaian_perbidang/' . $tahun));
 	}
 
-	public function export_pencapaian_perbidang($bulan,$tahun)
+	public function export_pencapaian_perbidang($bulan, $tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -155,13 +155,13 @@ class Laporankinerja extends Admin_Controller
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Pencapaian Output Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
-			->setSubject("Laporan Pencapaian Output Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
-			->setDescription("Laporan Pencapaian Output Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
+			->setTitle("Laporan Pencapaian Output Perbidang Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setSubject("Laporan Pencapaian Output Perbidang Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setDescription("Laporan Pencapaian Output Perbidang Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
 			->setKeywords("Laporan Operasional Akumulasi");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Pencapaian Output Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun); // 
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Pencapaian Output Perbidang Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun); // 
 		$excel->getActiveSheet()->mergeCells('A1:E1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
@@ -179,8 +179,8 @@ class Laporankinerja extends Admin_Controller
 		$excel->getActiveSheet()->SetCellValue('C4', 'Target');
 		$excel->getActiveSheet()->SetCellValue('D4', 'Realisasi');
 		$excel->getActiveSheet()->SetCellValue('E4', 'Persentase');
-		
-		$no=1;
+
+		$no = 1;
 		$rowCount = 5;
 		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
@@ -189,7 +189,7 @@ class Laporankinerja extends Admin_Controller
 			$excel->getActiveSheet()->SetCellValue('C' . $rowCount, $element['target']);
 			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['realisasi']);
 			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['persentase']);
-		
+
 
 			//stile column No
 			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
@@ -253,7 +253,7 @@ class Laporankinerja extends Admin_Controller
 		$data['view'] = 'penyerapan_perbidang';
 		$this->load->view('admin/layout', $data);
 	}
-	public function detail_penyerapan_perbidang($bulan=0, $tahun = 0)
+	public function detail_penyerapan_perbidang($bulan = 0, $tahun = 0)
 	{
 		$data['tahun'] = $this->laporankinerja_model->get_tahun_penyerapan_perbidang();
 		$data['penyerapan_perbidang'] = $this->laporankinerja_model->get_detail_penyerapan_perbidang($bulan, $tahun);
@@ -318,25 +318,25 @@ class Laporankinerja extends Admin_Controller
 
 		$data2 = array();
 
-			$numrow = 1;
-			foreach ($sheet as $row) {
+		$numrow = 1;
+		foreach ($sheet as $row) {
 
-				if ($numrow > 1) {
-					// Kita push (add) array data ke variabel data
-					array_push($data2, array(
-						'bidang' => $row['A'], 
-						'target' => $row['B'],
-						'efisiensi' => $row['C'],
-						'realisasi' => $row['D'],
-						'persentase' => $row['E'],
-						'bulan' => konversi_bulan_ke_angka($data["F"][1]),
-						'tahun' => $data["G"][1],
-					));
-				}
-
-				$numrow++; // Tambah 1 setiap kali looping
+			if ($numrow > 1) {
+				// Kita push (add) array data ke variabel data
+				array_push($data2, array(
+					'bidang' => $row['A'],
+					'target' => $row['B'],
+					'efisiensi' => $row['C'],
+					'realisasi' => $row['D'],
+					'persentase' => $row['E'],
+					'bulan' => konversi_bulan_ke_angka($data["F"][1]),
+					'tahun' => $data["G"][1],
+				));
 			}
-	
+
+			$numrow++; // Tambah 1 setiap kali looping
+		}
+
 
 		// Panggil fungsi insert_penyerapan_perbidang
 		$this->laporankinerja_model->insert_penyerapan_perbidang($data2);
@@ -348,10 +348,10 @@ class Laporankinerja extends Admin_Controller
 	{
 		$this->db->delete('penyerapan_perbidang2', array('bulan' => $bulan, 'tahun' => $tahun));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('laporankinerja/penyerapan_perbidang/'. $tahun));
+		redirect(base_url('laporankinerja/penyerapan_perbidang/' . $tahun));
 	}
 
-	public function export_penyerapan_perbidang($bulan,$tahun)
+	public function export_penyerapan_perbidang($bulan, $tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -371,13 +371,13 @@ class Laporankinerja extends Admin_Controller
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Penyerapan Anggaran Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
-			->setSubject("Laporan Penyerapan Anggaran Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
-			->setDescription("Laporan Penyerapan Anggaran Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun)
+			->setTitle("Laporan Penyerapan Anggaran Perbidang Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setSubject("Laporan Penyerapan Anggaran Perbidang Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setDescription("Laporan Penyerapan Anggaran Perbidang Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
 			->setKeywords("Laporan Operasional Akumulasi");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Penyerapan Anggaran Perbidang Bulan ". konversiBulanAngkaKeNama($bulan). " " . $tahun); // 
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Penyerapan Anggaran Perbidang Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun); // 
 		$excel->getActiveSheet()->mergeCells('A1:F1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
@@ -396,8 +396,8 @@ class Laporankinerja extends Admin_Controller
 		$excel->getActiveSheet()->SetCellValue('D4', 'RKAT-P Efisiensi');
 		$excel->getActiveSheet()->SetCellValue('E4', 'Realisasi');
 		$excel->getActiveSheet()->SetCellValue('F4', 'Persentase');
-		
-		$no=1;
+
+		$no = 1;
 		$rowCount = 5;
 		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
@@ -407,7 +407,7 @@ class Laporankinerja extends Admin_Controller
 			$excel->getActiveSheet()->SetCellValue('D' . $rowCount, $element['efisiensi']);
 			$excel->getActiveSheet()->SetCellValue('E' . $rowCount, $element['realisasi']);
 			$excel->getActiveSheet()->SetCellValue('F' . $rowCount, $element['persentase']);
-		
+
 
 			//stile column No
 			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
@@ -436,16 +436,7 @@ class Laporankinerja extends Admin_Controller
 			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
 		}
 
-		$excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A8')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A9')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A13')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A14')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A15')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A18')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A19')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A22')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A23')->getFont()->setBold(TRUE);
+
 
 		//auto column width
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
@@ -459,5 +450,4 @@ class Laporankinerja extends Admin_Controller
 		header("Content-Type: application/vnd.ms-excel");
 		redirect('./uploads/excel/' . $fileName);
 	}
-
 } //class

@@ -1,8 +1,10 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
-	use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-	use PhpOffice\PhpSpreadsheet\Spreadsheet;
-	use PhpOffice\PhpSpreadsheet\IOFactory; 
-	use PhpOffice\PhpSpreadsheet\Style\Alignment; 
+
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+
 class Laporankeuangan extends Admin_Controller
 {
 	//private $filename = "import_data";
@@ -21,8 +23,11 @@ class Laporankeuangan extends Admin_Controller
 		$this->load->view('admin/layout', $data);
 	}
 
+
+
 	public function neraca($tahun = 0)
 	{
+
 		$tahun = ($tahun != '') ? $tahun : date('Y');
 
 		$data['thn'] = $tahun;
@@ -31,10 +36,10 @@ class Laporankeuangan extends Admin_Controller
 		$data['view'] = 'neraca';
 		$this->load->view('admin/layout', $data);
 	}
-
-	public function detail_neraca($id = 0)
+	public function detail_neraca($bulan = 0, $tahun = 0)
 	{
-		$data['neraca'] = $this->laporankeuangan_model->get_detail_neraca($id);
+		$data['tahun'] = $this->laporankeuangan_model->get_tahun_neraca();
+		$data['neraca'] = $this->laporankeuangan_model->get_detail_neraca($bulan, $tahun);
 		$data['view'] = 'detail_neraca';
 		$this->load->view('admin/layout', $data);
 	}
@@ -61,7 +66,7 @@ class Laporankeuangan extends Admin_Controller
 			$upload = $this->upload->data();
 
 
-			if ($upload) { // Jika proses upload sukses
+			if ($upload) { // Jika proses upload sukses			    	
 
 				$excelreader = new Xlsx;
 				$loadexcel = $excelreader->load('./uploads/excel/laporankeuangan/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
@@ -95,51 +100,38 @@ class Laporankeuangan extends Admin_Controller
 
 		$data = transposeData($sheet);
 
-		$dataquery = array(
-			'kasdansetarakas' => $data['B'][4],
-			'piutang' => $data['B'][5],
-			'pendapatanyangmasihharusditerima' => $data['B'][6],
-			'uangmukabpih' => $data['B'][7],
-			'penempatanpadabank' => $data['B'][8],
-			'investasijangkapendek' => $data['B'][9],
-			'jumlahasetlancar' => $data['B'][10],
-			'investasijangkapanjang' => $data['B'][12],
-			'asettetapbersih' => $data['B'][13],
-			'asettakberwujudbersih' => $data['B'][14],
-			'asetlainlain' => $data['B'][15],
-			'jumlahasettidaklancar' => $data['B'][16],
-			'totalaset' => $data['B'][17],
-			'utangbeban' => $data['B'][20],
-			'utangsetoranlunasdantunda' => $data['B'][21],
-			'utangpajak' => $data['B'][22],
-			'utanglainlain' => $data['B'][23],
-			'jumlahliabilitasjangkapendek' => $data['B'][24],
-			'danatitipanjemaah' => $data['B'][26],
-			'pendapatannilaimanfaatyangditangguhkan' => $data['B'][27],
-			'jumlahliabilitasjangkapanjang' => $data['B'][28],
-			'jumlahliabilitas' => $data['B'][29],
-			'tidakterikat' => $data['B'][31],
-			'terikattemporer' => $data['B'][32],
-			'terikatpermanen' => $data['B'][33],
-			'jumlahasetneto' => $data['B'][34],
-			'jumlahliabilitasdanasetneto' => $data['B'][35],
-			'date' => konversitanggalmysqlformat($data['B'][1]),
-		);
+		$data2 = array();
+
+		$numrow = 1;
+		foreach ($sheet as $row) {
+
+			if ($numrow > 1) {
+				// Kita push (add) array data ke variabel data
+				array_push($data2, array(
+					'bidang' => $row['A'],
+					'target' => $row['B'],
+					'bulan' => konversi_bulan_ke_angka($data["B"][1]),
+					'tahun' => $data["C"][1],
+				));
+			}
+
+			$numrow++; // Tambah 1 setiap kali looping
+		}
 
 		// Panggil fungsi insert_neraca
-		$this->laporankeuangan_model->insert_neraca($dataquery);
+		$this->laporankeuangan_model->insert_neraca($data2);
 
 		redirect("laporankeuangan/neraca"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
-	public function hapus_neraca($id = 0, $uri = NULL)
+	public function hapus_neraca($bulan = 0, $tahun = 0, $uri = NULL)
 	{
-		$this->db->delete('neraca', array('id' => $id));
+		$this->db->delete('neraca2', array('bulan' => $bulan, 'tahun' => $tahun));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('laporankeuangan/neraca/' . $uri));
+		redirect(base_url('laporankeuangan/neraca/' . $tahun));
 	}
 
-	public function export_neraca($tahun)
+	public function export_neraca($bulan, $tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -147,143 +139,98 @@ class Laporankeuangan extends Admin_Controller
 		$style_td = $this->excel->style('style_td');
 		$style_td_left = $this->excel->style('style_td_left');
 		$style_td_bold = $this->excel->style('style_td_bold');
+		$style_td_bold_no_bg = $this->excel->style('style_td_bold_no_bg');
 
 		// create file name
 
-		$fileName = 'neraca_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
+		$fileName = 'laporan_operasional_bulanan' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
-		$sebaran = $this->laporankeuangan_model->get_neraca_export($tahun);
+		$sebaran = $this->laporankeuangan_model->get_detail_neraca($bulan, $tahun);
 		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);
 		$excel = new Spreadsheet;
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Neraca Tahun " . $tahun)
-			->setSubject("Neraca Tahun " . $tahun)
-			->setDescription("Neraca Tahun " . $tahun)
-			->setKeywords("Neraca");
+			->setTitle("Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setSubject("Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setDescription("Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setKeywords("Laporan Operasional Bulanan");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Neraca Tahun " . $tahun); // 
-		$excel->getActiveSheet()->mergeCells('A1:' . $maxcolumn . '1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:B1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
-		$excel->getActiveSheet()->mergeCells('A2:' . $maxcolumn . '2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->getActiveSheet()->mergeCells('A2:B2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
+
 		$excel->getActiveSheet()->SetCellValue('A4', 'Uraian');
-		$excel->getActiveSheet()->SetCellValue('A5', 'ASET');
-		$excel->getActiveSheet()->SetCellValue('A6', 'Aset Lancar');
-		$excel->getActiveSheet()->SetCellValue('A7', '  Kas dan setara kas');
-		$excel->getActiveSheet()->SetCellValue('A8', '  Piutang');
-		$excel->getActiveSheet()->SetCellValue('A9', '  Pendapatan yang masih harus diterima');
-		$excel->getActiveSheet()->SetCellValue('A10', '  Uang muka BPIH');
-		$excel->getActiveSheet()->SetCellValue('A11', '  Penempatan pada bank');
-		$excel->getActiveSheet()->SetCellValue('A12', '  Investasi jangka pendek');
-		$excel->getActiveSheet()->SetCellValue('A13', 'Jumlah Aset Lancar');
-		$excel->getActiveSheet()->SetCellValue('A14', 'Aset Tidak Lancar');
-		$excel->getActiveSheet()->SetCellValue('A15', '  Investasijangka panjang');
-		$excel->getActiveSheet()->SetCellValue('A16', '  Aset tetap - bersih');
-		$excel->getActiveSheet()->SetCellValue('A17', '  Aset tak berwujud - bersih');
-		$excel->getActiveSheet()->SetCellValue('A18', '  Aset lain-lain');
-		$excel->getActiveSheet()->SetCellValue('A19', 'Jumlah Aset Tidak Lancar');
-		$excel->getActiveSheet()->SetCellValue('A20', 'TOTAL ASET');
-		$excel->getActiveSheet()->SetCellValue('A21', 'LIABILITAS');
-		$excel->getActiveSheet()->SetCellValue('A22', 'Liabilitas Jangka Pendek');
-		$excel->getActiveSheet()->SetCellValue('A23', '  Utang beban');
-		$excel->getActiveSheet()->SetCellValue('A24', '  Utang setoran lunas dan tunda');
-		$excel->getActiveSheet()->SetCellValue('A25', '  Utang pajak');
-		$excel->getActiveSheet()->SetCellValue('A26', '  Utang lain-Lain');
-		$excel->getActiveSheet()->SetCellValue('A27', 'Jumlah Liabilitas Jangka Pendek');
-		$excel->getActiveSheet()->SetCellValue('A28', 'Liabilitas Jangka Panjang');
-		$excel->getActiveSheet()->SetCellValue('A29', '  Dana titipan jemaah');
-		$excel->getActiveSheet()->SetCellValue('A30', '  Pendapatan nilai manfaat yang ditangguhkan');
-		$excel->getActiveSheet()->SetCellValue('A31', 'Jumlah Liabilitas Jangka Panjang');
-		$excel->getActiveSheet()->SetCellValue('A32', 'JUMLAH LIABILITAS');
-		$excel->getActiveSheet()->SetCellValue('A33', 'ASET NETO');
-		$excel->getActiveSheet()->SetCellValue('A34', '  Tidak terikat');
-		$excel->getActiveSheet()->SetCellValue('A35', '  Terikat temporer');
-		$excel->getActiveSheet()->SetCellValue('A36', '  Terikat permanenT');
-		$excel->getActiveSheet()->SetCellValue('A37', 'JUMLAH ASET NETO');
-		$excel->getActiveSheet()->SetCellValue('A38', 'JUMLAH LIABILITAS DAN ASET NETO');
+		$excel->getActiveSheet()->SetCellValue('B4', konversiBulanAngkaKeNama($bulan));
 
-		$i = 2;
+		$excel->getActiveSheet()->SetCellValue('A5', '');
+		$excel->getActiveSheet()->SetCellValue('B5', '');
+
+		$no = 1;
+		$rowCount = 5;
+		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
-			//echo $element['bulan'];echo konversiAngkaKeHuruf($i);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4, konversiTanggalAngkaKeNama($element['date']));
 
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 7, $element['kasdansetarakas']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 8, $element['piutang']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 9, $element['pendapatanyangmasihharusditerima']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 10, $element['uangmukabpih']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 11, $element['penempatanpadabank']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 12, $element['investasijangkapendek']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 13, $element['jumlahasetlancar']);
+			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $element['bidang']);
+			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['target']);
 
 
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 15, $element['investasijangkapanjang']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 16, $element['asettetapbersih']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 17, $element['asettakberwujudbersih']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 18, $element['asetlainlain']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 19, $element['jumlahasettidaklancar']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 20, $element['totalaset']);
+			//stile column No
+			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
 
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 23, $element['utangbeban']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 24, $element['utangsetoranlunasdantunda']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 25, $element['utangpajak']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 26, $element['utanglainlain']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 27, $element['jumlahliabilitasjangkapendek']);
+			//header style lainnya
+			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+				$excel->getActiveSheet()->getStyle($i . $rowCount)->applyFromArray($style_td);
+			}
 
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 29, $element['danatitipanjemaah']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 30, $element['pendapatannilaimanfaatyangditangguhkan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 31, $element['jumlahliabilitasjangkapanjang']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 32, $element['jumlahliabilitas']);
+			//style column BPS/BPIH
+			$excel->getActiveSheet()->getStyle('A' . $rowCount)->applyFromArray($style_td_left);
 
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 34, $element['tidakterikat']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 35, $element['terikattemporer']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 36, $element['terikatpermanen']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 37, $element['jumlahasetneto']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 38, $element['jumlahliabilitasdanasetneto']);
-			$i++;
+			$rowCount++;
+			$no++;
 		}
-
 		//header style
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
 		}
-		//td style
-		for ($baris = 5; $baris <= 38; $baris++) {
-			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
-				$excel->getActiveSheet()->getStyle($i . $baris)->applyFromArray($style_td);
-			}
+
+
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . $last_row)->applyFromArray($style_td_bold);
 		}
 
-		for ($i = 5; $i <= 38; $i++) {
-			$excel->getActiveSheet()->getStyle('A' . $i)->applyFromArray($style_td_left);
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . '8')->applyFromArray($style_td_bold_no_bg);
+		}
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . '12')->applyFromArray($style_td_bold_no_bg);
+		}
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . '15')->applyFromArray($style_td_bold_no_bg);
+			$excel->getActiveSheet()->getStyle($i . '16')->applyFromArray($style_td_bold_no_bg);
+			$excel->getActiveSheet()->getStyle($i . '18')->applyFromArray($style_td_bold_no_bg);
 		}
 
-		$excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A6')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A13')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A14')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A19')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A20')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A21')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A22')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A27')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A28')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A31')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A32')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A33')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A37')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A38')->getFont()->setBold(TRUE);
+		//auto column width
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
+		}
 
 		//auto column width
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
@@ -446,7 +393,7 @@ class Laporankeuangan extends Admin_Controller
 
 
 		$excel->getActiveSheet()->SetCellValue('A4', 'Uraian');
-		$excel->getActiveSheet()->SetCellValue('B4', konversiBulanAngkaKeNama($bulan) );
+		$excel->getActiveSheet()->SetCellValue('B4', konversiBulanAngkaKeNama($bulan));
 
 		$excel->getActiveSheet()->SetCellValue('A5', '');
 		$excel->getActiveSheet()->SetCellValue('B5', '');
@@ -478,7 +425,7 @@ class Laporankeuangan extends Admin_Controller
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
 		}
-		
+
 
 		// last row style    		
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
@@ -669,7 +616,7 @@ class Laporankeuangan extends Admin_Controller
 
 
 		$excel->getActiveSheet()->SetCellValue('A4', 'Uraian');
-		$excel->getActiveSheet()->SetCellValue('B4', konversiBulanAngkaKeNama($bulan) );
+		$excel->getActiveSheet()->SetCellValue('B4', konversiBulanAngkaKeNama($bulan));
 
 		$excel->getActiveSheet()->SetCellValue('A5', '');
 		$excel->getActiveSheet()->SetCellValue('B5', '');
@@ -701,7 +648,7 @@ class Laporankeuangan extends Admin_Controller
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
 		}
-		
+
 
 		// last row style    		
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
@@ -745,10 +692,18 @@ class Laporankeuangan extends Admin_Controller
 	{
 
 		$tahun = ($tahun != '') ? $tahun : date('Y');
+
 		$data['thn'] = $tahun;
 		$data['tahun'] = $this->laporankeuangan_model->get_tahun_perubahan_asetneto();
 		$data['perubahan_asetneto'] = $this->laporankeuangan_model->get_perubahan_asetneto($tahun);
 		$data['view'] = 'perubahan_asetneto';
+		$this->load->view('admin/layout', $data);
+	}
+	public function detail_perubahan_asetneto($bulan = 0, $tahun = 0)
+	{
+		$data['tahun'] = $this->laporankeuangan_model->get_tahun_perubahan_asetneto();
+		$data['perubahan_asetneto'] = $this->laporankeuangan_model->get_detail_perubahan_asetneto($bulan, $tahun);
+		$data['view'] = 'detail_perubahan_asetneto';
 		$this->load->view('admin/layout', $data);
 	}
 
@@ -774,7 +729,7 @@ class Laporankeuangan extends Admin_Controller
 			$upload = $this->upload->data();
 
 
-			if ($upload) { // Jika proses upload sukses
+			if ($upload) { // Jika proses upload sukses			    	
 
 				$excelreader = new Xlsx;
 				$loadexcel = $excelreader->load('./uploads/excel/laporankeuangan/' . $upload['file_name']); // Load file yang tadi diupload ke folder excel
@@ -808,46 +763,38 @@ class Laporankeuangan extends Admin_Controller
 
 		$data = transposeData($sheet);
 
-		$dataquery = array(
-			'aset_neto_tidak_terikat' => $data['B'][2],
-			'saldo_awal1' => $data['B'][3],
-			'surplus_defisit_tahun_berjalan' => $data['B'][4],
-			'saldo_akhir1' => $data['B'][5],
-			'penghasilan_komprehensif_lain' => $data['B'][6],
-			'saldo_awal2' => $data['B'][7],
-			'penghasilan_beban_komprehensif_tahun_berjalan' => $data['B'][8],
-			'koreksi_aset_neto_tidak_terikat' => $data['B'][9],
-			'saldo_akhir2' => $data['B'][10],
-			'total_aset_neto_tidak_terikat' => $data['B'][11],
-			'aset_neto_terikat_temporer' => $data['B'][12],
-			'saldo_awal3' => $data['B'][13],
-			'surplus_tahun_berjalan' => $data['B'][14],
-			'saldo_akhir3' => $data['B'][15],
-			'aset_neto_terikat_permanen' => $data['B'][16],
-			'saldo_awal4' => $data['B'][17],
-			'surplus_tahun_berjalan_permanen' => $data['B'][18],
-			'penggunaan_efisiensi_haji ' => $data['B'][19],
-			'saldo_akhir4' => $data['B'][20],
-			'total_aset_neto' => $data['B'][21],
-			'tahun' => $data['C'][1],
-			'bulan' =>  konversi_bulan_ke_angka($data['B'][1]),
-			'upload_by' => $this->session->userdata('user_id'),
-		);
+		$data2 = array();
+
+		$numrow = 1;
+		foreach ($sheet as $row) {
+
+			if ($numrow > 1) {
+				// Kita push (add) array data ke variabel data
+				array_push($data2, array(
+					'bidang' => $row['A'],
+					'target' => $row['B'],
+					'bulan' => konversi_bulan_ke_angka($data["B"][1]),
+					'tahun' => $data["C"][1],
+				));
+			}
+
+			$numrow++; // Tambah 1 setiap kali looping
+		}
 
 		// Panggil fungsi insert_perubahan_asetneto
-		$this->laporankeuangan_model->insert_perubahan_asetneto($dataquery);
+		$this->laporankeuangan_model->insert_perubahan_asetneto($data2);
 
 		redirect("laporankeuangan/perubahan_asetneto"); // Redirect ke halaman awal (ke controller siswa fungsi index)
 	}
 
-	public function hapus_perubahan_asetneto($id = 0, $uri = NULL)
+	public function hapus_perubahan_asetneto($bulan = 0, $tahun = 0, $uri = NULL)
 	{
-		$this->db->delete('perubahan_asetneto', array('id' => $id));
+		$this->db->delete('perubahan_asetneto2', array('bulan' => $bulan, 'tahun' => $tahun));
 		$this->session->set_flashdata('msg', 'Data berhasil dihapus!');
-		redirect(base_url('laporankeuangan/perubahan_asetneto/' . $uri));
+		redirect(base_url('laporankeuangan/perubahan_asetneto/' . $tahun));
 	}
 
-	public function export_perubahan_asetneto($tahun)
+	public function export_perubahan_asetneto($bulan, $tahun)
 	{
 
 		// ambil style untuk table dari library Excel.php
@@ -855,113 +802,98 @@ class Laporankeuangan extends Admin_Controller
 		$style_td = $this->excel->style('style_td');
 		$style_td_left = $this->excel->style('style_td_left');
 		$style_td_bold = $this->excel->style('style_td_bold');
+		$style_td_bold_no_bg = $this->excel->style('style_td_bold_no_bg');
 
 		// create file name
 
-		$fileName = 'laporan_perubahan_asetneto_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
+		$fileName = 'laporan_operasional_bulanan' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
-		$sebaran = $this->laporankeuangan_model->get_perubahan_asetneto($tahun);
+		$sebaran = $this->laporankeuangan_model->get_detail_perubahan_asetneto($bulan, $tahun);
 		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);
 		$excel = new Spreadsheet;
 
 		// Settingan awal file excel
 		$excel->getProperties()->setCreator('BPKH')
 			->setLastModifiedBy('BPKH')
-			->setTitle("Laporan Perubahan Aset Neto Tahun " . $tahun)
-			->setSubject("Laporan Perubahan Aset Neto Tahun " . $tahun)
-			->setDescription("Laporan Perubahan Aset Neto Tahun " . $tahun)
-			->setKeywords("Laporan Operasional Akumulasi");
+			->setTitle("Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setSubject("Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setDescription("Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun)
+			->setKeywords("Laporan Operasional Bulanan");
 
 		//judul baris ke 1
-		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Perubahan Aset Neto Tahun " . $tahun); // 
-		$excel->getActiveSheet()->mergeCells('A1:' . $maxcolumn . '1'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->setActiveSheetIndex(0)->setCellValue('A1', "Laporan Operasional Bulanan  Bulan " . konversiBulanAngkaKeNama($bulan) . " " . $tahun); // 
+		$excel->getActiveSheet()->mergeCells('A1:B1'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
 		//sub judul baris ke 2
 		$excel->setActiveSheetIndex(0)->setCellValue('A2', "Badan Pengelola Keuangan Haji Republik Indonesia");
-		$excel->getActiveSheet()->mergeCells('A2:' . $maxcolumn . '2'); // Set Merge Cell pada kolom A1 sampai F1
+		$excel->getActiveSheet()->mergeCells('A2:B2'); // Set Merge Cell pada kolom A1 sampai F1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(TRUE); // Set bold kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12); // Set font size 15 untuk kolom A1
 		$excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Set text center untuk kolom A1
 
-		$excel->getActiveSheet()->SetCellValue('A4', 'BULAN');
-		$excel->getActiveSheet()->SetCellValue('A5', 'ASET NETO TIDAK TERIKAT');
-		$excel->getActiveSheet()->SetCellValue('A6', 'Saldo awal');
-		$excel->getActiveSheet()->SetCellValue('A7', 'Surplus/(Defisit) tahun berjalan');
-		$excel->getActiveSheet()->SetCellValue('A8', 'Saldo Akhir');
-		$excel->getActiveSheet()->SetCellValue('A9', 'Penghasilan Komprehensif Lain');
-		$excel->getActiveSheet()->SetCellValue('A10', 'Saldo awal');
-		$excel->getActiveSheet()->SetCellValue('A11', 'Penghasilan /(Beban) komprehensif tahun berjalan	');
-		$excel->getActiveSheet()->SetCellValue('A12', 'Koreksi aset neto tidak terikat');
-		$excel->getActiveSheet()->SetCellValue('A13', 'Saldo Akhir');
-		$excel->getActiveSheet()->SetCellValue('A14', 'Total Aset Neto Tidak Terikat');
-		$excel->getActiveSheet()->SetCellValue('A15', 'ASET NETO TERIKAT TEMPORER');
-		$excel->getActiveSheet()->SetCellValue('A16', 'Saldo awal');
-		$excel->getActiveSheet()->SetCellValue('A17', 'Surplus tahun berjalan');
-		$excel->getActiveSheet()->SetCellValue('A18', 'Penggunaan Efisiensi Haji Tahun Sebelumnya');
-		$excel->getActiveSheet()->SetCellValue('A19', 'Saldo Akhir');
-		$excel->getActiveSheet()->SetCellValue('A20', 'ASET NETO TERIKAT PERMANEN');
-		$excel->getActiveSheet()->SetCellValue('A21', 'Saldo awal');
-		$excel->getActiveSheet()->SetCellValue('A22', 'Surplus tahun berjalan');
-		$excel->getActiveSheet()->SetCellValue('A23', 'Saldo Akhir');
-		$excel->getActiveSheet()->SetCellValue('A24', 'TOTAL ASET NETO');
 
+		$excel->getActiveSheet()->SetCellValue('A4', 'Uraian');
+		$excel->getActiveSheet()->SetCellValue('B4', konversiBulanAngkaKeNama($bulan));
 
-		$i = 2;
+		$excel->getActiveSheet()->SetCellValue('A5', '');
+		$excel->getActiveSheet()->SetCellValue('B5', '');
+
+		$no = 1;
+		$rowCount = 5;
+		$last_row = count($sebaran) + 4;
 		foreach ($sebaran as $element) {
-			//echo $element['bulan'];echo konversiAngkaKeHuruf($i);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 4,  konversiBulanAngkaKeNama($element['bulan']));
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 5, $element['aset_neto_tidak_terikat']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 6, $element['saldo_awal1']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 7, $element['surplus_defisit_tahun_berjalan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 8, $element['saldo_akhir1']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 9, $element['penghasilan_komprehensif_lain']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 10, $element['saldo_awal2']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 11, $element['penghasilan_beban_komprehensif_tahun_berjalan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 12, $element['koreksi_aset_neto_tidak_terikat']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 13, $element['saldo_akhir2']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 14, $element['total_aset_neto_tidak_terikat']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 15, $element['aset_neto_terikat_temporer']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 16, $element['saldo_awal3']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 17, $element['surplus_tahun_berjalan']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 18, $element['penggunaan_efisiensi_haji']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 19, $element['saldo_akhir3']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 20, $element['aset_neto_terikat_permanen']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 21, $element['saldo_awal4']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 22, $element['surplus_tahun_berjalan_permanen']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 23, $element['saldo_akhir4']);
-			$excel->getActiveSheet()->SetCellValue(konversiAngkaKeHuruf($i) . 24, $element['total_aset_neto']);
 
-			$i++;
+			$excel->getActiveSheet()->SetCellValue('A' . $rowCount, $element['bidang']);
+			$excel->getActiveSheet()->SetCellValue('B' . $rowCount, $element['target']);
+
+
+			//stile column No
+			// $excel->getActiveSheet()->getStyle('A'.$rowCount)->applyFromArray($style_td);
+
+			//header style lainnya
+			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+				$excel->getActiveSheet()->getStyle($i . $rowCount)->applyFromArray($style_td);
+			}
+
+			//style column BPS/BPIH
+			$excel->getActiveSheet()->getStyle('A' . $rowCount)->applyFromArray($style_td_left);
+
+			$rowCount++;
+			$no++;
 		}
-
 		//header style
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
 			$excel->getActiveSheet()->getStyle($i . '4')->applyFromArray($style_header);
 		}
-		//td style
-		for ($baris = 5; $baris <= 24; $baris++) {
-			for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
-				$excel->getActiveSheet()->getStyle($i . $baris)->applyFromArray($style_td);
-			}
+
+
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . $last_row)->applyFromArray($style_td_bold);
 		}
 
-		for ($i = 5; $i <= 23; $i++) {
-			$excel->getActiveSheet()->getStyle('A' . $i)->applyFromArray($style_td_left);
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . '8')->applyFromArray($style_td_bold_no_bg);
+		}
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . '12')->applyFromArray($style_td_bold_no_bg);
+		}
+		// last row style    		
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getStyle($i . '15')->applyFromArray($style_td_bold_no_bg);
+			$excel->getActiveSheet()->getStyle($i . '16')->applyFromArray($style_td_bold_no_bg);
+			$excel->getActiveSheet()->getStyle($i . '18')->applyFromArray($style_td_bold_no_bg);
 		}
 
-		$excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A8')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A9')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A13')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A14')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A15')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A19')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A20')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A23')->getFont()->setBold(TRUE);
-		$excel->getActiveSheet()->getStyle('A24')->getFont()->setBold(TRUE);
+		//auto column width
+		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
+			$excel->getActiveSheet()->getColumnDimension($i)->setAutoSize(TRUE);
+		}
 
 		//auto column width
 		for ($i = 'A'; $i <=  $excel->getActiveSheet()->getHighestColumn(); $i++) {
@@ -1317,7 +1249,7 @@ class Laporankeuangan extends Admin_Controller
 
 		// create file name
 
-		$fileName = 'laporan_operasional_bulanan_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
+		$fileName = 'laporan_arus_kas_' . $tahun . '-(' . date('d-m-Y H-i-s', time()) . ').xlsx';
 
 		$sebaran = $this->laporankeuangan_model->get_lap_arus_kas($tahun);
 		$maxcolumn = konversiAngkaKeHuruf(count($sebaran) + 1);

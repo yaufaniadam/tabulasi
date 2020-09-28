@@ -1,32 +1,36 @@
 <?php
-	class Nilaimanfaat_model extends CI_Model{	
-		// PER INSTRUMEN
+class Nilaimanfaat_model extends CI_Model
+{
+	// PER INSTRUMEN
 
-		public function get_tahun_per_instrumen(){
-			
-			$this->db->select('tahun');
-			$this->db->from('per_instrumen');			
-			
-			$this->db->order_by('tahun', 'ASC');
-			$this->db->group_by('tahun');
+	public function get_tahun_per_instrumen()
+	{
 
-			$query = $this->db->get();
+		$this->db->select('tahun');
+		$this->db->from('per_instrumen');
 
-			return $result = $query->result_array();
-			
-		}
+		$this->db->order_by('tahun', 'ASC');
+		$this->db->group_by('tahun');
 
-		public function get_per_instrumen_export($tahun){
-			$this->db->select('*');
-			$this->db->from('per_instrumen');
-			$this->db->where('tahun', $tahun);
-			$this->db->order_by('tahun', 'ASC');
-    		$query = $this->db->get(); 
-    		return $result = $query->result_array();
-  		}
+		$query = $this->db->get();
 
-		  public function get_per_instrumen($tahun){
-			$this->db->select("
+		return $result = $query->result_array();
+	}
+
+	public function get_per_instrumen_export($tahun)
+	{
+		$this->db->select('*');
+		$this->db->from('per_instrumen');
+		$this->db->where('tahun', $tahun);
+		$this->db->order_by('tahun', 'ASC');
+		$this->db->order_by('bulan', 'ASC');
+		$query = $this->db->get();
+		return $result = $query->result_array();
+	}
+
+	public function get_per_instrumen($tahun)
+	{
+		$this->db->select("
 				bulan as Bulan, 
 				id_per_instrumen as Hapus,
 				dau as 'DAU (SDHI & SBSN)',
@@ -46,105 +50,110 @@
 				total as Total,
 				total_exclude_dau as Total Exclude DAU
 			");
-			$this->db->from('per_instrumen');
-			$this->db->where('tahun', $tahun);
-			$this->db->order_by('tahun', 'ASC');
-			$this->db->order_by('bulan', 'ASC');
-    		$query = $this->db->get(); 
-    		return $result = $query->result_array();
-  		}
-  		public function get_detail_per_instrumen($id){
-			$this->db->select('*');
-			$this->db->from('per_instrumen');
-			$this->db->where('id_per_instrumen', $id);
-    		$query = $this->db->get(); 
-    		return $result = $query->row_array();
-  		}		  
-		  
-		public function insert_per_instrumen($data){
-		    $this->db->insert('per_instrumen', $data);
-		}
-
-		//NILAI MANFAAT PER BPS BPIH
-		public function get_tahun_nilai_manfaat_penempatan_di_bpsbpih(){
-			
-			$this->db->select('tahun');
-			$this->db->from('nilai_manfaat_penempatan_di_bpsbpih');			
-			
-			$this->db->order_by('tahun', 'ASC');
-			$this->db->group_by('tahun');
-
-			$query = $this->db->get();
-
-			return $result = $query->result_array();			
-		}
-
-		public function get_bps_bpih_nilai_manfaat_penempatan_di_bpsbpih(){
-			
-			$this->db->select('*');
-			$this->db->from('nilai_manfaat_penempatan_di_bpsbpih');			
-			$this->db->group_by('bps_bpih');
-			$query = $this->db->get();
-
-			return $result = $query->result_array();			
-		}
-
-		public function get_nilai_manfaat_penempatan_di_bpsbpih($tahun){
-			
-			$this->db->select('*');
-			$this->db->from('nilai_manfaat_penempatan_di_bpsbpih');			
-			$this->db->where('tahun', $tahun);
-			$this->db->order_by('id', 'ASC');
-			$query = $this->db->get();
-
-			return $result = $query->result_array();			
-		}
-	
-  		public function insert_nilai_manfaat_penempatan_di_bpsbpih($data){
-		    $this->db->insert_batch('nilai_manfaat_penempatan_di_bpsbpih', $data);
-		}	
-
-		//NILAI MANFAAT PER PRODUK
-		public function get_tahun_nilai_manfaat_produk(){
-			
-			$this->db->select('tahun');
-			$this->db->from('nilai_manfaat_produk');			
-			
-			$this->db->order_by('bulan', 'ASC');
-			$this->db->group_by('tahun');
-
-			$query = $this->db->get();
-
-			return $result = $query->result_array();
-			
-		}
-
-		public function get_bps_bpih_nilai_manfaat_produk(){
-			
-			$this->db->select('*');
-			$this->db->from('nilai_manfaat_produk');	
-			$this->db->group_by('bps_bpih');
-			$query = $this->db->get();
-
-			return $result = $query->result_array();
-			
-		}
-
-		public function get_nilai_manfaat_produk($tahun){
-			
-			$this->db->select('*');
-			$this->db->from('nilai_manfaat_produk');			
-			$this->db->where('tahun', $tahun);
-			$this->db->order_by('bulan', 'ASC');	
-			$query = $this->db->get();
-
-			return $result = $query->result_array();			
-		}
-	
-  		public function insert_nilai_manfaat_produk($data){
-		    $this->db->insert_batch('nilai_manfaat_produk', $data);
-		}
-
+		$this->db->from('per_instrumen');
+		$this->db->where('tahun', $tahun);
+		$this->db->order_by('tahun', 'ASC');
+		$this->db->order_by('bulan', 'ASC');
+		$query = $this->db->get();
+		return $result = $query->result_array();
+	}
+	public function get_detail_per_instrumen($id)
+	{
+		$this->db->select('*');
+		$this->db->from('per_instrumen');
+		$this->db->where('id_per_instrumen', $id);
+		$query = $this->db->get();
+		return $result = $query->row_array();
 	}
 
-?>
+	public function insert_per_instrumen($data)
+	{
+		$this->db->insert('per_instrumen', $data);
+	}
+
+	//NILAI MANFAAT PER BPS BPIH
+	public function get_tahun_nilai_manfaat_penempatan_di_bpsbpih()
+	{
+
+		$this->db->select('tahun');
+		$this->db->from('nilai_manfaat_penempatan_di_bpsbpih');
+
+		$this->db->order_by('tahun', 'ASC');
+		$this->db->group_by('tahun');
+
+		$query = $this->db->get();
+
+		return $result = $query->result_array();
+	}
+
+	public function get_bps_bpih_nilai_manfaat_penempatan_di_bpsbpih()
+	{
+
+		$this->db->select('*');
+		$this->db->from('nilai_manfaat_penempatan_di_bpsbpih');
+		$this->db->group_by('bps_bpih');
+		$query = $this->db->get();
+
+		return $result = $query->result_array();
+	}
+
+	public function get_nilai_manfaat_penempatan_di_bpsbpih($tahun)
+	{
+
+		$this->db->select('*');
+		$this->db->from('nilai_manfaat_penempatan_di_bpsbpih');
+		$this->db->where('tahun', $tahun);
+		$this->db->order_by('id', 'ASC');
+		$query = $this->db->get();
+
+		return $result = $query->result_array();
+	}
+
+	public function insert_nilai_manfaat_penempatan_di_bpsbpih($data)
+	{
+		$this->db->insert_batch('nilai_manfaat_penempatan_di_bpsbpih', $data);
+	}
+
+	//NILAI MANFAAT PER PRODUK
+	public function get_tahun_nilai_manfaat_produk()
+	{
+
+		$this->db->select('tahun');
+		$this->db->from('nilai_manfaat_produk');
+
+		$this->db->order_by('bulan', 'ASC');
+		$this->db->group_by('tahun');
+
+		$query = $this->db->get();
+
+		return $result = $query->result_array();
+	}
+
+	public function get_bps_bpih_nilai_manfaat_produk()
+	{
+
+		$this->db->select('*');
+		$this->db->from('nilai_manfaat_produk');
+		$this->db->group_by('bps_bpih');
+		$query = $this->db->get();
+
+		return $result = $query->result_array();
+	}
+
+	public function get_nilai_manfaat_produk($tahun)
+	{
+
+		$this->db->select('*');
+		$this->db->from('nilai_manfaat_produk');
+		$this->db->where('tahun', $tahun);
+		$this->db->order_by('bulan', 'ASC');
+		$query = $this->db->get();
+
+		return $result = $query->result_array();
+	}
+
+	public function insert_nilai_manfaat_produk($data)
+	{
+		$this->db->insert_batch('nilai_manfaat_produk', $data);
+	}
+}
