@@ -29,3 +29,5 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/tests/
 /tests/results/
 /uploads
+/application/config/database.php
+/public/dist/img/logo-bpkh-w.png
