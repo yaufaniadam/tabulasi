@@ -9,7 +9,7 @@
 				<a href="<?= base_url('admin/dashboard'); ?>">
 					<i class="fas fa-tachometer-alt"></i><span> Dashboard</span>
 				</a>
-			</li>			
+			</li>
 
 			<li class="header">KEUANGAN HAJI</li>
 			<li id="alokasi_produk_perbankan" class="treeview">
@@ -20,11 +20,9 @@
 					</span>
 				</a>
 				<ul class="treeview-menu">
-					<li class="sebaran_dana_haji"><a
-							href="<?= base_url('keuanganhaji/sebaran_dana_haji'); ?>">Penempatan Dana
+					<li class="sebaran_dana_haji"><a href="<?= base_url('keuanganhaji/sebaran_dana_haji'); ?>">Penempatan Dana
 							Kelolaan di BPS-BPIH</a></li>
-					<li class="posisi_penempatan_produk"><a
-							href="<?= base_url('keuanganhaji/posisi_penempatan_produk'); ?>">Dana
+					<li class="posisi_penempatan_produk"><a href="<?= base_url('keuanganhaji/posisi_penempatan_produk'); ?>">Dana
 							Haji yang Ditempatkan</a></li>
 
 				</ul>
@@ -40,14 +38,12 @@
 				<ul class="treeview-menu">
 
 					<li class="sukuk"><a href="<?= base_url('keuanganhaji/sukuk_korporasi'); ?>">Sukuk</a></li>
-					<li class="reksadana"><a
-							href="<?= base_url('keuanganhaji/reksadana_terproteksi_syariah'); ?>">Reksadana</a>
+					<li class="reksadana"><a href="<?= base_url('keuanganhaji/reksadana_terproteksi_syariah'); ?>">Reksadana</a>
 					</li>
 					<li class="penyertaan_saham"><a href="<?= base_url('keuanganhaji/penyertaan_saham'); ?>">Penyertaan
 							Saham</a>
 					</li>
-					<li class="investasi_langsung"><a
-							href="<?= base_url('keuanganhaji/investasi_langsung'); ?>">Investasi
+					<li class="investasi_langsung"><a href="<?= base_url('keuanganhaji/investasi_langsung'); ?>">Investasi
 							Langsung</a></li>
 					<li class="investasi_lainnya"><a href="<?= base_url('keuanganhaji/investasi_lainnya'); ?>">Investasi
 							Lainnya</a></li>
@@ -64,8 +60,7 @@
 					</span>
 				</a>
 				<ul class="treeview-menu">
-					<li class="per_instrumen"><a
-							href="<?= base_url('nilaimanfaat/per_instrumen'); ?>">Produk
+					<li class="per_instrumen"><a href="<?= base_url('nilaimanfaat/per_instrumen'); ?>">Produk
 							Investasi</a></li>
 					<!-- <li class="penempatan_di_bpsbpih"><a href="<?= base_url('keuanganhaji/nilaimanfaat/penempatan_di_bpsbpih'); ?>">Nilai Manfaat Hasil<br> Penempatan di BPS-BPIH</a></li>-->
 					<li class="produk"><a href="<?= base_url('nilaimanfaat/produk'); ?>">Produk
@@ -145,8 +140,7 @@
 					</span>
 				</a>
 				<ul class="treeview-menu">
-					<li class="laporan_industri_keuangan_syariah"><a
-							href="<?= base_url('makro/laporan_industri_keuangan_syariah'); ?>">Laporan Industri Keuangan
+					<li class="laporan_industri_keuangan_syariah"><a href="<?= base_url('makro/laporan_industri_keuangan_syariah'); ?>">Laporan Industri Keuangan
 							Syariah</a>
 					</li>
 					<li class="gdp_ina"><a href="<?= base_url('makro/gdp_ina'); ?>">Pertumbuhan GDP Indonesia </a></li>
@@ -155,13 +149,13 @@
 					<li class="indeks_saham_syariah"><a href="<?= base_url('makro/indeks_saham_syariah'); ?>">Indeks
 							Saham
 							Syariah</a></li>
-					<li class="harga_avtur"><a href="<?= base_url('makro/harga_avtur'); ?>">Harga Avtur</a></li>
+					<!--	<li class="harga_avtur"><a href="<?= base_url('makro/harga_avtur'); ?>">Harga Avtur</a></li>-->
 					<li class="suku_bunga_lps"><a href="<?= base_url('makro/suku_bunga_lps'); ?>">Suku Bunga LPS</a>
 					</li>
-					<li class="yield_sukuk_negara"><a href="<?= base_url('makro/yield_sukuk_negara'); ?>">Yield Sukuk
+					<!-- <li class="yield_sukuk_negara"><a href="<?= base_url('makro/yield_sukuk_negara'); ?>">Yield Sukuk
 							Negara</a>
 					</li>
-					<li class="harga_emas"><a href="<?= base_url('makro/harga_emas'); ?>">Harga Emas</a></li>
+					<li class="harga_emas"><a href="<?= base_url('makro/harga_emas'); ?>">Harga Emas</a></li> -->
 				</ul>
 			</li>
 
@@ -201,15 +195,11 @@
 					<li class="aset_nontunai"><a href="<?= base_url('nonkeuanganbpkh/dokumen/aset_nontunai'); ?>">Aset
 							Non
 							Tunai</a></li>
-					<li class="survey"><a
-							href="<?= base_url('nonkeuanganbpkh/dokumen/survey'); ?>"><span>Survey</span></a></li>
-					<li class="kajian"><a
-							href="<?= base_url('nonkeuanganbpkh/dokumen/kajian'); ?>"><span>Kajian</span></a></li>
-					<li class="laporan_kinerja"><a
-							href="<?= base_url('nonkeuanganbpkh/dokumen/laporan_kinerja'); ?>"><span>Laporan
+					<li class="survey"><a href="<?= base_url('nonkeuanganbpkh/dokumen/survey'); ?>"><span>Survey</span></a></li>
+					<li class="kajian"><a href="<?= base_url('nonkeuanganbpkh/dokumen/kajian'); ?>"><span>Kajian</span></a></li>
+					<li class="laporan_kinerja"><a href="<?= base_url('nonkeuanganbpkh/dokumen/laporan_kinerja'); ?>"><span>Laporan
 								Kinerja</span></a></li>
-					<li class="materi_video_dan_paparan"><a
-							href="<?= base_url('nonkeuanganbpkh/dokumen/materi_video_dan_paparan'); ?>"><span>Materi
+					<li class="materi_video_dan_paparan"><a href="<?= base_url('nonkeuanganbpkh/dokumen/materi_video_dan_paparan'); ?>"><span>Materi
 								Video dan
 								Paparan</span></a></li>
 				</ul>
