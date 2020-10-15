@@ -6,7 +6,7 @@
 			
 			$this->db->select('tahun');
 			$this->db->from('per_instrumen');			
-			
+			$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 			$this->db->order_by('tahun', 'ASC');
 			$this->db->group_by('tahun');
 
@@ -70,7 +70,7 @@
 			
 			$this->db->select('tahun');
 			$this->db->from('nilai_manfaat_penempatan_di_bpsbpih');			
-			
+			$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 			$this->db->order_by('tahun', 'ASC');
 			$this->db->group_by('tahun');
 
@@ -109,7 +109,7 @@
 			
 			$this->db->select('tahun');
 			$this->db->from('nilai_manfaat_produk');			
-			
+			$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 			$this->db->order_by('bulan', 'ASC');
 			$this->db->group_by('tahun');
 
@@ -146,5 +146,3 @@
 		}
 
 	}
-
-?>

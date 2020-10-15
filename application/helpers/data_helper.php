@@ -244,13 +244,13 @@ function menu_sukuk()
 
     <div class="btn-group" role="group" style="margin-bottom: 20px;">
 
-        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/sbssn_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+        <a href="<?= base_url(((is_admin() == 1) ? '' : 'visitor/') . 'keuanganhaji/sbssn_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
             SBSN Rupiah</a>
-        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/sbssn_usd/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_usd') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+        <a href="<?= base_url(((is_admin() == 1) ? '' : 'visitor/') . 'keuanganhaji/sbssn_usd/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sbssn_usd') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
             SBSN USD</a>
-        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/sdhi_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sdhi_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+        <a href="<?= base_url(((is_admin() == 1) ? '' : 'visitor/') . 'keuanganhaji/sdhi_rupiah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sdhi_rupiah') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
             SDHI Rupiah</a>
-        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/sukuk_korporasi/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sukuk_korporasi') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
+        <a href="<?= base_url(((is_admin() == 1) ? '' : 'visitor/') . 'keuanganhaji/sukuk_korporasi/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'sukuk_korporasi') ? "btn-info disabled" : "btn-default"; ?>">Sukuk
             Korporasi</a>
 
 
@@ -270,9 +270,9 @@ function menu_reksadana()
 
     <div class="btn-group" role="group" style="margin-bottom: 20px;">
 
-        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/reksadana_terproteksi_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_terproteksi_syariah') ? "btn-info disabled" : "btn-default"; ?>">Terproteksi
+        <a href="<?= base_url(((is_admin() == 1) ? '' : 'visitor/') . 'keuanganhaji/reksadana_terproteksi_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_terproteksi_syariah') ? "btn-info disabled" : "btn-default"; ?>">Terproteksi
             Syariah</a>
-        <a href="<?= base_url(((is_admin() == 1) ? '': 'visitor/') . 'keuanganhaji/reksadana_pasar_uang_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_pasar_uang_syariah') ? "btn-info disabled" : "btn-default"; ?>">Pasar
+        <a href="<?= base_url(((is_admin() == 1) ? '' : 'visitor/') . 'keuanganhaji/reksadana_pasar_uang_syariah/'); ?>" class="btn btn-md <?= ($CI->router->fetch_method() == 'reksadana_pasar_uang_syariah') ? "btn-info disabled" : "btn-default"; ?>">Pasar
             Uang Syariah</a>
 
 

@@ -7,7 +7,7 @@ class Keuanganhaji_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('porsi_penempatan_bps_bpih');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -49,7 +49,7 @@ class Keuanganhaji_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('sebaran_dana_haji2');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -88,40 +88,44 @@ class Keuanganhaji_model extends CI_Model
 
 	//SDHI RUPIAH
 
-public function get_tahun_sdhi_rupiah(){
-    
-    $this->db->select('tahun');
-    $this->db->from('sdhi_rupiah2');			
-    
-    $this->db->order_by('tahun', 'ASC');
-    $this->db->group_by('tahun');
+	public function get_tahun_sdhi_rupiah()
+	{
 
-    $query = $this->db->get();
-    return $result = $query->result_array();			
-}
+		$this->db->select('tahun');
+		$this->db->from('sdhi_rupiah2');
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
+		$this->db->order_by('tahun', 'ASC');
+		$this->db->group_by('tahun');
 
-public function get_sdhi_rupiah($tahun){
-    $this->db->select('bulan,tahun');
-    $this->db->from('sdhi_rupiah2');
-    $this->db->where('tahun', $tahun);
-    $this->db->order_by('bulan', 'ASC');
-    $this->db->group_by('bulan');
-    $query = $this->db->get(); 
-    return $result = $query->result_array();
-  }
+		$query = $this->db->get();
+		return $result = $query->result_array();
+	}
 
-  public function get_detail_sdhi_rupiah($bulan, $tahun){
-    $this->db->select('*');
-    $this->db->from('sdhi_rupiah2');
-    $this->db->where('bulan', $bulan);
-    $this->db->where('tahun', $tahun);
-    $query = $this->db->get(); 
-    return $result = $query->result_array();
-  }		  
-  
-public function insert_sdhi_rupiah($data){
-    $this->db->insert_batch('sdhi_rupiah2', $data);
-}
+	public function get_sdhi_rupiah($tahun)
+	{
+		$this->db->select('bulan,tahun');
+		$this->db->from('sdhi_rupiah2');
+		$this->db->where('tahun', $tahun);
+		$this->db->order_by('bulan', 'ASC');
+		$this->db->group_by('bulan');
+		$query = $this->db->get();
+		return $result = $query->result_array();
+	}
+
+	public function get_detail_sdhi_rupiah($bulan, $tahun)
+	{
+		$this->db->select('*');
+		$this->db->from('sdhi_rupiah2');
+		$this->db->where('bulan', $bulan);
+		$this->db->where('tahun', $tahun);
+		$query = $this->db->get();
+		return $result = $query->result_array();
+	}
+
+	public function insert_sdhi_rupiah($data)
+	{
+		$this->db->insert_batch('sdhi_rupiah2', $data);
+	}
 
 	//Sbssn RUPIAH
 
@@ -130,7 +134,7 @@ public function insert_sdhi_rupiah($data){
 
 		$this->db->select('tahun');
 		$this->db->from('sbssn_rupiah2');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -172,7 +176,7 @@ public function insert_sdhi_rupiah($data){
 
 		$this->db->select('tahun');
 		$this->db->from('sbssn_usd2');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -209,40 +213,44 @@ public function insert_sdhi_rupiah($data){
 	//Sukuk Korporasi
 	//SDHI RUPIAH
 
-public function get_tahun_sukuk_korporasi(){
-    
-    $this->db->select('tahun');
-    $this->db->from('sukuk_korporasi2');			
-    
-    $this->db->order_by('tahun', 'ASC');
-    $this->db->group_by('tahun');
+	public function get_tahun_sukuk_korporasi()
+	{
 
-    $query = $this->db->get();
-    return $result = $query->result_array();			
-}
+		$this->db->select('tahun');
+		$this->db->from('sukuk_korporasi2');
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
+		$this->db->order_by('tahun', 'ASC');
+		$this->db->group_by('tahun');
 
-public function get_sukuk_korporasi($tahun){
-    $this->db->select('bulan,tahun');
-    $this->db->from('sukuk_korporasi2');
-    $this->db->where('tahun', $tahun);
-    $this->db->order_by('bulan', 'ASC');
-    $this->db->group_by('bulan');
-    $query = $this->db->get(); 
-    return $result = $query->result_array();
-  }
+		$query = $this->db->get();
+		return $result = $query->result_array();
+	}
 
-  public function get_detail_sukuk_korporasi($bulan, $tahun){
-    $this->db->select('*');
-    $this->db->from('sukuk_korporasi2');
-    $this->db->where('bulan', $bulan);
-    $this->db->where('tahun', $tahun);
-    $query = $this->db->get(); 
-    return $result = $query->result_array();
-  }		  
-  
-public function insert_sukuk_korporasi($data){
-    $this->db->insert_batch('sukuk_korporasi2', $data);
-}
+	public function get_sukuk_korporasi($tahun)
+	{
+		$this->db->select('bulan,tahun');
+		$this->db->from('sukuk_korporasi2');
+		$this->db->where('tahun', $tahun);
+		$this->db->order_by('bulan', 'ASC');
+		$this->db->group_by('bulan');
+		$query = $this->db->get();
+		return $result = $query->result_array();
+	}
+
+	public function get_detail_sukuk_korporasi($bulan, $tahun)
+	{
+		$this->db->select('*');
+		$this->db->from('sukuk_korporasi2');
+		$this->db->where('bulan', $bulan);
+		$this->db->where('tahun', $tahun);
+		$query = $this->db->get();
+		return $result = $query->result_array();
+	}
+
+	public function insert_sukuk_korporasi($data)
+	{
+		$this->db->insert_batch('sukuk_korporasi2', $data);
+	}
 
 	//REKSADANA TERPROTEKSI SARIAH
 	public function get_tahun_reksadana_terproteksi_syariah()
@@ -250,7 +258,7 @@ public function insert_sukuk_korporasi($data){
 
 		$this->db->select('tahun');
 		$this->db->from('reksadana_terproteksi_syariah');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -292,7 +300,7 @@ public function insert_sukuk_korporasi($data){
 
 		$this->db->select('tahun');
 		$this->db->from('reksadana_pasar_uang_syariah');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -336,7 +344,7 @@ public function insert_sukuk_korporasi($data){
 
 		$this->db->select('tahun');
 		$this->db->from('penyertaan_saham');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -378,7 +386,7 @@ public function insert_sukuk_korporasi($data){
 
 		$this->db->select('tahun');
 		$this->db->from('investasi_langsung');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -420,7 +428,7 @@ public function insert_sukuk_korporasi($data){
 
 		$this->db->select('tahun');
 		$this->db->from('investasi_lainnya');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -462,7 +470,7 @@ public function insert_sukuk_korporasi($data){
 
 		$this->db->select('tahun');
 		$this->db->from('emas');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -504,7 +512,7 @@ public function insert_sukuk_korporasi($data){
 
 		$this->db->select('tahun');
 		$this->db->from('akumulasi_kontribusi_bpsbpih');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -546,7 +554,7 @@ public function insert_sukuk_korporasi($data){
 
 		$this->db->select('tahun');
 		$this->db->from('posisi_penempatan_produk');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -578,7 +586,7 @@ public function insert_sukuk_korporasi($data){
 
 		$this->db->select('tahun');
 		$this->db->from('penempatan_dana_haji');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 

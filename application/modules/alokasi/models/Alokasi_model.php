@@ -7,7 +7,7 @@
 			
 			$this->db->select('tahun');
 			$this->db->from('alokasi_investasi');			
-			
+			$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 			$this->db->order_by('tahun', 'ASC');
 			$this->db->group_by('tahun');
 
@@ -56,7 +56,7 @@
 			
 			$this->db->select('tahun');
 			$this->db->from('manfaat_investasi');			
-			
+			$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 			$this->db->order_by('tahun', 'ASC');
 			$this->db->group_by('tahun');
 
@@ -88,5 +88,3 @@
 		}
 
 	}
-
-?>

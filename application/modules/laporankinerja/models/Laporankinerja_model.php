@@ -9,7 +9,7 @@ class Laporankinerja_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('pencapaian_perbidang2');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -49,7 +49,7 @@ class Laporankinerja_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('penyerapan_perbidang2');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 

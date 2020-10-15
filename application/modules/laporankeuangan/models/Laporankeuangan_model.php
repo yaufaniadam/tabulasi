@@ -6,6 +6,7 @@ class Laporankeuangan_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('neraca2');
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
@@ -48,7 +49,7 @@ class Laporankeuangan_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('lap_bulanan2');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -90,6 +91,7 @@ class Laporankeuangan_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('lap_akumulasi2');
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
@@ -132,7 +134,7 @@ class Laporankeuangan_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('perubahan_asetneto2');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -174,7 +176,7 @@ class Laporankeuangan_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('realisasi_anggaran2');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -214,7 +216,7 @@ class Laporankeuangan_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('penyerapan_perbidang2');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
@@ -229,7 +231,7 @@ class Laporankeuangan_model extends CI_Model
 
 		$this->db->select('tahun');
 		$this->db->from('lap_arus_kas');
-
+		$this->db->where(array('tahun !=' => '0', 'tahun !=' => ''));
 		$this->db->order_by('tahun', 'ASC');
 		$this->db->group_by('tahun');
 
