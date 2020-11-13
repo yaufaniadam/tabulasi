@@ -2,7 +2,7 @@
 	class Dashboard_model extends CI_Model{
 
 		public function get_all_users(){
-			return $this->db->count_all('ci_users');
+			return $this->db->count_all('bpk_surveys_entity_participants');
 		}
 		public function get_active_users(){
 			$this->db->where('is_active', 1);
@@ -32,5 +32,3 @@
 			return true;
 		}
 	}
-
-?>

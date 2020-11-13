@@ -302,3 +302,10 @@ function menu_non_dau()
 
 <?php
 }
+
+function get_survey()
+{
+
+    $CI = &get_instance();
+    $db2 = $CI->load->database('dbsqlsrv', TRUE);
+}
