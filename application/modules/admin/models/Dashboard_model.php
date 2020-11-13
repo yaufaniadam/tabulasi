@@ -10,7 +10,7 @@ class Dashboard_model extends CI_Model
 		status = 2
 		GROUP BY date )
 
-		UNION ALL
+		UNION
 
 		(SELECT DATE_FORMAT(start_date,"%e %M") as date, start_date,
 		count(DATE_FORMAT(start_date,"%e")) as total from sitejumat_surveys_entity_participants 

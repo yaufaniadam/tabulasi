@@ -18,11 +18,11 @@ class Dashboard extends CI_Controller
 	{
 		$survey_id = 4;
 
-		$lama_sah = $this->db->query("(SELECT * from sitejumat_surveys_entity_participants where survey_id = '$survey_id' and status = 2)")->num_rows();
-		$lama_semua = $this->db->query("(SELECT * from sitejumat_surveys_entity_participants where survey_id = '$survey_id')")->num_rows();
+		$lama_sah = $this->db->query("(SELECT id from sitejumat_surveys_entity_participants where survey_id = '$survey_id' and status = 2)")->num_rows();
+		$lama_semua = $this->db->query("(SELECT id from sitejumat_surveys_entity_participants where survey_id = '$survey_id')")->num_rows();
 
-		$baru_sah = $this->db->query("(SELECT * from bpk_surveys_entity_participants where survey_id = '$survey_id' and status = 2)")->num_rows();
-		$baru_semua = $this->db->query("(SELECT * from bpk_surveys_entity_participants where survey_id = '$survey_id')")->num_rows();
+		$baru_sah = $this->db->query("(SELECT id from bpk_surveys_entity_participants where survey_id = '$survey_id' and status = 2)")->num_rows();
+		$baru_semua = $this->db->query("(SELECT id from bpk_surveys_entity_participants where survey_id = '$survey_id')")->num_rows();
 
 		$sah = $lama_sah + $baru_sah;
 		$semua = $lama_semua + $baru_semua;
