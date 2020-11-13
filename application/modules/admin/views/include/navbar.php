@@ -13,7 +13,7 @@
 			<i class="fa fa-bars"></i>
 		</a>
 		<div class="navbar-custom-menu">
-			<h4 style="color:#ffffff; margin-right:20px;">E Survei BPKH</h4>
+			<h4 class="d-none" style="color:#ffffff; margin-right:20px;">E Survei BPKH</h4>
 
 		</div>
 	</nav>
