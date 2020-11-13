@@ -24,7 +24,7 @@ class Dashboard extends CI_Controller
 		$grafik = $this->db->query('SELECT DATE_FORMAT(start_date,"%e") as date, count(DATE_FORMAT(start_date,"%e")) as total from bpk_surveys_entity_participants 
 		where survey_id = 4 AND
 		status = 2
-		GROUP BY date ORDER BY date DESC ');
+		GROUP BY date ORDER BY DATE_FORMAT(start_date,"%d") ASC ');
 
 		$data['totalparticipants'] = $participants;
 		$data['totalparticipants_sah'] = $participants_sah;
