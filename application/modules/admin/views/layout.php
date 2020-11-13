@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title><?= isset($title) ? $title : 'Database Keuangan dan Ekonomi BPKH RI' ?></title>
+	<title><?= isset($title) ? $title : 'Survey BPKH' ?></title>
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<meta name="keywords" content="Database Keuangan dan Ekonomi BPKH RI" />
