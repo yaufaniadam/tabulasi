@@ -11,7 +11,7 @@
       <!-- DONUT CHART -->
       <div class="box box-danger">
         <div class="box-header with-border">
-          <h3 class="box-title">Total Responden (<?= $totalparticipants->num_rows(); ?>)</h3>
+          <h3 class="box-title">Total Responden (<?= $total_participant; ?>)</h3>
 
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -39,7 +39,6 @@
 
 
   </div>
-  <!-- /.row -->
 
   <!-- DONUT CHART -->
   <div class="box box-danger">
@@ -76,11 +75,11 @@
     new Chart(document.getElementById("responden"), {
       type: 'pie',
       data: {
-        labels: ["Menyelesaikan <?= $totalparticipants_sah->num_rows(); ?>", "Tidak menyelesaikan <?= $totalparticipants->num_rows() - $totalparticipants_sah->num_rows(); ?>"],
+        labels: ["Menyelesaikan <?= $participant_sah ?>", "Tidak menyelesaikan <?= $total_participant - $participant_sah ?>"],
         datasets: [{
           label: "Total Responden",
           backgroundColor: ["#3e95cd", "#8e5ea2"],
-          data: [<?= $totalparticipants_sah->num_rows(); ?>, <?= $totalparticipants->num_rows() - $totalparticipants_sah->num_rows(); ?>]
+          data: [<?= $participant_sah ?>, <?= $total_participant - $participant_sah ?>]
         }]
       },
       options: {
@@ -103,26 +102,35 @@
     type: 'line',
     data: {
       labels: [
-        <?php foreach ($grafik as $grf) {
+        <?php foreach ($grafik->result_array() as $grf) {
           echo '"' . $grf['date'] . '",';
         } ?>
       ],
       datasets: [{
         label: "Grafik Harian",
         // Name the series
-        data: [<?php foreach ($grafik_total as $grfk) {
-                  echo '"' . $grfk['total'] . '",';
+        data: [<?php foreach ($grafik->result_array() as $grf) {
+                  echo '"' . $grf['total'] . '",';
                 } ?>], // Specify the data values array
         fill: false,
         borderColor: '#2196f3', // Add custom color border (Line)
         backgroundColor: '#2196f3', // Add custom color background (Points and Fill)
-        borderWidth: 1 // Specify bar border width
+        borderWidth: 1, // Specify bar border width
+        order: 1
       }]
     },
     options: {
       responsive: true, // Instruct chart js to respond nicely.
       maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+    },
+
+    scales: {
+      xAxes: [{
+        type: 'time',
+        distribution: 'series'
+      }]
     }
+
   });
 </script>
 <script>

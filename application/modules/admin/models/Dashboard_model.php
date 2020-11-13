@@ -1,34 +1,26 @@
 <?php
-	class Dashboard_model extends CI_Model{
+class Dashboard_model extends CI_Model
+{
 
-		public function get_all_users(){
-			return $this->db->count_all('bpk_surveys_entity_participants');
-		}
-		public function get_active_users(){
-			$this->db->where('is_active', 1);
-			return $this->db->count_all_results('ci_users');
-		}
-		public function get_deactive_users(){
-			$this->db->where('is_active', 0);
-			return $this->db->count_all_results('ci_users');
-		}
+	public function get_grafik($survey_id)
+	{
+		$grafik = $this->db->query('(SELECT DATE_FORMAT(start_date,"%e %M") as date, start_date, 
+		count(DATE_FORMAT(start_date,"%e")) as total from bpk_surveys_entity_participants 
+		where survey_id = ' . $survey_id . ' AND
+		status = 2
+		GROUP BY date )
 
-		public function get_all_fakultas(){
-			$this->db->where('kode =', 'f');
-			return $this->db->count_all_results('ci_unit_kerja');
-		}
+		UNION ALL
 
-		public function get_all_prodi(){
-			$this->db->where('kode =', 'p');
-			return $this->db->count_all_results('ci_unit_kerja');
-		}
+		(SELECT DATE_FORMAT(start_date,"%e %M") as date, start_date,
+		count(DATE_FORMAT(start_date,"%e")) as total from sitejumat_surveys_entity_participants 
+		where survey_id = ' . $survey_id . ' AND
+		status = 2
+		GROUP BY date )
+		
+		ORDER BY start_date ASC
+		');
 
-		public function get_all_biro(){
-			$this->db->where('kode =', 'b');
-			return $this->db->count_all_results('ci_unit_kerja');
-		}
-		public function tambah($data){
-			$this->db->insert('dashboard', $data);
-			return true;
-		}
+		return $grafik;
 	}
+}

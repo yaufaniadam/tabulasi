@@ -11,27 +11,29 @@ class Dashboard extends CI_Controller
 	{
 		parent::__construct();
 
-		$this->load->library('excel');
+		$this->load->model('admin/dashboard_model', 'dashboard_model');
 	}
 
 	public function index()
 	{
+		$survey_id = 4;
 
-		$participants_sah = $this->db->query('SELECT * from bpk_surveys_entity_participants where survey_id = 4 and status = 2 ORDER BY id DESC');
+		$lama_sah = $this->db->query("(SELECT * from sitejumat_surveys_entity_participants where survey_id = '$survey_id' and status = 2)")->num_rows();
+		$lama_semua = $this->db->query("(SELECT * from sitejumat_surveys_entity_participants where survey_id = '$survey_id')")->num_rows();
 
-		$participants = $this->db->query('SELECT * from bpk_surveys_entity_participants where survey_id = 4 ORDER BY id DESC');
+		$baru_sah = $this->db->query("(SELECT * from bpk_surveys_entity_participants where survey_id = '$survey_id' and status = 2)")->num_rows();
+		$baru_semua = $this->db->query("(SELECT * from bpk_surveys_entity_participants where survey_id = '$survey_id')")->num_rows();
 
-		$grafik = $this->db->query('SELECT DATE_FORMAT(start_date,"%e") as date, count(DATE_FORMAT(start_date,"%e")) as total from bpk_surveys_entity_participants 
-		where survey_id = 4 AND
-		status = 2
-		GROUP BY date ORDER BY DATE_FORMAT(start_date,"%d	") ASC ');
+		$sah = $lama_sah + $baru_sah;
+		$semua = $lama_semua + $baru_semua;
 
-		$data['totalparticipants'] = $participants;
-		$data['totalparticipants_sah'] = $participants_sah;
-		$data['grafik'] = $grafik->result_array();
-		$data['grafik_total'] = $grafik->result_array();
 
-		$data['title'] = 'Hasil Statistik';
+		$grafik = $this->dashboard_model->get_grafik(4);
+
+		$data['total_participant'] = $semua;
+		$data['participant_sah'] = $sah;
+		$data['grafik'] = $grafik;
+		$data['title'] = 'Hasil Survey';
 		$data['view'] = 'admin/dashboard/dashboard2';
 		$this->load->view('layout', $data);
 	}
